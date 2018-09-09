@@ -7,19 +7,22 @@
 //
 
 import UIKit
+import DependencyRouter
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+       
+        
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func actionNext() {
+//        let presenter = BuilderRouter(SecondViewControllerFactory.self).setContainer(Void()).create().setup()
+        let presenter = BuilderRouter(SecondViewControllerFactory.self).createAndSetup()
+        
+        navigationController?.pushViewController(presenter.viewController, animated: true)
     }
-
-
+    
 }
 

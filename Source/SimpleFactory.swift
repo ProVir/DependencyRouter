@@ -1,5 +1,5 @@
 //
-//  SimpleFactoryRouter.swift
+//  SimpleFactory.swift
 //  DependencyRouter
 //
 //  Created by Короткий Виталий on 08.09.2018.
@@ -51,8 +51,8 @@ extension BlankCreatorFactoryRouter {
 
 extension BlankFactoryRouter {
     public func coreSetupViewController(_ viewController: UIViewController, file: StaticString = #file, line: UInt = #line) {
-        let vc: VCType = FactoryRouterError.tryAsFatalError(file: file, line: line) {
-            try factoryRouterFindViewController(viewController)
+        let vc: VCType = DependencyRouterError.tryAsFatalError(file: file, line: line) {
+            try dependencyRouterFindViewController(viewController)
         }
         
         setupViewController(vc)

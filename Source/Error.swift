@@ -1,5 +1,5 @@
 //
-//  FactoryRouterError.swift
+//  Error.swift
 //  DependencyRouter
 //
 //  Created by Короткий Виталий on 08.09.2018.
@@ -8,12 +8,12 @@
 
 import Foundation
 
-extension FactoryRouterError {
+extension DependencyRouterError {
     public static func tryAsFatalError<R>(file: StaticString = #file, line: UInt = #line, handler: () throws ->R) -> R {
         do {
             return try handler()
         } catch {
-            if let error = error as? FactoryRouterError {
+            if let error = error as? DependencyRouterError {
                 error.fatalError(file: file, line: line)
             } else {
                 Swift.fatalError("\(error)" ,file: file, line: line)
@@ -25,7 +25,7 @@ extension FactoryRouterError {
         do {
             return try handler()
         } catch {
-            if let error = error as? FactoryRouterError {
+            if let error = error as? DependencyRouterError {
                 error.assertionFailure(file: file, line: line)
             } else {
                 Swift.assertionFailure("\(error)" ,file: file, line: line)
@@ -36,7 +36,9 @@ extension FactoryRouterError {
     }
 }
 
-public enum FactoryRouterError: Error {
+public enum DependencyRouterError: Error {
+    case notReadyPresentingViewController(String)
+    
 //    case viewControllerNotFactoryRouterSupporting
     case viewControllerNotFound(UIViewController.Type)
     
@@ -53,6 +55,9 @@ public enum FactoryRouterError: Error {
     
     public var description: String {
         switch self {
+        case .notReadyPresentingViewController(let detail):
+            return "Not ready presenting ViewController: \(detail)"
+            
 //        case .viewControllerNotFactoryRouterSupporting:
 //            return "ViewController doesn't conform to FactoryRouterSupporting"
 

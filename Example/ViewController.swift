@@ -19,9 +19,10 @@ class ViewController: UIViewController {
 
     @IBAction func actionNext() {
 //        let presenter = BuilderRouter(SecondViewControllerFactory.self).setContainer(Void()).create().setup()
-        let presenter = BuilderRouter(SecondViewControllerFactory.self).createAndSetup()
+        let vc = BuilderRouter(SecondViewControllerFactory.self).createAndSetup().viewController
         
-        navigationController?.pushViewController(presenter.viewController, animated: true)
+        let presentationHandler = PresentationRouterHandler(presentation: ShowPresentationRouter(), viewController: vc)
+        presentationHandler.present(on: self)
     }
     
 }

@@ -16,15 +16,16 @@
 		507C9D9B2143834100996677 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 507C9D9A2143834100996677 /* Assets.xcassets */; };
 		507C9D9E2143834100996677 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 507C9D9C2143834100996677 /* LaunchScreen.storyboard */; };
 		507C9DA6214383C400996677 /* DependencyRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 507C9D73214382DB00996677 /* DependencyRouter.framework */; };
-		507C9DA8214385AA00996677 /* FactoryRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DA7214385AA00996677 /* FactoryRouter.swift */; };
-		507C9DAA2143D45600996677 /* SimpleFactoryRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DA92143D45600996677 /* SimpleFactoryRouter.swift */; };
-		507C9DAE2143D67400996677 /* FactoryRouterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DAD2143D67400996677 /* FactoryRouterError.swift */; };
-		507C9DB02143DC4800996677 /* ParamsFactoryRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DAF2143DC4800996677 /* ParamsFactoryRouter.swift */; };
-		507C9DB22143E32D00996677 /* CocoaFactoryRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB12143E32D00996677 /* CocoaFactoryRouter.swift */; };
-		507C9DB42144BF7400996677 /* ParamsCreatorFactoryRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB32144BF7400996677 /* ParamsCreatorFactoryRouter.swift */; };
-		507C9DB62144C2A200996677 /* BuilderRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB52144C2A200996677 /* BuilderRouter.swift */; };
+		507C9DA8214385AA00996677 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DA7214385AA00996677 /* Core.swift */; };
+		507C9DAA2143D45600996677 /* SimpleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DA92143D45600996677 /* SimpleFactory.swift */; };
+		507C9DAE2143D67400996677 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DAD2143D67400996677 /* Error.swift */; };
+		507C9DB02143DC4800996677 /* ParamsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DAF2143DC4800996677 /* ParamsFactory.swift */; };
+		507C9DB22143E32D00996677 /* CocoaFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB12143E32D00996677 /* CocoaFactory.swift */; };
+		507C9DB42144BF7400996677 /* ParamsCreatorFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB32144BF7400996677 /* ParamsCreatorFactory.swift */; };
+		507C9DB62144C2A200996677 /* Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB52144C2A200996677 /* Builder.swift */; };
 		507C9DB82144DFCC00996677 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB72144DFCC00996677 /* SecondViewController.swift */; };
 		507C9DBA2144DFDA00996677 /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB92144DFDA00996677 /* ModalViewController.swift */; };
+		50E7E6222147F4D400FA64E0 /* SimplePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E7E6212147F4D400FA64E0 /* SimplePresentation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,15 +59,16 @@
 		507C9D9A2143834100996677 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		507C9D9D2143834100996677 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		507C9D9F2143834100996677 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		507C9DA7214385AA00996677 /* FactoryRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactoryRouter.swift; sourceTree = "<group>"; };
-		507C9DA92143D45600996677 /* SimpleFactoryRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleFactoryRouter.swift; sourceTree = "<group>"; };
-		507C9DAD2143D67400996677 /* FactoryRouterError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactoryRouterError.swift; sourceTree = "<group>"; };
-		507C9DAF2143DC4800996677 /* ParamsFactoryRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamsFactoryRouter.swift; sourceTree = "<group>"; };
-		507C9DB12143E32D00996677 /* CocoaFactoryRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocoaFactoryRouter.swift; sourceTree = "<group>"; };
-		507C9DB32144BF7400996677 /* ParamsCreatorFactoryRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamsCreatorFactoryRouter.swift; sourceTree = "<group>"; };
-		507C9DB52144C2A200996677 /* BuilderRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuilderRouter.swift; sourceTree = "<group>"; };
+		507C9DA7214385AA00996677 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
+		507C9DA92143D45600996677 /* SimpleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleFactory.swift; sourceTree = "<group>"; };
+		507C9DAD2143D67400996677 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		507C9DAF2143DC4800996677 /* ParamsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamsFactory.swift; sourceTree = "<group>"; };
+		507C9DB12143E32D00996677 /* CocoaFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocoaFactory.swift; sourceTree = "<group>"; };
+		507C9DB32144BF7400996677 /* ParamsCreatorFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamsCreatorFactory.swift; sourceTree = "<group>"; };
+		507C9DB52144C2A200996677 /* Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Builder.swift; sourceTree = "<group>"; };
 		507C9DB72144DFCC00996677 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		507C9DB92144DFDA00996677 /* ModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
+		50E7E6212147F4D400FA64E0 /* SimplePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePresentation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,13 +124,14 @@
 			children = (
 				507C9D76214382DB00996677 /* DependencyRouter.h */,
 				507C9D77214382DB00996677 /* Info.plist */,
-				507C9DA7214385AA00996677 /* FactoryRouter.swift */,
-				507C9DAD2143D67400996677 /* FactoryRouterError.swift */,
-				507C9DB12143E32D00996677 /* CocoaFactoryRouter.swift */,
-				507C9DA92143D45600996677 /* SimpleFactoryRouter.swift */,
-				507C9DAF2143DC4800996677 /* ParamsFactoryRouter.swift */,
-				507C9DB32144BF7400996677 /* ParamsCreatorFactoryRouter.swift */,
-				507C9DB52144C2A200996677 /* BuilderRouter.swift */,
+				507C9DA7214385AA00996677 /* Core.swift */,
+				507C9DAD2143D67400996677 /* Error.swift */,
+				507C9DB12143E32D00996677 /* CocoaFactory.swift */,
+				507C9DA92143D45600996677 /* SimpleFactory.swift */,
+				507C9DAF2143DC4800996677 /* ParamsFactory.swift */,
+				507C9DB32144BF7400996677 /* ParamsCreatorFactory.swift */,
+				50E7E6212147F4D400FA64E0 /* SimplePresentation.swift */,
+				507C9DB52144C2A200996677 /* Builder.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -307,13 +310,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				507C9DA8214385AA00996677 /* FactoryRouter.swift in Sources */,
-				507C9DB02143DC4800996677 /* ParamsFactoryRouter.swift in Sources */,
-				507C9DB62144C2A200996677 /* BuilderRouter.swift in Sources */,
-				507C9DB42144BF7400996677 /* ParamsCreatorFactoryRouter.swift in Sources */,
-				507C9DB22143E32D00996677 /* CocoaFactoryRouter.swift in Sources */,
-				507C9DAE2143D67400996677 /* FactoryRouterError.swift in Sources */,
-				507C9DAA2143D45600996677 /* SimpleFactoryRouter.swift in Sources */,
+				507C9DA8214385AA00996677 /* Core.swift in Sources */,
+				50E7E6222147F4D400FA64E0 /* SimplePresentation.swift in Sources */,
+				507C9DB02143DC4800996677 /* ParamsFactory.swift in Sources */,
+				507C9DB62144C2A200996677 /* Builder.swift in Sources */,
+				507C9DB42144BF7400996677 /* ParamsCreatorFactory.swift in Sources */,
+				507C9DB22143E32D00996677 /* CocoaFactory.swift in Sources */,
+				507C9DAE2143D67400996677 /* Error.swift in Sources */,
+				507C9DAA2143D45600996677 /* SimpleFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -44,14 +44,14 @@ public protocol CoreParamsFactoryRouter: CoreFactoryRouter {
 
 extension ParamsFactoryRouter {
     public func coreSetupViewController(_ viewController: UIViewController, params: Any, callbacks: [Any], file: StaticString = #file, line: UInt = #line) {
-        let vc: VCType = FactoryRouterError.tryAsFatalError(file: file, line: line) {
-            try factoryRouterFindViewController(viewController)
+        let vc: VCType = DependencyRouterError.tryAsFatalError(file: file, line: line) {
+            try dependencyRouterFindViewController(viewController)
         }
         
         if let params = params as? ParamsType {
             setupViewController(vc, params: params)
         } else {
-            FactoryRouterError.paramsInvalidType(type(of: params), required: ParamsType.self).fatalError(file: file, line: line)
+            DependencyRouterError.paramsInvalidType(type(of: params), required: ParamsType.self).fatalError(file: file, line: line)
         }
     }
     
@@ -60,12 +60,12 @@ extension ParamsFactoryRouter {
 
 extension ParamsWithCallbackFactoryRouter {
     public func coreSetupViewController(_ viewController: UIViewController, params: Any, callbacks: [Any], file: StaticString = #file, line: UInt = #line) {
-        let vc: VCType = FactoryRouterError.tryAsFatalError(file: file, line: line) {
-            try factoryRouterFindViewController(viewController)
+        let vc: VCType = DependencyRouterError.tryAsFatalError(file: file, line: line) {
+            try dependencyRouterFindViewController(viewController)
         }
         
         guard let s_params = params as? ParamsType else {
-            FactoryRouterError.paramsInvalidType(type(of: params), required: ParamsType.self).fatalError(file: file, line: line)
+            DependencyRouterError.paramsInvalidType(type(of: params), required: ParamsType.self).fatalError(file: file, line: line)
         }
         
         var callback: CallbackType?
@@ -77,7 +77,7 @@ extension ParamsWithCallbackFactoryRouter {
         }
         
         guard let s_callback = callback else {
-            FactoryRouterError.callbackNotFound(CallbackType.self).fatalError(file: file, line: line)
+            DependencyRouterError.callbackNotFound(CallbackType.self).fatalError(file: file, line: line)
         }
         
         setupViewController(vc, params: s_params, callback: s_callback)
@@ -85,4 +85,40 @@ extension ParamsWithCallbackFactoryRouter {
     
     public var coreNeedCallback: Bool { return true }
 }
+
+
+//MARK: Support Builder
+extension BuilderRouterReadySetup where FR: ParamsFactoryRouter {
+    public func setup(params: FR.ParamsType) -> BuilderRouterReadyPresent<VC> {
+        factory.coreSetupViewController(viewController, params: params, callbacks: [])
+        return .init(viewController: viewController)
+    }
+}
+
+extension BuilderRouterReadySetup where FR: ParamsWithCallbackFactoryRouter {
+    public func setup(params: FR.ParamsType, callback: FR.CallbackType) -> BuilderRouterReadyPresent<VC> {
+        factory.coreSetupViewController(viewController, params: params, callbacks: [callback])
+        return .init(viewController: viewController)
+    }
+}
+
+extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsFactoryRouter {
+    public func createAndSetup(params: FR.ParamsType) -> BuilderRouterReadyPresent<FR.VCCreateType> {
+        let factory = self.factory
+        let vc = factory.createViewController()
+        factory.coreSetupViewController(vc, params: params, callbacks: [])
+        return .init(viewController: vc)
+    }
+}
+
+extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsWithCallbackFactoryRouter {
+    public func createAndSetup(params: FR.ParamsType, callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCCreateType> {
+        let factory = self.factory
+        let vc = factory.createViewController()
+        factory.coreSetupViewController(vc, params: params, callbacks: [callback])
+        return .init(viewController: vc)
+    }
+}
+
+
 

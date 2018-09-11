@@ -47,7 +47,7 @@ extension ParamsCreatorFactoryRouter {
         if let params = params as? ParamsType {
             return createAndSetupViewController(params: params)
         } else {
-            FactoryRouterError.paramsInvalidType(type(of: params), required: ParamsType.self).fatalError(file: file, line: line)
+            DependencyRouterError.paramsInvalidType(type(of: params), required: ParamsType.self).fatalError(file: file, line: line)
         }
     }
     
@@ -57,7 +57,7 @@ extension ParamsCreatorFactoryRouter {
 extension ParamsCreatorWithCallbackFactoryRouter {
     public func coreCreateAndSetupViewController(params: Any, callbacks: [Any], file: StaticString = #file, line: UInt = #line) -> UIViewController {
         guard let s_params = params as? ParamsType else {
-            FactoryRouterError.paramsInvalidType(type(of: params), required: ParamsType.self).fatalError(file: file, line: line)
+            DependencyRouterError.paramsInvalidType(type(of: params), required: ParamsType.self).fatalError(file: file, line: line)
         }
         
         var callback: CallbackType?
@@ -69,7 +69,7 @@ extension ParamsCreatorWithCallbackFactoryRouter {
         }
         
         guard let s_callback = callback else {
-            FactoryRouterError.callbackNotFound(CallbackType.self).fatalError(file: file, line: line)
+            DependencyRouterError.callbackNotFound(CallbackType.self).fatalError(file: file, line: line)
         }
         
         return createAndSetupViewController(params: s_params, callback: s_callback)
@@ -79,6 +79,23 @@ extension ParamsCreatorWithCallbackFactoryRouter {
 }
 
 
+
+//MARK: Support Builder
+extension BuilderRouterReadyCreate where FR: ParamsCreatorFactoryRouter {
+    public func createAndSetup(params: FR.ParamsType) -> BuilderRouterReadyPresent<FR.VCType> {
+        let factory = self.factory
+        let vc = factory.createAndSetupViewController(params: params)
+        return .init(viewController: vc)
+    }
+}
+
+extension BuilderRouterReadyCreate where FR: ParamsCreatorWithCallbackFactoryRouter {
+    public func createAndSetup(params: FR.ParamsType, callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCType> {
+        let factory = self.factory
+        let vc = factory.createAndSetupViewController(params: params, callback: callback)
+        return .init(viewController: vc)
+    }
+}
 
 
 

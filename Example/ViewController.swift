@@ -13,16 +13,18 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
         
     }
 
     @IBAction func actionNext() {
 //        let presenter = BuilderRouter(SecondViewControllerFactory.self).setContainer(Void()).create().setup()
-        let vc = BuilderRouter(SecondViewControllerFactory.self).createAndSetup().viewController
+//        BuilderRouter(SecondViewControllerFactory.self).createAndSetup().present(NavigationControllerPresentationRouter(), on: self)
         
-        let presentationHandler = PresentationRouterHandler(presentation: ShowPresentationRouter(), viewController: vc)
-        presentationHandler.present(on: self)
+        BuilderRouter(SecondViewControllerFactory.self).createAndSetup()
+            .prepareHandler { print("Prepare open") }
+            .postHandler { print("Post open") }
+            .present(on: self)
     }
     
 }

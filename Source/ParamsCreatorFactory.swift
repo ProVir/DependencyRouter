@@ -13,6 +13,7 @@ public protocol ParamsCreatorFactoryRouter: CoreParamsCreatorFactoryRouter, Fact
     associatedtype ParamsType
     
     func createAndSetupViewController(params: ParamsType) -> VCType
+    func defaultPresentation(params: ParamsType) -> PresentationRouter
 }
 
 public protocol ParamsCreatorWithCallbackFactoryRouter: CoreParamsCreatorFactoryRouter, FactoryRouter {
@@ -21,15 +22,24 @@ public protocol ParamsCreatorWithCallbackFactoryRouter: CoreParamsCreatorFactory
     associatedtype CallbackType
     
     func createAndSetupViewController(params: ParamsType, callback: CallbackType) -> VCType
+    func defaultPresentation(params: ParamsType) -> PresentationRouter
 }
 
 extension ParamsCreatorFactoryRouter {
+    public func defaultPresentation(params: ParamsType) -> PresentationRouter {
+        return defaultPresentation
+    }
+    
     public static func createParams(_ params: ParamsType) -> ParamsType {
         return params
     }
 }
 
 extension ParamsCreatorWithCallbackFactoryRouter {
+    public func defaultPresentation(params: ParamsType) -> PresentationRouter {
+        return defaultPresentation
+    }
+    
     public static func createParams(_ params: ParamsType) -> ParamsType {
         return params
     }
@@ -38,11 +48,15 @@ extension ParamsCreatorWithCallbackFactoryRouter {
 
 //MARK: - Core
 public protocol CoreParamsCreatorFactoryRouter: CoreFactoryRouter {
-    func coreCreateAndSetupViewController(params: Any, callbacks: [Any], file: StaticString, line: UInt) -> UIViewController
     var coreNeedCallback: Bool { get }
+    
+    func coreCreateAndSetupViewController(params: Any, callbacks: [Any], file: StaticString, line: UInt) -> UIViewController
+    func coreDefaultPresentation(params: Any) -> PresentationRouter
 }
 
 extension ParamsCreatorFactoryRouter {
+    public var coreNeedCallback: Bool { return false }
+    
     public func coreCreateAndSetupViewController(params: Any, callbacks: [Any], file: StaticString = #file, line: UInt = #line) -> UIViewController {
         if let params = params as? ParamsType {
             return createAndSetupViewController(params: params)
@@ -51,10 +65,18 @@ extension ParamsCreatorFactoryRouter {
         }
     }
     
-    public var coreNeedCallback: Bool { return false }
+    func coreDefaultPresentation(params: Any) -> PresentationRouter {
+        if let params = params as? ParamsType {
+            return defaultPresentation(params: params)
+        } else {
+            return defaultPresentation
+        }
+    }
 }
 
 extension ParamsCreatorWithCallbackFactoryRouter {
+    public var coreNeedCallback: Bool { return true }
+    
     public func coreCreateAndSetupViewController(params: Any, callbacks: [Any], file: StaticString = #file, line: UInt = #line) -> UIViewController {
         guard let s_params = params as? ParamsType else {
             DependencyRouterError.paramsInvalidType(type(of: params), required: ParamsType.self).fatalError(file: file, line: line)
@@ -75,7 +97,13 @@ extension ParamsCreatorWithCallbackFactoryRouter {
         return createAndSetupViewController(params: s_params, callback: s_callback)
     }
     
-    public var coreNeedCallback: Bool { return true }
+    func coreDefaultPresentation(params: Any) -> PresentationRouter {
+        if let params = params as? ParamsType {
+            return defaultPresentation(params: params)
+        } else {
+            return defaultPresentation
+        }
+    }
 }
 
 
@@ -85,7 +113,7 @@ extension BuilderRouterReadyCreate where FR: ParamsCreatorFactoryRouter {
     public func createAndSetup(params: FR.ParamsType) -> BuilderRouterReadyPresent<FR.VCType> {
         let factory = self.factory
         let vc = factory.createAndSetupViewController(params: params)
-        return .init(viewController: vc)
+        return .init(viewController: vc, default: factory.defaultPresentation(params: params))
     }
 }
 
@@ -93,7 +121,7 @@ extension BuilderRouterReadyCreate where FR: ParamsCreatorWithCallbackFactoryRou
     public func createAndSetup(params: FR.ParamsType, callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCType> {
         let factory = self.factory
         let vc = factory.createAndSetupViewController(params: params, callback: callback)
-        return .init(viewController: vc)
+        return .init(viewController: vc, default: factory.defaultPresentation(params: params))
     }
 }
 

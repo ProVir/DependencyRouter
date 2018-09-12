@@ -15,6 +15,25 @@ public protocol FactoryRouter: CoreFactoryRouter {
     init(container: ContainerType)
 }
 
+public protocol LightFactoryRouter: FactoryRouter {
+    init()
+}
+
+public protocol AutoServiceContainer {
+    init()
+}
+
+public struct EmptyContainer: AutoServiceContainer {
+    public init() { }
+}
+
+
+///Wrappers for childViewController support
+public protocol ContainerSupportRouter {
+    func findViewController<VCType: UIViewController>() -> VCType?
+}
+
+//MARK: Core
 public protocol CoreFactoryRouter {
     init?(containerAny: Any)
     
@@ -35,9 +54,14 @@ extension FactoryRouter {
     }
 }
 
-///Wrappers for childViewController support
-public protocol ContainerSupportRouter {
-    func findViewController<VCType: UIViewController>() -> VCType?
+extension LightFactoryRouter {
+    public init?(containerAny: Any) {
+        self.init()
+    }
+    
+    public init(container: EmptyContainer) {
+        self.init()
+    }
 }
 
 

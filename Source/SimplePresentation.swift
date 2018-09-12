@@ -45,8 +45,8 @@ public struct ModalPresentationRouter: PresentationRouter {
     public var prepareHandler: ((UIViewController)->Void)? = nil
     public var postHandler: ((UIViewController)->Void)? = nil
     
-    public init(canAutoWrappedNavigtionController: Bool = false, prepareHandler: ((UIViewController)->Void)? = nil) {
-        self.canAutoWrappedNavigtionController = canAutoWrappedNavigtionController
+    public init(autoWrapped: Bool = false, prepareHandler: ((UIViewController)->Void)? = nil) {
+        self.canAutoWrappedNavigtionController = autoWrapped
         self.prepareHandler = prepareHandler
     }
     

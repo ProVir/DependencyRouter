@@ -25,8 +25,39 @@ public struct BuilderRouter<FR: FactoryRouter> {
     }
 }
 
-public struct BuilderRouterReadyPresent<VC: UIViewController> {
+public class BuilderRouterReadyPresent<VC: UIViewController> {
     public let viewController: VC
+    public let defaultPresentationSource: ()->PresentationRouter
+    
+    private var prepareHandlers: [()->Void] = []
+    private var postHandlers: [()->Void] = []
+    
+    public init(viewController: VC, default presentationSource: @autoclosure @escaping ()->PresentationRouter) {
+        self.viewController = viewController
+        self.defaultPresentationSource = presentationSource
+    }
+    
+    @discardableResult
+    public func prepareHandler(_ handler: @escaping ()->Void) -> BuilderRouterReadyPresent<VC> {
+        prepareHandlers.append(handler)
+        return self
+    }
+    
+    @discardableResult
+    public func postHandler(_ handler: @escaping ()->Void) -> BuilderRouterReadyPresent<VC> {
+        postHandlers.append(handler)
+        return self
+    }
+
+    public func present(on existingController: UIViewController, animated: Bool = true) {
+        let handler = PresentationRouterHandler(presentation: defaultPresentationSource(), viewController: viewController, prepareHandlers: prepareHandlers, postHandlers: postHandlers)
+        handler.present(on: existingController, animated: animated, completionHandler: nil, assertWhenFailure: true)
+    }
+    
+    public func present(_ presentation: PresentationRouter, on existingController: UIViewController, animated: Bool = true) {
+        let handler = PresentationRouterHandler(presentation: presentation, viewController: viewController, prepareHandlers: prepareHandlers, postHandlers: postHandlers)
+        handler.present(on: existingController, animated: animated, completionHandler: nil, assertWhenFailure: true)
+    }
 }
 
 
@@ -42,9 +73,9 @@ public protocol BuilderRouterReadySetup {
     var viewController: VC { get }
 }
 
-extension BuilderRouter: BuilderRouterReadyCreate where FR.ContainerType == Void {
+extension BuilderRouter: BuilderRouterReadyCreate where FR.ContainerType: AutoServiceContainer {
     public var factory: FR {
-        return FR.init(containerAny: Void())!
+        return FR.init(container: FR.ContainerType.init())
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  CocoaFactory.swift
+//  Cocoa.swift
 //  DependencyRouter
 //
 //  Created by Короткий Виталий on 08.09.2018.

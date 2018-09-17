@@ -1,5 +1,5 @@
 //
-//  SimpleFactory.swift
+//  BlankFactory.swift
 //  DependencyRouter
 //
 //  Created by Короткий Виталий on 08.09.2018.
@@ -13,16 +13,15 @@ public protocol CreatorFactoryRouter: FactoryRouter {
     func createViewController() -> VCCreateType
 }
 
-public protocol BlankCreatorFactoryRouter: FactoryRouter {
-    associatedtype VCType: UIViewController
-    func createAndSetupViewController() -> VCType
-}
-
-public protocol BlankFactoryRouter: FactoryRouter {
+public protocol BlankFactoryRouter: FactoryRouter, FactorySupportInputSource {
     associatedtype VCType: UIViewController
     func setupViewController(_ viewController: VCType)
 }
 
+public protocol BlankCreatorFactoryRouter: FactoryRouter {
+    associatedtype VCType: UIViewController
+    func createAndSetupViewController() -> VCType
+}
 
 //MARK: Support Builder
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter {
@@ -30,14 +29,6 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter {
         let factory = self.factory
         let vc = factory.createViewController()
         return .init(factory: factory, viewController: vc)
-    }
-}
-
-extension BuilderRouterReadyCreate where FR: BlankCreatorFactoryRouter {
-    public func createAndSetup() -> BuilderRouterReadyPresent<FR.VCType>{
-        let factory = self.factory
-        let vc = factory.createAndSetupViewController()
-        return .init(viewController: vc, default: factory.defaultPresentation())
     }
 }
 
@@ -51,6 +42,14 @@ extension BuilderRouterReadySetup where FR: BlankFactoryRouter {
     }
 }
 
+extension BuilderRouterReadyCreate where FR: BlankCreatorFactoryRouter {
+    public func createAndSetup() -> BuilderRouterReadyPresent<FR.VCType>{
+        let factory = self.factory
+        let vc = factory.createAndSetupViewController()
+        return .init(viewController: vc, default: factory.defaultPresentation())
+    }
+}
+
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFactoryRouter {
     public func createAndSetup() -> BuilderRouterReadyPresent<FR.VCCreateType>{
         let factory = self.factory
@@ -59,6 +58,13 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFact
         
         factory.setupViewController(findedViewController)
         return .init(viewController: viewController, default: factory.defaultPresentation())
+    }
+}
+
+//MARK: Support InputSource
+extension BlankFactoryRouter {
+    public func setup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+        setupViewController(try dependencyRouterFindViewController(viewController))
     }
 }
 

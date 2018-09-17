@@ -46,6 +46,7 @@ public enum DependencyRouterError: Error {
 //    case factoryRouterNotFound
 //    case factoryRouterInvalidType(CoreFactoryRouter.Type)
     
+    case inputSourceNotFound(Any)
     case inputDataInvalidType(String, Any.Type, required: Any.Type)
     case inputDataNotFound(String)
     
@@ -72,6 +73,9 @@ public enum DependencyRouterError: Error {
 //
 //        case .factoryRouterInvalidType(let routerType):
 //            return "Invalid factory router type \(routerType)"
+            
+        case .inputSourceNotFound(let sourceType):
+            return "Not found \(sourceType) in input source list"
             
         case .inputDataInvalidType(let dataName, let srcType, required: let requiredType):
             return "\(dataName) (\(srcType) doesn't conform to type \(requiredType)"

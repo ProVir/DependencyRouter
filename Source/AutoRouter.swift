@@ -9,12 +9,11 @@
 import Foundation
 
 
+//MARK: Auto Setup from viewDidLoad
 public protocol AutoRouterViewController: SourceRouterViewController where Factory: BlankFactoryRouter {
     var setupedByRouter: Bool { get }
 }
 
-
-//MARK: Router
 extension Router {
     public static func viewDidLoad<FR: BlankFactoryRouter>(_ needSetup: Bool, factory: @autoclosure ()->FR, viewController: FR.VCType) {
         if needSetup {
@@ -35,4 +34,12 @@ extension Router {
     }
 }
 
+//MARK: Auto Setup from segue
+extension Router {
+    public static func prepare(for segue: UIStoryboardSegue, sender: Any?) -> Bool {
+        
+        
+        return false
+    }
+}
 

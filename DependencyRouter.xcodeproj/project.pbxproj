@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5040F36C214E287F00A23F08 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040F36A214E284B00A23F08 /* Router.swift */; };
+		5040F36C214E287F00A23F08 /* AutoRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040F36A214E284B00A23F08 /* AutoRouter.swift */; };
 		507C9D7D214382DB00996677 /* DependencyRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 507C9D73214382DB00996677 /* DependencyRouter.framework */; };
 		507C9D82214382DB00996677 /* DependencyRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9D81214382DB00996677 /* DependencyRouterTests.swift */; };
 		507C9D84214382DB00996677 /* DependencyRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = 507C9D76214382DB00996677 /* DependencyRouter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -20,7 +20,7 @@
 		507C9DA8214385AA00996677 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DA7214385AA00996677 /* Core.swift */; };
 		507C9DAA2143D45600996677 /* SimpleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DA92143D45600996677 /* SimpleFactory.swift */; };
 		507C9DAE2143D67400996677 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DAD2143D67400996677 /* Error.swift */; };
-		507C9DB02143DC4800996677 /* ParamsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DAF2143DC4800996677 /* ParamsFactory.swift */; };
+		507C9DB02143DC4800996677 /* ParamsCallbackFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DAF2143DC4800996677 /* ParamsCallbackFactory.swift */; };
 		507C9DB22143E32D00996677 /* Cocoa.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB12143E32D00996677 /* Cocoa.swift */; };
 		507C9DB42144BF7400996677 /* ParamsCreatorFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB32144BF7400996677 /* ParamsCreatorFactory.swift */; };
 		507C9DB62144C2A200996677 /* Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB52144C2A200996677 /* Builder.swift */; };
@@ -47,7 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5040F36A214E284B00A23F08 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		5040F36A214E284B00A23F08 /* AutoRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRouter.swift; sourceTree = "<group>"; };
 		507C9D73214382DB00996677 /* DependencyRouter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DependencyRouter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		507C9D76214382DB00996677 /* DependencyRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DependencyRouter.h; sourceTree = "<group>"; };
 		507C9D77214382DB00996677 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -64,7 +64,7 @@
 		507C9DA7214385AA00996677 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		507C9DA92143D45600996677 /* SimpleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleFactory.swift; sourceTree = "<group>"; };
 		507C9DAD2143D67400996677 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
-		507C9DAF2143DC4800996677 /* ParamsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamsFactory.swift; sourceTree = "<group>"; };
+		507C9DAF2143DC4800996677 /* ParamsCallbackFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamsCallbackFactory.swift; sourceTree = "<group>"; };
 		507C9DB12143E32D00996677 /* Cocoa.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cocoa.swift; sourceTree = "<group>"; };
 		507C9DB32144BF7400996677 /* ParamsCreatorFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamsCreatorFactory.swift; sourceTree = "<group>"; };
 		507C9DB52144C2A200996677 /* Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Builder.swift; sourceTree = "<group>"; };
@@ -130,10 +130,10 @@
 				507C9DAD2143D67400996677 /* Error.swift */,
 				507C9DB12143E32D00996677 /* Cocoa.swift */,
 				507C9DA92143D45600996677 /* SimpleFactory.swift */,
-				507C9DAF2143DC4800996677 /* ParamsFactory.swift */,
+				507C9DAF2143DC4800996677 /* ParamsCallbackFactory.swift */,
 				507C9DB32144BF7400996677 /* ParamsCreatorFactory.swift */,
 				50E7E6212147F4D400FA64E0 /* SimplePresentation.swift */,
-				5040F36A214E284B00A23F08 /* Router.swift */,
+				5040F36A214E284B00A23F08 /* AutoRouter.swift */,
 				507C9DB52144C2A200996677 /* Builder.swift */,
 			);
 			path = Source;
@@ -315,8 +315,8 @@
 			files = (
 				507C9DA8214385AA00996677 /* Core.swift in Sources */,
 				50E7E6222147F4D400FA64E0 /* SimplePresentation.swift in Sources */,
-				507C9DB02143DC4800996677 /* ParamsFactory.swift in Sources */,
-				5040F36C214E287F00A23F08 /* Router.swift in Sources */,
+				507C9DB02143DC4800996677 /* ParamsCallbackFactory.swift in Sources */,
+				5040F36C214E287F00A23F08 /* AutoRouter.swift in Sources */,
 				507C9DB62144C2A200996677 /* Builder.swift in Sources */,
 				507C9DB42144BF7400996677 /* ParamsCreatorFactory.swift in Sources */,
 				507C9DB22143E32D00996677 /* Cocoa.swift in Sources */,

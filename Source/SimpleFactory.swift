@@ -8,55 +8,19 @@
 
 import UIKit
 
-public protocol CreatorFactoryRouter: CoreCreatorFactoryRouter, FactoryRouter {
+public protocol CreatorFactoryRouter: FactoryRouter {
     associatedtype VCCreateType: UIViewController
     func createViewController() -> VCCreateType
 }
 
-public protocol BlankCreatorFactoryRouter: CoreBlankCreatorFactoryRouter, FactoryRouter {
+public protocol BlankCreatorFactoryRouter: FactoryRouter {
     associatedtype VCType: UIViewController
     func createAndSetupViewController() -> VCType
 }
 
-public protocol BlankFactoryRouter: CoreBlankFactoryRouter, FactoryRouter {
+public protocol BlankFactoryRouter: FactoryRouter {
     associatedtype VCType: UIViewController
     func setupViewController(_ viewController: VCType)
-}
-
-
-//MARK: - Core routing
-public protocol CoreCreatorFactoryRouter: CoreFactoryRouter {
-    func coreCreateViewController() -> UIViewController
-}
-
-public protocol CoreBlankCreatorFactoryRouter: CoreFactoryRouter {
-    func coreCreateAndSetupViewController() -> UIViewController
-}
-
-public protocol CoreBlankFactoryRouter: CoreFactoryRouter {
-    func coreSetupViewController(_ viewController: UIViewController, file: StaticString, line: UInt)
-}
-
-extension CreatorFactoryRouter {
-    public func coreCreateViewController() -> UIViewController {
-        return createViewController()
-    }
-}
-
-extension BlankCreatorFactoryRouter {
-    public func coreCreateAndSetupViewController() -> UIViewController {
-        return createAndSetupViewController()
-    }
-}
-
-extension BlankFactoryRouter {
-    public func coreSetupViewController(_ viewController: UIViewController, file: StaticString = #file, line: UInt = #line) {
-        let vc: VCType = DependencyRouterError.tryAsFatalError(file: file, line: line) {
-            try dependencyRouterFindViewController(viewController)
-        }
-        
-        setupViewController(vc)
-    }
 }
 
 
@@ -80,7 +44,9 @@ extension BuilderRouterReadyCreate where FR: BlankCreatorFactoryRouter {
 extension BuilderRouterReadySetup where FR: BlankFactoryRouter {
     public func setup() -> BuilderRouterReadyPresent<VC> {
         let factory = self.factory
-        factory.coreSetupViewController(viewController)
+        let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
+        
+        factory.setupViewController(findedViewController)
         return .init(viewController: viewController, default: factory.defaultPresentation())
     }
 }
@@ -88,9 +54,11 @@ extension BuilderRouterReadySetup where FR: BlankFactoryRouter {
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFactoryRouter {
     public func createAndSetup() -> BuilderRouterReadyPresent<FR.VCCreateType>{
         let factory = self.factory
-        let vc = factory.createViewController()
-        factory.coreSetupViewController(vc)
-        return .init(viewController: vc, default: factory.defaultPresentation())
+        let viewController = factory.createViewController()
+        let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
+        
+        factory.setupViewController(findedViewController)
+        return .init(viewController: viewController, default: factory.defaultPresentation())
     }
 }
 

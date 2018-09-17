@@ -9,8 +9,11 @@
 import UIKit
 import DependencyRouter
 
-struct SecondViewControllerFactory: FactoryRouter, CreatorFactoryRouter, BlankFactoryRouter {
-    let container: EmptyContainer
+struct SecondViewControllerFactory: AutoFactoryRouter, CreatorFactoryRouter, BlankFactoryRouter {
+    let container: Container
+    struct Container: AutoServiceContainer {
+        
+    }
     
     func createViewController() -> SecondViewController {
         return createViewController(storyboardName: "Main", identifier: "second")

@@ -46,9 +46,8 @@ public enum DependencyRouterError: Error {
 //    case factoryRouterNotFound
 //    case factoryRouterInvalidType(CoreFactoryRouter.Type)
     
-    case paramsInvalidType(Any.Type, required: Any.Type)
-    case paramsNotFound
-    case callbackNotFound(Any.Type)
+    case inputDataInvalidType(String, Any.Type, required: Any.Type)
+    case inputDataNotFound(String)
     
 //    case containerInvalidType(Any.Type, routerType: CoreFactoryRouter.Type)
 //    case stateRestoreContainerNotFound(type: Any.Type, identifier:String?)
@@ -74,14 +73,11 @@ public enum DependencyRouterError: Error {
 //        case .factoryRouterInvalidType(let routerType):
 //            return "Invalid factory router type \(routerType)"
             
-        case .paramsInvalidType(let srcType, required: let requiredType):
-            return "Params (\(srcType) doesn't conform to type \(requiredType)"
+        case .inputDataInvalidType(let dataName, let srcType, required: let requiredType):
+            return "\(dataName) (\(srcType) doesn't conform to type \(requiredType)"
             
-        case .paramsNotFound:
-            return "Params not found"
-            
-        case .callbackNotFound(let cbType):
-            return "Callback type \(cbType) don't finded"
+        case .inputDataNotFound(let dataName):
+            return "\(dataName) not found"
             
 //        case .containerInvalidType(let providerType, routerType: let routerType):
 //            return "Invalid container type \(providerType) for FactoryRouter type \(routerType)"

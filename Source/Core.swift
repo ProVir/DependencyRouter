@@ -15,18 +15,14 @@ public protocol FactoryRouter: CoreFactoryRouter {
     init(container: ContainerType)
 }
 
-public protocol LightFactoryRouter: AutoFactoryRouter { }
-
 public protocol AutoFactoryRouter: FactoryRouter {
     init()
 }
 
+public protocol LightFactoryRouter: AutoFactoryRouter { }
+
 public protocol AutoServiceContainer {
     init()
-}
-
-public struct EmptyContainer: AutoServiceContainer {
-    public init() { }
 }
 
 
@@ -35,16 +31,13 @@ public protocol SourceRouterViewController: CoreSourceRouterViewController {
     func createFactoryForSetup() -> Factory
 }
 
-public protocol AutoRouterViewController: SourceRouterViewController where Factory: BlankFactoryRouter {
-    var setupedByRouter: Bool { get }
-}
-
 
 ///Wrappers for childViewController support
 public protocol ViewContainerSupportRouter {
     func findViewController<VCType: UIViewController>() -> VCType?
 }
 
+public struct Router { }
 
 //MARK: Core
 public protocol CoreFactoryRouter {
@@ -71,9 +64,15 @@ extension FactoryRouter {
     }
 }
 
-extension FactoryRouter where ContainerType: AutoServiceContainer {
+extension AutoFactoryRouter where ContainerType: AutoServiceContainer {
     public init() {
         self.init(container: ContainerType())
+    }
+}
+
+extension AutoFactoryRouter where ContainerType == Void {
+    public init() {
+        self.init(container: Void())
     }
 }
 
@@ -82,7 +81,7 @@ extension LightFactoryRouter {
         self.init()
     }
     
-    public init(container: EmptyContainer) {
+    public init(container: Void) {
         self.init()
     }
 }
@@ -93,9 +92,9 @@ extension SourceRouterViewController {
     }
 }
 
-extension SourceRouterViewController where Factory.ContainerType: AutoServiceContainer {
+extension SourceRouterViewController where Factory: AutoFactoryRouter {
     public func createFactoryForSetup() -> Factory {
-        return Factory(container: Factory.ContainerType())
+        return Factory()
     }
 }
 
@@ -136,6 +135,13 @@ public func dependencyRouterFindViewController<VCType: UIViewController>(_ viewC
         return vc
     } else {
         throw DependencyRouterError.viewControllerNotFound(VCType.self)
+    }
+}
+
+
+public func dependencyRouterFindViewControllerOrFatalError<VCType: UIViewController>(_ viewController: UIViewController, file: StaticString = #file, line: UInt = #line) -> VCType {
+    return DependencyRouterError.tryAsFatalError(file: file, line: line) {
+        try dependencyRouterFindViewController(viewController)
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  Router.swift
+//  AutoRouter.swift
 //  Example
 //
 //  Created by Короткий Виталий on 16.09.2018.
@@ -9,10 +9,13 @@
 import Foundation
 
 
+public protocol AutoRouterViewController: SourceRouterViewController where Factory: BlankFactoryRouter {
+    var setupedByRouter: Bool { get }
+}
 
 
 //MARK: Router
-public struct Router {
+extension Router {
     public static func viewDidLoad<FR: BlankFactoryRouter>(_ needSetup: Bool, factory: @autoclosure ()->FR, viewController: FR.VCType) {
         if needSetup {
             let use_factory = factory()
@@ -20,18 +23,14 @@ public struct Router {
         }
     }
     
-    public static func viewDidLoad<VC: AutoRouterViewController>(_ viewController: VC) where VC == VC.Factory.VCType, VC.Factory.ContainerType: AutoServiceContainer {
+    public static func viewDidLoad<VC: AutoRouterViewController>(_ viewController: VC) where VC == VC.Factory.VCType {
         if viewController.setupedByRouter { return }
         
         let factory = viewController.createFactoryForSetup()
         factory.setupViewController(viewController)
         
-        testIsSetuped(viewController)
-    }
-    
-    private static func testIsSetuped<VC: AutoRouterViewController>(_ viewController: VC, file: StaticString = #file, line: UInt = #line) {
-        if !viewController.setupedByRouter {
-            DependencyRouterError.failureSetupViewController.assertionFailure(file: file, line: line)
+        if viewController.setupedByRouter == false {
+            DependencyRouterError.failureSetupViewController.assertionFailure()
         }
     }
 }

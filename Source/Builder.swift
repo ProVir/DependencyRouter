@@ -76,9 +76,9 @@ public protocol BuilderRouterReadySetup {
     var viewController: VC { get }
 }
 
-extension BuilderRouter: BuilderRouterReadyCreate where FR.ContainerType: AutoServiceContainer {
+extension BuilderRouter: BuilderRouterReadyCreate where FR: AutoFactoryRouter {
     public var factory: FR {
-        return FR.init(container: FR.ContainerType.init())
+        return FR()
     }
 }
 

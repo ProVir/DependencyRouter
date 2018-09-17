@@ -16,6 +16,13 @@ class ViewController: UIViewController {
         
         
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "next" {
+//            BuilderRouter(SecondViewControllerFactory.self).use(segue: segue).setup().completed()
+        }
+    }
+    
 
     @IBAction func actionNext() {
 //        let presenter = BuilderRouter(SecondViewControllerFactory.self).setContainer(Void()).create().setup()
@@ -25,6 +32,9 @@ class ViewController: UIViewController {
             .prepareHandler { print("Prepare open") }
             .postHandler { print("Post open") }
             .present(on: self)
+        
+//        let viewController = BuilderRouter(SecondViewControllerFactory.self).create().viewController
+//        navigationController?.pushViewController(viewController, animated: true)
     }
     
 }

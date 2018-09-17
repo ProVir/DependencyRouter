@@ -27,7 +27,7 @@ public protocol ParamsWithCallbackFactoryRouter: CoreParamsFactoryRouter, Factor
 
 extension ParamsFactoryRouter {
     public func defaultPresentation(params: ParamsType) -> PresentationRouter {
-        return defaultPresentation
+        return defaultPresentation()
     }
     
     public static func createParams(_ params: ParamsType) -> ParamsType {
@@ -37,7 +37,7 @@ extension ParamsFactoryRouter {
 
 extension ParamsWithCallbackFactoryRouter {
     public func defaultPresentation(params: ParamsType) -> PresentationRouter {
-        return defaultPresentation
+        return defaultPresentation()
     }
     
     public static func createParams(_ params: ParamsType) -> ParamsType {
@@ -73,7 +73,7 @@ extension ParamsFactoryRouter {
         if let params = params as? ParamsType {
             return defaultPresentation(params: params)
         } else {
-            return defaultPresentation
+            return defaultPresentation()
         }
     }
 }
@@ -109,7 +109,7 @@ extension ParamsWithCallbackFactoryRouter {
         if let params = params as? ParamsType {
             return defaultPresentation(params: params)
         } else {
-            return defaultPresentation
+            return defaultPresentation()
         }
     }
 }

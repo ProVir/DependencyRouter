@@ -15,7 +15,9 @@ public protocol FactoryRouter: CoreFactoryRouter {
     init(container: ContainerType)
 }
 
-public protocol LightFactoryRouter: FactoryRouter {
+public protocol LightFactoryRouter: AutoFactoryRouter { }
+
+public protocol AutoFactoryRouter: FactoryRouter {
     init()
 }
 
@@ -28,16 +30,31 @@ public struct EmptyContainer: AutoServiceContainer {
 }
 
 
+public protocol SourceRouterViewController: CoreSourceRouterViewController {
+    associatedtype Factory: FactoryRouter
+    func createFactoryForSetup() -> Factory
+}
+
+public protocol AutoRouterViewController: SourceRouterViewController where Factory: BlankFactoryRouter {
+    var setupedByRouter: Bool { get }
+}
+
+
 ///Wrappers for childViewController support
-public protocol ContainerSupportRouter {
+public protocol ViewContainerSupportRouter {
     func findViewController<VCType: UIViewController>() -> VCType?
 }
+
 
 //MARK: Core
 public protocol CoreFactoryRouter {
     init?(containerAny: Any)
     
-    var defaultPresentation: PresentationRouter { get }
+    func defaultPresentation() -> PresentationRouter
+}
+
+public protocol CoreSourceRouterViewController {
+    func coreCreateFactoryForSetup() -> CoreFactoryRouter
 }
 
 extension FactoryRouter {
@@ -49,8 +66,14 @@ extension FactoryRouter {
         }
     }
     
-    public var defaultPresentation: PresentationRouter {
+    public func defaultPresentation() -> PresentationRouter {
         return ShowPresentationRouter()
+    }
+}
+
+extension FactoryRouter where ContainerType: AutoServiceContainer {
+    public init() {
+        self.init(container: ContainerType())
     }
 }
 
@@ -61,6 +84,18 @@ extension LightFactoryRouter {
     
     public init(container: EmptyContainer) {
         self.init()
+    }
+}
+
+extension SourceRouterViewController {
+    public func coreCreateFactoryForSetup() -> CoreFactoryRouter {
+        return createFactoryForSetup()
+    }
+}
+
+extension SourceRouterViewController where Factory.ContainerType: AutoServiceContainer {
+    public func createFactoryForSetup() -> Factory {
+        return Factory(container: Factory.ContainerType())
     }
 }
 
@@ -77,12 +112,27 @@ public protocol PresentationRouter {
 
 
 //MARK: - Helpers
+extension FactoryRouter {
+    public func createViewController<VC: UIViewController>(storyboardName: String, identifier: String? = nil) -> VC {
+        let sb = UIStoryboard(name: storyboardName, bundle: nil)
+        let viewController: UIViewController
+        
+        if let identifier = identifier {
+            viewController = sb.instantiateViewController(withIdentifier: identifier)
+        } else {
+            viewController = sb.instantiateInitialViewController()!
+        }
+        
+        return viewController as! VC
+    }
+}
+
 
 ///UIViewController -> VCType with support NavigationController wrapper
 public func dependencyRouterFindViewController<VCType: UIViewController>(_ viewController: UIViewController) throws -> VCType {
     if let vc = viewController as? VCType {
         return vc
-    } else if let vc: VCType = (viewController as? ContainerSupportRouter)?.findViewController() {
+    } else if let vc: VCType = (viewController as? ViewContainerSupportRouter)?.findViewController() {
         return vc
     } else {
         throw DependencyRouterError.viewControllerNotFound(VCType.self)

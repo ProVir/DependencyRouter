@@ -7,6 +7,22 @@
 //
 
 import UIKit
+import DependencyRouter
+
+struct ModalViewControllerFactory: LightFactoryRouter, CreatorFactoryRouter, BlankFactoryRouter {
+    
+    func defaultPresentation() -> PresentationRouter {
+        return ModalPresentationRouter(autoWrapped: true, prepareHandler: nil)
+    }
+    
+    func createViewController() -> ModalViewController {
+        return createViewController(storyboardName: "Main", identifier: "modalContent")
+    }
+    
+    func setupViewController(_ viewController: ModalViewController) {
+        
+    }
+}
 
 class ModalViewController: UIViewController {
 

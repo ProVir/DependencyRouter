@@ -73,7 +73,7 @@ extension BuilderRouterReadyCreate where FR: BlankCreatorFactoryRouter {
     public func createAndSetup() -> BuilderRouterReadyPresent<FR.VCType>{
         let factory = self.factory
         let vc = factory.createAndSetupViewController()
-        return .init(viewController: vc, default: factory.defaultPresentation)
+        return .init(viewController: vc, default: factory.defaultPresentation())
     }
 }
 
@@ -81,7 +81,7 @@ extension BuilderRouterReadySetup where FR: BlankFactoryRouter {
     public func setup() -> BuilderRouterReadyPresent<VC> {
         let factory = self.factory
         factory.coreSetupViewController(viewController)
-        return .init(viewController: viewController, default: factory.defaultPresentation)
+        return .init(viewController: viewController, default: factory.defaultPresentation())
     }
 }
 
@@ -90,7 +90,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFact
         let factory = self.factory
         let vc = factory.createViewController()
         factory.coreSetupViewController(vc)
-        return .init(viewController: vc, default: factory.defaultPresentation)
+        return .init(viewController: vc, default: factory.defaultPresentation())
     }
 }
 

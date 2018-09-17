@@ -58,6 +58,9 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
         let handler = PresentationRouterHandler(presentation: presentation, viewController: viewController, prepareHandlers: prepareHandlers, postHandlers: postHandlers)
         handler.present(on: existingController, animated: animated, completionHandler: nil, assertWhenFailure: true)
     }
+    
+    /// Empty stub when used segue.
+    public func completed() { }
 }
 
 
@@ -80,7 +83,11 @@ extension BuilderRouter: BuilderRouterReadyCreate where FR.ContainerType: AutoSe
 }
 
 extension BuilderRouterReadyCreate {
-    public func create<VC: UIViewController>(use viewController: VC) -> BuilderRouter<FR>.ReadySetup<VC> {
+    public func use<VC: UIViewController>(_ viewController: VC) -> BuilderRouter<FR>.ReadySetup<VC> {
         return .init(factory: factory, viewController: viewController)
+    }
+    
+    public func use(segue: UIStoryboardSegue) -> BuilderRouter<FR>.ReadySetup<UIViewController> {
+        return .init(factory: factory, viewController: segue.destination)
     }
 }

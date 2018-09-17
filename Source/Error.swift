@@ -38,6 +38,7 @@ extension DependencyRouterError {
 
 public enum DependencyRouterError: Error {
     case notReadyPresentingViewController(String)
+    case failureSetupViewController
     
 //    case viewControllerNotFactoryRouterSupporting
     case viewControllerNotFound(UIViewController.Type)
@@ -57,6 +58,9 @@ public enum DependencyRouterError: Error {
         switch self {
         case .notReadyPresentingViewController(let detail):
             return "Not ready presenting ViewController: \(detail)"
+            
+        case .failureSetupViewController:
+            return "ViewController setup is failure. Perhaps after a successful configuration you did not set `setupedByRouter = true`"
             
 //        case .viewControllerNotFactoryRouterSupporting:
 //            return "ViewController doesn't conform to FactoryRouterSupporting"

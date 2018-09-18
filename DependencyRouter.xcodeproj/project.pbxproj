@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5040F36C214E287F00A23F08 /* AutoRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040F36A214E284B00A23F08 /* AutoRouter.swift */; };
 		5040F36F214FE75A00A23F08 /* InputSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040F36D214FE74800A23F08 /* InputSource.swift */; };
+		5040F3712150C6E000A23F08 /* UnwindRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040F3702150C6E000A23F08 /* UnwindRouter.swift */; };
 		507C9D7D214382DB00996677 /* DependencyRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 507C9D73214382DB00996677 /* DependencyRouter.framework */; };
 		507C9D82214382DB00996677 /* DependencyRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9D81214382DB00996677 /* DependencyRouterTests.swift */; };
 		507C9D84214382DB00996677 /* DependencyRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = 507C9D76214382DB00996677 /* DependencyRouter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -50,6 +51,7 @@
 /* Begin PBXFileReference section */
 		5040F36A214E284B00A23F08 /* AutoRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRouter.swift; sourceTree = "<group>"; };
 		5040F36D214FE74800A23F08 /* InputSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputSource.swift; sourceTree = "<group>"; };
+		5040F3702150C6E000A23F08 /* UnwindRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwindRouter.swift; sourceTree = "<group>"; };
 		507C9D73214382DB00996677 /* DependencyRouter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DependencyRouter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		507C9D76214382DB00996677 /* DependencyRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DependencyRouter.h; sourceTree = "<group>"; };
 		507C9D77214382DB00996677 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				507C9DAF2143DC4800996677 /* ParamsCallbackFactory.swift */,
 				507C9DB32144BF7400996677 /* ParamsCreatorFactory.swift */,
 				50E7E6212147F4D400FA64E0 /* SimplePresentation.swift */,
+				5040F3702150C6E000A23F08 /* UnwindRouter.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				507C9DA8214385AA00996677 /* Core.swift in Sources */,
 				50E7E6222147F4D400FA64E0 /* SimplePresentation.swift in Sources */,
 				507C9DB02143DC4800996677 /* ParamsCallbackFactory.swift in Sources */,
+				5040F3712150C6E000A23F08 /* UnwindRouter.swift in Sources */,
 				5040F36C214E287F00A23F08 /* AutoRouter.swift in Sources */,
 				507C9DB62144C2A200996677 /* Builder.swift in Sources */,
 				5040F36F214FE75A00A23F08 /* InputSource.swift in Sources */,

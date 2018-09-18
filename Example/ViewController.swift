@@ -35,5 +35,19 @@ class ViewController: UIViewController {
 //        navigationController?.pushViewController(viewController, animated: true)
     }
     
+    @IBAction func unwindCancel(_ segue: UIStoryboardSegue) {
+        if !Router.unwindSegue(ModalViewController.self, segue: segue, callback: { _ in print("unwind empty") }) {
+            Router.unwindSegue(segue: segue, source: self)
+        }
+    }
 }
 
+extension ViewController: CallbackUnwindInputSource {
+    func callbackForUnwindRouter(_ unwindType: CoreUnwindCallbackRouter.Type, segueIdentifier: String?) -> Any? {
+        if unwindType == ModalViewController.self {
+            return ModalViewController.useCallback({ print("Message closed: \($0)") })
+        }
+        
+        return nil
+    }
+}

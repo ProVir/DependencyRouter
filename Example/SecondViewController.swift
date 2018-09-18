@@ -49,7 +49,8 @@ class SecondViewController: UIViewController, AutoRouterViewController {
     
     
     @IBAction func actionModal() {
-        BuilderRouter(ModalViewControllerFactory.self).createAndSetup(params: .init(message: "Hello!"), callback: self).present(on: self)
+        BuilderRouter(ModalViewControllerFactory.self).createAndSetup(params: .init(message: "Hello!"), callback:
+            { print("Closed modal with message: \($0)") }).present(on: self)
     }
     
 }

@@ -140,40 +140,41 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsWit
 
 //MARK: Support InputSource
 private func findParams<ParamsType>(factoryType: CoreFactoryRouter.Type, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws -> ParamsType {
-    guard let inputSource = sourceList.first(where: { $0 is ParamsFactoryInputSource }) as? ParamsFactoryInputSource else {
-        throw DependencyRouterError.inputSourceNotFound(ParamsFactoryInputSource.self)
+    for inputSourceAny in sourceList {
+        guard let inputSource = inputSourceAny as? ParamsFactoryInputSource else { continue }
+        guard let anyParams = inputSource.paramsForFactoryRouter(factoryType, identifier: identifier, sender: sender) else { continue }
+        
+        guard let params = anyParams as? ParamsType else {
+            throw DependencyRouterError.inputDataInvalidType("Params", type(of: anyParams), required: ParamsType.self)
+        }
+        
+        return params
     }
     
-    guard let anyParams = inputSource.paramsForFactoryRouter(factoryType, identifier: identifier, sender: sender) else {
-        throw DependencyRouterError.inputDataNotFound("Params")
-    }
-    
-    guard let params = anyParams as? ParamsType else {
-        throw DependencyRouterError.inputDataInvalidType("Params", type(of: anyParams), required: ParamsType.self)
-    }
-    
-    return params
+    throw DependencyRouterError.inputSourceNotFound(ParamsFactoryInputSource.self)
 }
 
 private func findCallback<CallbackType>(factoryType: CoreFactoryRouter.Type, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws -> CallbackType {
-    guard let inputSource = sourceList.first(where: { $0 is CallbackFactoryInputSource }) as? CallbackFactoryInputSource else {
-        throw DependencyRouterError.inputSourceNotFound(CallbackFactoryInputSource.self)
+    for inputSourceAny in sourceList {
+        guard let inputSource = inputSourceAny as? CallbackFactoryInputSource else { continue }
+        guard let anyCallback = inputSource.callbackForFactoryRouter(factoryType, identifier: identifier, sender: sender) else { continue }
+        
+        guard let callback = anyCallback as? CallbackType else {
+            throw DependencyRouterError.inputDataInvalidType("Callback", type(of: anyCallback), required: CallbackType.self)
+        }
+        
+        return callback
     }
     
-    guard let anyCallback = inputSource.callbackForFactoryRouter(factoryType, identifier: identifier, sender: sender) else {
-        throw DependencyRouterError.inputDataNotFound("Callback")
-    }
-    
-    guard let callback = anyCallback as? CallbackType else {
-        throw DependencyRouterError.inputDataInvalidType("Callback", type(of: anyCallback), required: CallbackType.self)
-    }
-    
-    return callback
+    throw DependencyRouterError.inputSourceNotFound(CallbackFactoryInputSource.self)
 }
 
 extension ParamsFactoryRouter {
     public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
-        let viewController: VCType = try dependencyRouterFindViewController(viewController)
+        guard let viewController = viewController as? VCType else {
+            throw DependencyRouterError.viewControllerNotFound(VCType.self)
+        }
+        
         let params: ParamsType = try findParams(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
   
         setupViewController(viewController, params: params)
@@ -182,7 +183,10 @@ extension ParamsFactoryRouter {
 
 extension CallbackFactoryRouter {
     public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
-        let viewController: VCType = try dependencyRouterFindViewController(viewController)
+        guard let viewController = viewController as? VCType else {
+            throw DependencyRouterError.viewControllerNotFound(VCType.self)
+        }
+        
         let callback: CallbackType = try findCallback(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
         
         setupViewController(viewController, callback: callback)
@@ -191,7 +195,10 @@ extension CallbackFactoryRouter {
 
 extension ParamsWithCallbackFactoryRouter {
     public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
-        let viewController: VCType = try dependencyRouterFindViewController(viewController)
+        guard let viewController = viewController as? VCType else {
+            throw DependencyRouterError.viewControllerNotFound(VCType.self)
+        }
+        
         let params: ParamsType = try findParams(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
         let callback: CallbackType = try findCallback(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
         

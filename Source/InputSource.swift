@@ -24,7 +24,7 @@ extension Router {
     
     @discardableResult
     public static func prepare(for segue: UIStoryboardSegue, sender: Any?, sourceList: [BaseFactoryInputSource]) -> Bool {
-        guard let (viewController, factory) = try? dependencyRouterFindSourceRouterViewController(segue.destination) else {
+        guard let (viewController, factory) = dependencyRouterFindSourceRouterViewController(segue.destination) else {
             return false
         }
         
@@ -72,12 +72,12 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: FactorySu
 }
 
 //MARK: Helpers
-public func dependencyRouterFindSourceRouterViewController(_ viewController: UIViewController) throws -> (UIViewController & CoreSourceRouterViewController, FactorySupportInputSource) {
+public func dependencyRouterFindSourceRouterViewController(_ viewController: UIViewController) -> (UIViewController & CoreSourceRouterViewController, FactorySupportInputSource)? {
     if let vc = viewController as? UIViewController & CoreSourceRouterViewController {
         return (vc, vc.coreCreateFactoryForSetup())
     } else if let vc: UIViewController & CoreSourceRouterViewController = (viewController as? ViewContainerSupportRouter)?.findViewController() {
         return (vc, vc.coreCreateFactoryForSetup())
     } else {
-        throw DependencyRouterError.viewControllerNotFoundSourceRouter
+        return nil
     }
 }

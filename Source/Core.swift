@@ -45,7 +45,7 @@ public protocol CoreFactoryRouter {
     func defaultPresentation() -> PresentationRouter
 }
 
-public protocol CoreSourceRouterViewController {
+public protocol CoreSourceRouterViewController: class {
     func coreCreateFactoryForSetup() -> FactorySupportInputSource
 }
 

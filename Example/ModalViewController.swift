@@ -26,17 +26,22 @@ struct ModalViewControllerFactory: LightFactoryRouter, CreatorFactoryRouter, Par
         return createViewController(storyboardName: "Main", identifier: "modalContent")
     }
     
-    func setupViewController(_ viewController: ModalViewController, params: Params, callback: ModalViewControllerCallback) {
+    func setupViewController(_ viewController: ModalViewController, params: Params, callback: @escaping (String)->Void) {
         viewController.message = params.message
         viewController.callback = callback
     }
 }
 
-class ModalViewController: UIViewController, SourceRouterViewController {
+class ModalViewController: UIViewController, SourceRouterViewController, SelfUnwindRouterViewController {
     typealias Factory = ModalViewControllerFactory
     
+    func unwindUseCallback(callback: @escaping (String)->Void, segueIdentifier: String?) {
+        callback("used UNWIND with id = \(segueIdentifier ?? "")")
+    }
+    
     var message: String!
-    weak var callback: ModalViewControllerCallback?
+//    weak var callback: ModalViewControllerCallback?
+    var callback: (String)->Void = { _ in }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +55,7 @@ class ModalViewController: UIViewController, SourceRouterViewController {
     
     @IBAction func actionClose() {
         navigationController?.dismiss(animated: true, completion: { [callback] in
-            callback?.closedModal()
+            callback("Hello closed!")
         })
     }
     
@@ -76,7 +81,7 @@ extension ModalViewController: ParamsFactoryInputSource, CallbackFactoryInputSou
     
     func callbackForFactoryRouter(_ routerType: CoreFactoryRouter.Type, identifier: String?, sender: Any?) -> Any? {
         if routerType == ModalViewControllerFactory.self {
-            return ModalViewControllerFactory.useCallback(self)
+            return ModalViewControllerFactory.useCallback({ print("Modal: closed other modal, message = \($0)") })
         }
         
         return nil

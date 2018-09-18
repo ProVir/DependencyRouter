@@ -64,7 +64,11 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFact
 //MARK: Support InputSource
 extension BlankFactoryRouter {
     public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
-        setupViewController(try dependencyRouterFindViewController(viewController))
+        if let viewController = viewController as? VCType {
+            setupViewController(viewController)
+        } else {
+            throw DependencyRouterError.viewControllerNotFound(VCType.self)
+        }
     }
 }
 

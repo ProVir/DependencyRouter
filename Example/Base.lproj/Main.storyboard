@@ -61,7 +61,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Ju-JA-Rbo">
                                 <rect key="frame" x="113" y="337" width="149" height="98"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Model"/>
+                                <state key="normal" title="Modal"/>
                                 <connections>
                                     <action selector="actionModal" destination="Puh-4m-u1g" eventType="touchUpInside" id="AX6-Te-gDn"/>
                                 </connections>
@@ -116,7 +116,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TtE-i2-2ba">
                                 <rect key="frame" x="113" y="337" width="149" height="98"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Model"/>
+                                <state key="normal" title="Modal"/>
                                 <connections>
                                     <action selector="actionModal" destination="JFv-RI-2L7" eventType="touchUpInside" id="jOc-jL-zi5"/>
                                 </connections>
@@ -129,10 +129,24 @@
                                     <action selector="actionNext" destination="JFv-RI-2L7" eventType="touchUpInside" id="R1b-HD-Zel"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MCc-sj-7lm">
+                                <rect key="frame" x="113" y="443" width="149" height="98"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Modal Segue"/>
+                                <connections>
+                                    <segue destination="AN8-ZH-jHT" kind="show" id="BqU-sh-PCI"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Модальный" id="kds-Td-vuv"/>
+                    <navigationItem key="navigationItem" title="Модальный" id="kds-Td-vuv">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="SCx-Nm-b1S">
+                            <connections>
+                                <action selector="actionClose" destination="JFv-RI-2L7" id="e5x-fH-3ar"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="in9-Oz-bZW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -155,4 +169,7 @@
             <point key="canvasLocation" x="-890" y="34"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="BqU-sh-PCI"/>
+    </inferredMetricsTieBreakers>
 </document>

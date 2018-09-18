@@ -26,7 +26,7 @@ public protocol BlankCreatorFactoryRouter: FactoryRouter {
 //MARK: Support Builder
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter {
     public func create() -> BuilderRouter<FR>.ReadySetup<FR.VCCreateType> {
-        let factory = self.factory
+        let factory = self.factory()
         let vc = factory.createViewController()
         return .init(factory: factory, viewController: vc)
     }
@@ -44,7 +44,7 @@ extension BuilderRouterReadySetup where FR: BlankFactoryRouter {
 
 extension BuilderRouterReadyCreate where FR: BlankCreatorFactoryRouter {
     public func createAndSetup() -> BuilderRouterReadyPresent<FR.VCType>{
-        let factory = self.factory
+        let factory = self.factory()
         let vc = factory.createAndSetupViewController()
         return .init(viewController: vc, default: factory.defaultPresentation())
     }
@@ -52,7 +52,7 @@ extension BuilderRouterReadyCreate where FR: BlankCreatorFactoryRouter {
 
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFactoryRouter {
     public func createAndSetup() -> BuilderRouterReadyPresent<FR.VCCreateType>{
-        let factory = self.factory
+        let factory = self.factory()
         let viewController = factory.createViewController()
         let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
         
@@ -63,7 +63,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFact
 
 //MARK: Support InputSource
 extension BlankFactoryRouter {
-    public func setup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+    public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
         setupViewController(try dependencyRouterFindViewController(viewController))
     }
 }

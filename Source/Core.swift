@@ -26,14 +26,15 @@ public protocol AutoServiceContainer {
 }
 
 public protocol SourceRouterViewController: CoreSourceRouterViewController {
-    associatedtype Factory: FactoryRouter
+    associatedtype Factory: FactoryRouter & FactorySupportInputSource
     func createFactoryForSetup() -> Factory
 }
 
 ///Wrappers for childViewController support
 public protocol ViewContainerSupportRouter {
-    func findViewController<VCType: UIViewController>() -> VCType?
+    func findViewController<VCType>() -> VCType?
 }
+
 
 public struct Router { }
 
@@ -45,7 +46,7 @@ public protocol CoreFactoryRouter {
 }
 
 public protocol CoreSourceRouterViewController {
-    func coreCreateFactoryForSetup() -> CoreFactoryRouter
+    func coreCreateFactoryForSetup() -> FactorySupportInputSource
 }
 
 extension FactoryRouter {
@@ -85,7 +86,7 @@ extension LightFactoryRouter {
 }
 
 extension SourceRouterViewController {
-    public func coreCreateFactoryForSetup() -> CoreFactoryRouter {
+    public func coreCreateFactoryForSetup() -> FactorySupportInputSource {
         return createFactoryForSetup()
     }
 }
@@ -142,6 +143,7 @@ public func dependencyRouterFindViewControllerOrFatalError<VCType: UIViewControl
         try dependencyRouterFindViewController(viewController)
     }
 }
+
 
 
 public struct PresentationRouterHandler {

@@ -18,9 +18,7 @@ class ViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "next" {
-//            BuilderRouter(SecondViewControllerFactory.self).use(segue: segue).setup().completed()
-        }
+        Router.prepare(for: segue, sender: sender, source: nil)
     }
     
 

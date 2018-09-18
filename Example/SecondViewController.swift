@@ -40,18 +40,22 @@ class SecondViewController: UIViewController, AutoRouterViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
+        Router.prepare(for: segue, sender: sender, source: nil)
     }
     
     @IBAction func actionNext() {
-        
-        
+        BuilderRouter(SecondViewControllerFactory.self).createAndSetup().present(on: self)
     }
     
     
     @IBAction func actionModal() {
-        
-        
+        BuilderRouter(ModalViewControllerFactory.self).createAndSetup(params: .init(message: "Hello!"), callback: self).present(on: self)
     }
     
+}
+
+extension SecondViewController: ModalViewControllerCallback {
+    func closedModal() {
+        print("Closed last modal")
+    }
 }

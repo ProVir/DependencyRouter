@@ -41,13 +41,13 @@ public struct ShowPresentationRouter: PresentationRouter {
 
 /// Present ViewController as Modal
 public struct ModalPresentationRouter: PresentationRouter {
-    public var canAutoWrappedNavigtionController: Bool = false
+    public var canAutoWrappedNavigtionController: Bool = true
     public var canDismissOtherPresented: Bool = false
     
     public var prepareHandler: ((UIViewController)->Void)? = nil
     public var postHandler: ((UIViewController)->Void)? = nil
     
-    public init(autoWrapped: Bool = false, dismissOtherPresented: Bool = false, prepareHandler: ((UIViewController)->Void)? = nil) {
+    public init(autoWrapped: Bool = true, dismissOtherPresented: Bool = false, prepareHandler: ((UIViewController)->Void)? = nil) {
         self.canAutoWrappedNavigtionController = autoWrapped
         self.canDismissOtherPresented = dismissOtherPresented
         self.prepareHandler = prepareHandler

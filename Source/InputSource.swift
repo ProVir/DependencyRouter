@@ -8,14 +8,33 @@
 
 import Foundation
 
-
 public protocol BaseFactoryInputSource { }
 
 public protocol FactorySupportInputSource: CoreFactoryRouter {
-    func setup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws
+    func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws
 }
 
 
+//MARK: Auto Setup from segue
+extension Router {
+    @discardableResult
+    public static func prepare(for segue: UIStoryboardSegue, sender: Any?, source: BaseFactoryInputSource?) -> Bool {
+        return prepare(for: segue, sender: sender, sourceList: source.map({ [$0] }) ?? [])
+    }
+    
+    @discardableResult
+    public static func prepare(for segue: UIStoryboardSegue, sender: Any?, sourceList: [BaseFactoryInputSource]) -> Bool {
+        guard let (viewController, factory) = try? dependencyRouterFindSourceRouterViewController(segue.destination) else {
+            return false
+        }
+        
+        DependencyRouterError.tryAsFatalError {
+            try factory.coreSetup(viewController, sourceList: sourceList, identifier: segue.identifier, sender: sender)
+        }
+        
+        return true
+    }
+}
 
 
 //MARK: Support Builder
@@ -28,7 +47,7 @@ extension BuilderRouterReadySetup where FR: FactoryRouter, FR: FactorySupportInp
         
         let factory = self.factory
         DependencyRouterError.tryAsFatalError {
-            try factory.setup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+            try factory.coreSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
         }
  
         return .init(viewController: viewController, default: factory.defaultPresentation())
@@ -41,13 +60,24 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: FactorySu
     }
     
     public func createAndSetup(sourceList: [BaseFactoryInputSource], identifier: String? = nil, sender: Any? = nil) -> BuilderRouterReadyPresent<FR.VCCreateType> {
-        let factory = self.factory
+        let factory = self.factory()
         let viewController = factory.createViewController()
         
         DependencyRouterError.tryAsFatalError {
-            try factory.setup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+            try factory.coreSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
         }
         
         return .init(viewController: viewController, default: factory.defaultPresentation())
+    }
+}
+
+//MARK: Helpers
+public func dependencyRouterFindSourceRouterViewController(_ viewController: UIViewController) throws -> (UIViewController & CoreSourceRouterViewController, FactorySupportInputSource) {
+    if let vc = viewController as? UIViewController & CoreSourceRouterViewController {
+        return (vc, vc.coreCreateFactoryForSetup())
+    } else if let vc: UIViewController & CoreSourceRouterViewController = (viewController as? ViewContainerSupportRouter)?.findViewController() {
+        return (vc, vc.coreCreateFactoryForSetup())
+    } else {
+        throw DependencyRouterError.viewControllerNotFoundSourceRouter
     }
 }

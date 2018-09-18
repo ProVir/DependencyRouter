@@ -10,7 +10,10 @@ import UIKit
 
 public struct BuilderRouter<FR: FactoryRouter> {
     public struct ReadyCreate: BuilderRouterReadyCreate {
-        public let factory: FR
+        public init(factory: FR) { storeFactory = factory }
+        
+        public let storeFactory: FR
+        public func factory() -> FR { return storeFactory }
     }
     
     public struct ReadySetup<VC: UIViewController>: BuilderRouterReadySetup {
@@ -66,7 +69,7 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
 
 public protocol BuilderRouterReadyCreate {
     associatedtype FR: FactoryRouter
-    var factory: FR { get }
+    func factory() -> FR
 }
 
 public protocol BuilderRouterReadySetup {
@@ -77,17 +80,17 @@ public protocol BuilderRouterReadySetup {
 }
 
 extension BuilderRouter: BuilderRouterReadyCreate where FR: AutoFactoryRouter {
-    public var factory: FR {
+    public func factory() -> FR {
         return FR()
     }
 }
 
 extension BuilderRouterReadyCreate {
     public func use<VC: UIViewController>(_ viewController: VC) -> BuilderRouter<FR>.ReadySetup<VC> {
-        return .init(factory: factory, viewController: viewController)
+        return .init(factory: factory(), viewController: viewController)
     }
     
     public func use(segue: UIStoryboardSegue) -> BuilderRouter<FR>.ReadySetup<UIViewController> {
-        return .init(factory: factory, viewController: segue.destination)
+        return .init(factory: factory(), viewController: segue.destination)
     }
 }

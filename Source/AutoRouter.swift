@@ -34,12 +34,3 @@ extension Router {
     }
 }
 
-//MARK: Auto Setup from segue
-extension Router {
-    public static func prepare(for segue: UIStoryboardSegue, sender: Any?) -> Bool {
-        
-        
-        return false
-    }
-}
-

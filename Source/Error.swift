@@ -40,8 +40,8 @@ public enum DependencyRouterError: Error {
     case notReadyPresentingViewController(String)
     case failureSetupViewController
     
-//    case viewControllerNotFactoryRouterSupporting
     case viewControllerNotFound(UIViewController.Type)
+    case viewControllerNotFoundSourceRouter
     
 //    case factoryRouterNotFound
 //    case factoryRouterInvalidType(CoreFactoryRouter.Type)
@@ -67,6 +67,9 @@ public enum DependencyRouterError: Error {
 
         case .viewControllerNotFound(let vcType):
             return "ViewController with type \(vcType) not found"
+            
+        case .viewControllerNotFoundSourceRouter:
+            return "SourceRouterViewController not found"
 
 //        case .factoryRouterNotFound:
 //            return "Not found ViewController conformed to FactoryRouterSupporting"

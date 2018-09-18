@@ -10,7 +10,7 @@ import UIKit
 
 //MARK: Containers
 extension UINavigationController: ViewContainerSupportRouter {
-    public func findViewController<VCType: UIViewController>() -> VCType? {
+    public func findViewController<VCType>() -> VCType? {
         if let vc = viewControllers.first as? VCType {
             return vc
         } else if let container = viewControllers.first as? ViewContainerSupportRouter {

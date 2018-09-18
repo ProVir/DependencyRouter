@@ -107,7 +107,7 @@ extension BuilderRouterReadySetup where FR: ParamsWithCallbackFactoryRouter {
 
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsFactoryRouter {
     public func createAndSetup(params: FR.ParamsType) -> BuilderRouterReadyPresent<FR.VCCreateType> {
-        let factory = self.factory
+        let factory = self.factory()
         let viewController = factory.createViewController()
         let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
         
@@ -118,7 +118,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsFac
 
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: CallbackFactoryRouter {
     public func createAndSetup(callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCCreateType> {
-        let factory = self.factory
+        let factory = self.factory()
         let viewController = factory.createViewController()
         let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
         
@@ -129,7 +129,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: CallbackF
 
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsWithCallbackFactoryRouter {
     public func createAndSetup(params: FR.ParamsType, callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCCreateType> {
-        let factory = self.factory
+        let factory = self.factory()
         let viewController = factory.createViewController()
         let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
         
@@ -172,7 +172,7 @@ private func findCallback<CallbackType>(factoryType: CoreFactoryRouter.Type, sou
 }
 
 extension ParamsFactoryRouter {
-    public func setup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+    public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
         let viewController: VCType = try dependencyRouterFindViewController(viewController)
         let params: ParamsType = try findParams(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
   
@@ -181,7 +181,7 @@ extension ParamsFactoryRouter {
 }
 
 extension CallbackFactoryRouter {
-    public func setup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+    public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
         let viewController: VCType = try dependencyRouterFindViewController(viewController)
         let callback: CallbackType = try findCallback(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
         
@@ -190,7 +190,7 @@ extension CallbackFactoryRouter {
 }
 
 extension ParamsWithCallbackFactoryRouter {
-    public func setup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+    public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
         let viewController: VCType = try dependencyRouterFindViewController(viewController)
         let params: ParamsType = try findParams(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
         let callback: CallbackType = try findCallback(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)

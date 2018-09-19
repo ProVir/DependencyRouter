@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.author       = { "ViR (Vitaliy Korotkiy)" => "admin@provir.ru" }
   s.source       = { :git => "https://github.com/ProVir/DependencyRouter.git", :tag => "#{s.version}" }
 
-  s.swift_version = '4'
+  s.swift_version = '4.2'
 
   s.ios.deployment_target = '8.0'
   

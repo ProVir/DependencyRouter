@@ -46,7 +46,7 @@ class ModalViewController: UIViewController, SourceRouterViewController, SelfUnw
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        print("Presented with Message: \(message)")
+        print("Presented with Message: \(message!)")
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

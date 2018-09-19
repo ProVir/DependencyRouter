@@ -38,6 +38,14 @@ public protocol ViewContainerSupportRouter {
 
 public struct Router { }
 
+public protocol PresentNavigationRouter {
+    var associatedViewController: UIViewController? { get }
+    var sourceList: [BaseFactoryInputSource] { get }
+    
+    func performSegue(withIdentifier identifier: String, sourceList: [BaseFactoryInputSource], sender: Any?)
+}
+
+
 //MARK: Core
 public protocol CoreFactoryRouter {
     init?(containerAny: Any)

@@ -53,12 +53,14 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
     }
 
     public func present(on existingController: UIViewController, animated: Bool = true) {
-        let handler = PresentationRouterHandler(presentation: defaultPresentationSource(), viewController: viewController, prepareHandlers: prepareHandlers, postHandlers: postHandlers)
-        handler.present(on: existingController, animated: animated, completionHandler: nil, assertWhenFailure: true)
+        present(on: existingController, presentation: nil, animated: animated)
     }
     
-    public func present(_ presentation: PresentationRouter, on existingController: UIViewController, animated: Bool = true) {
-        let handler = PresentationRouterHandler(presentation: presentation, viewController: viewController, prepareHandlers: prepareHandlers, postHandlers: postHandlers)
+    public func present(on existingController: UIViewController, presentation: PresentationRouter?, animated: Bool = true) {
+        let handler = PresentationRouterHandler(presentation: presentation ?? defaultPresentationSource(),
+                                                viewController: viewController,
+                                                prepareHandlers: prepareHandlers,
+                                                postHandlers: postHandlers)
         handler.present(on: existingController, animated: animated, completionHandler: nil, assertWhenFailure: true)
     }
     

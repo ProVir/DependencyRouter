@@ -1,6 +1,6 @@
 //
 //  AutoRouter.swift
-//  Example
+//  DependencyRouter
 //
 //  Created by Короткий Виталий on 16.09.2018.
 //  Copyright © 2018 ProVir. All rights reserved.

@@ -78,12 +78,12 @@ extension Router {
     }
     
     @discardableResult
-    public static func unwindSegue(segue: UIStoryboardSegue, source: CallbackUnwindInputSource) -> Bool {
-        return unwindSegue(segue: segue, sourceList: [source])
+    public static func unwindSegue(_ segue: UIStoryboardSegue, source: CallbackUnwindInputSource) -> Bool {
+        return unwindSegue(segue, sourceList: [source])
     }
     
     @discardableResult
-    public static func unwindSegue(segue: UIStoryboardSegue, sourceList: [BaseFactoryInputSource]) -> Bool {
+    public static func unwindSegue(_ segue: UIStoryboardSegue, sourceList: [BaseFactoryInputSource]) -> Bool {
         guard let viewController = dependencyRouterFindUnwindRouterViewController(segue.source) else {
             return false
         }

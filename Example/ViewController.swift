@@ -37,7 +37,7 @@ class ViewController: UIViewController {
     
     @IBAction func unwindCancel(_ segue: UIStoryboardSegue) {
         if !Router.unwindSegue(ModalViewController.self, segue: segue, callback: { _ in print("unwind empty") }) {
-            Router.unwindSegue(segue: segue, source: self)
+            Router.unwindSegue(segue, source: self)
         }
     }
 }

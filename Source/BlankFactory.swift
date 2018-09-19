@@ -61,6 +61,21 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFact
     }
 }
 
+//MARK: Support Present NavigationRouter
+extension PresentNavigationRouter {
+    func present<FR: AutoFactoryRouter & CreatorFactoryRouter & BlankFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
+        if let viewController = associatedViewController {
+            BuilderRouter(routerType).createAndSetup().present(on: viewController, presentation: presentation, animated: animated)
+        }
+    }
+    
+    func present<FR: AutoFactoryRouter & BlankCreatorFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
+        if let viewController = associatedViewController {
+            BuilderRouter(routerType).createAndSetup().present(on: viewController, presentation: presentation, animated: animated)
+        }
+    }
+}
+
 //MARK: Support InputSource
 extension BlankFactoryRouter {
     public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {

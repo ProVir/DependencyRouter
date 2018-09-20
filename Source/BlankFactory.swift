@@ -62,20 +62,20 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFact
 }
 
 //MARK: Support Present NavigationRouter
-extension PresentNavigationRouter {
-    func present<FR: AutoFactoryRouter & CreatorFactoryRouter & BlankFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
+extension SimplePresentNavigationRouter {
+    public func simplePresent<FR: CreatorFactoryRouter & BlankFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup().present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    func present<FR: AutoFactoryRouter & BlankCreatorFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresent<FR: BlankCreatorFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup().present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    func performSegue<FR: BlankFactoryRouter>(withIdentifier identifier: String, factory: FR, sender: Any? = nil) {
+    public func performSegue<FR: BlankFactoryRouter>(withIdentifier identifier: String, factory: FR, sender: Any? = nil) {
         performSegue(withIdentifier: identifier, factory: factory, sourceList: [], sender: sender)
     }
 }

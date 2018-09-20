@@ -194,57 +194,57 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsWit
     }
 }
 
-extension PresentNavigationRouter {
+extension SimplePresentNavigationRouter {
     //MARK: Support Present NavigationRouter - input params
-    func present<FR: AutoFactoryRouter & CreatorFactoryRouter & ParamsFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresent<FR: CreatorFactoryRouter & ParamsFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup(params: params).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    func present<FR: AutoFactoryRouter & CreatorFactoryRouter & CallbackFactoryRouter>(_ routerType: FR.Type, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresent<FR: CreatorFactoryRouter & CallbackFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup(callback: callback).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    func present<FR: AutoFactoryRouter & CreatorFactoryRouter & ParamsWithCallbackFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresent<FR: CreatorFactoryRouter & ParamsWithCallbackFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup(params: params, callback: callback).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
     //MARK: Support Present NavigationRouter - input source
-    func present<FR: AutoFactoryRouter & CreatorFactoryRouter & ParamsFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresentUseSource<FR: CreatorFactoryRouter & ParamsFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).create().setup(sourceList: sourceList).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    func present<FR: AutoFactoryRouter & CreatorFactoryRouter & CallbackFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresentUseSource<FR: CreatorFactoryRouter & CallbackFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).create().setup(sourceList: sourceList).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    func present<FR: AutoFactoryRouter & CreatorFactoryRouter & ParamsWithCallbackFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresentUseSource<FR: CreatorFactoryRouter & ParamsWithCallbackFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).create().setup(sourceList: sourceList).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
     //MARK: Support Present NavigationRouter - perform segue
-    func performSegue<FR: ParamsFactoryRouter>(withIdentifier identifier: String, factory: FR, params: FR.ParamsType, sender: Any? = nil) {
+    public func performSegue<FR: ParamsFactoryRouter>(withIdentifier identifier: String, factory: FR, params: FR.ParamsType, sender: Any? = nil) {
         let paramsStore = ParamsFactoryInputSourceStore(FR.self, params: params)
         performSegue(withIdentifier: identifier, factory: factory, sourceList: [paramsStore], sender: sender)
     }
     
-    func performSegue<FR: CallbackFactoryRouter>(withIdentifier identifier: String, factory: FR, callback: FR.CallbackType, sender: Any? = nil) {
+    public func performSegue<FR: CallbackFactoryRouter>(withIdentifier identifier: String, factory: FR, callback: FR.CallbackType, sender: Any? = nil) {
         let callbackStore = CallbackFactoryInputSourceStore(FR.self, callback: callback)
         performSegue(withIdentifier: identifier, factory: factory, sourceList: [callbackStore], sender: sender)
     }
     
-    func performSegue<FR: ParamsWithCallbackFactoryRouter>(withIdentifier identifier: String, factory: FR, params: FR.ParamsType, callback: FR.CallbackType, sender: Any? = nil) {
+    public func performSegue<FR: ParamsWithCallbackFactoryRouter>(withIdentifier identifier: String, factory: FR, params: FR.ParamsType, callback: FR.CallbackType, sender: Any? = nil) {
         let paramsStore = ParamsFactoryInputSourceStore(FR.self, params: params)
         let callbackStore = CallbackFactoryInputSourceStore(FR.self, callback: callback)
         performSegue(withIdentifier: identifier, factory: factory, sourceList: [paramsStore, callbackStore], sender: sender)

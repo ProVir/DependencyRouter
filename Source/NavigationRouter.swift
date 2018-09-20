@@ -9,7 +9,7 @@
 import UIKit
 
 
-open class BaseNavigationRouter: PresentNavigationRouter, SegueRouterSupport {
+open class BaseNavigationRouter: SimplePresentNavigationRouter {
     open weak var associatedViewController: UIViewController?
     open weak var source: (AnyObject & BaseFactoryInputSource)?
     
@@ -25,7 +25,7 @@ open class BaseNavigationRouter: PresentNavigationRouter, SegueRouterSupport {
         return list
     }
     
-    public init(viewController: UIViewController?) {
+    public init(_ viewController: UIViewController?) {
         self.associatedViewController = viewController
     }
 
@@ -65,25 +65,33 @@ public class NullModel {
     private init() { }
 }
 
+public typealias VCNavigationRouter<VC: UIViewController> = NavigationRouter<VC, NullModel>
+
 open class NavigationRouter<VC: UIViewController, M: AnyObject>: BaseNavigationRouter {
     ///RouterModel with data for next Screens.
     public let model: M
     
     ///Require ViewController, RouterModel (can be ViewModel or Model).
-    public init(viewController: VC, routerModel: M) {
+    public init(_ viewController: VC, routerModel: M) {
         self.model = routerModel
-        super.init(viewController: viewController)
+        super.init(viewController)
     }
     
     ///Current ViewController for router.
     public var viewController: VC {
         return associatedViewController as! VC
     }
+    
+    open override var sourceList: [BaseFactoryInputSource] {
+        var list = super.sourceList
+        if let source = model as? BaseFactoryInputSource { list.append(source) }
+        return list
+    }
 }
 
 extension NavigationRouter where M == NullModel {
-    ///Require ViewController and Provider.
-    public convenience init(viewController: VC) {
-        self.init(viewController: viewController, routerModel: NullModel.null)
+    ///Require ViewController.
+    public convenience init(_ viewController: VC) {
+        self.init(viewController, routerModel: NullModel.null)
     }
 }

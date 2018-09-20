@@ -8,12 +8,6 @@
 
 import UIKit
 
-protocol SegueRouterSupport {
-    var segueRouter: SegueRouter { get }
-    
-    
-    
-}
 
 public class SegueRouter {
     

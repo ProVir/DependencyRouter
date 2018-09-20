@@ -20,14 +20,46 @@ struct SecondViewControllerFactory: AutoFactoryRouter, CreatorFactoryRouter, Bla
     }
     
     func setupViewController(_ viewController: SecondViewController) {
+        viewController.router = SecondViewControllerRouter(viewController)
         viewController.data = "setuped"
         viewController.setupedByRouter = true
+    }
+}
+
+class SecondViewControllerRouter: VCNavigationRouter<SecondViewController>, ParamsFactoryInputSource, CallbackFactoryInputSource {
+    func presentNext() {
+        simplePresent(SecondViewControllerFactory.self)
+    }
+    
+    func presentModal() {
+//        BuilderRouter(ModalViewControllerFactory.self).createAndSetup(params: .init(message: "Hello!"), callback:{ print("Closed modal with message: \($0)") }).present(on: associatedViewController!)
+//        simplePresent(ModalViewControllerFactory.self, params: .init(message: "Hello!"), callback:{ print("Closed modal with message: \($0)") })
+        simplePresentUseSource(ModalViewControllerFactory.self)
+    }
+    
+    
+    func paramsForFactoryRouter(_ routerType: CoreFactoryRouter.Type, identifier: String?, sender: Any?) -> Any? {
+        if routerType == ModalViewControllerFactory.self {
+            return ModalViewControllerFactory.Params(message: viewController.data)
+        }
+        
+        return nil
+    }
+    
+    func callbackForFactoryRouter(_ routerType: CoreFactoryRouter.Type, identifier: String?, sender: Any?) -> Any? {
+        if routerType == ModalViewControllerFactory.self {
+            return ModalViewControllerFactory.useCallback({ print("Closed modal with message: \($0)") })
+        }
+        
+        return nil
     }
 }
 
 class SecondViewController: UIViewController, AutoRouterViewController {
     typealias Factory = SecondViewControllerFactory
     var setupedByRouter = false
+    
+    var router: SecondViewControllerRouter!
     
     var data = ""
 
@@ -40,19 +72,17 @@ class SecondViewController: UIViewController, AutoRouterViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        Router.prepare(for: segue, sender: sender, source: nil)
+        router.prepare(for: segue, sender: sender)
     }
     
     @IBAction func actionNext() {
-        BuilderRouter(SecondViewControllerFactory.self).createAndSetup().present(on: self)
+        router.presentNext()
     }
     
     
     @IBAction func actionModal() {
-        BuilderRouter(ModalViewControllerFactory.self).createAndSetup(params: .init(message: "Hello!"), callback:
-            { print("Closed modal with message: \($0)") }).present(on: self)
+        router.presentModal()
     }
-    
 }
 
 extension SecondViewController: ModalViewControllerCallback {

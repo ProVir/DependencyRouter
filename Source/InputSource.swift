@@ -14,7 +14,7 @@ public protocol FactorySupportInputSource: CoreFactoryRouter {
     func coreFindAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws
 }
 
-public protocol PresentNavigationRouter {
+public protocol SimplePresentNavigationRouter {
     var associatedViewController: UIViewController? { get }
     var sourceList: [BaseFactoryInputSource] { get }
     

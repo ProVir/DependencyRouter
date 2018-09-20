@@ -32,8 +32,20 @@ struct ModalViewControllerFactory: LightFactoryRouter, CreatorFactoryRouter, Par
     }
 }
 
+class ModalViewControllerRouter: BaseNavigationRouter {
+    func presentNext() {
+        BuilderRouter(SecondViewControllerFactory.self).createAndSetup().present(on: associatedViewController!)
+    }
+    
+    func presentModal() {
+        //        BuilderRouter(ModalViewControllerFactory.self).createAndSetup(params: .init(message: "Hello!"), callback:{ print("Closed modal with message: \($0)") }).present(on: associatedViewController!)
+        simplePresentUseSource(ModalViewControllerFactory.self)
+    }
+}
+
 class ModalViewController: UIViewController, SourceRouterViewController, SelfUnwindRouterViewController {
     typealias Factory = ModalViewControllerFactory
+    private lazy var router = ModalViewControllerRouter(self)
     
     func unwindUseCallback(callback: @escaping (String)->Void, segueIdentifier: String?) {
         callback("used UNWIND with id = \(segueIdentifier ?? "")")
@@ -50,22 +62,21 @@ class ModalViewController: UIViewController, SourceRouterViewController, SelfUnw
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        Router.prepare(for: segue, sender: sender, source: self)
+        router.prepare(for: segue, sender: sender)
     }
     
     @IBAction func actionClose() {
-        navigationController?.dismiss(animated: true, completion: { [callback] in
-            callback("Hello closed!")
-        })
+        router.dismiss()
     }
     
     @IBAction func actionNext() {
-        BuilderRouter(SecondViewControllerFactory.self).createAndSetup().present(on: self)
+        router.presentNext()
     }
     
     
     @IBAction func actionModal() {
-        BuilderRouter(ModalViewControllerFactory.self).createAndSetup(source: self).present(on: self)
+        router.presentModal()
+//        BuilderRouter(ModalViewControllerFactory.self).createAndSetup(source: self).present(on: self)
     }
 
 }

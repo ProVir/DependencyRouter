@@ -92,20 +92,20 @@ extension BuilderRouterReadyCreate where FR: BlankCreatorWithCallbackFactoryRout
 
 
 //MARK: Support Present NavigationRouter - input params
-extension PresentNavigationRouter {
-    func present<FR: AutoFactoryRouter & ParamsCreatorFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, presentation: PresentationRouter? = nil, animated: Bool = true) {
+extension SimplePresentNavigationRouter {
+    public func simplePresent<FR: ParamsCreatorFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup(params: params).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    func present<FR: AutoFactoryRouter & CreatorFactoryRouter & ParamsCreatorWithCallbackFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresent<FR: CreatorFactoryRouter & ParamsCreatorWithCallbackFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup(params: params, callback: callback).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    func present<FR: AutoFactoryRouter & CreatorFactoryRouter & BlankCreatorWithCallbackFactoryRouter>(_ routerType: FR.Type, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresent<FR: CreatorFactoryRouter & BlankCreatorWithCallbackFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup(callback: callback).present(on: viewController, presentation: presentation, animated: animated)
         }

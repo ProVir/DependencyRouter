@@ -9,36 +9,42 @@
 import UIKit
 import DependencyRouter
 
-class ViewController: UIViewController {
+struct ViewControllerFactory: LightFactoryRouter, BlankFactoryRouter {
+    func setupViewController(_ viewController: ViewController) {
+        viewController.router = ViewControllerRouter(viewController)
+    }
+}
 
+class ViewControllerRouter: VCNavigationRouter<ViewController> {
+    func presentNext() {
+        simplePresent(SecondViewControllerFactory.self)
+//        performSegue(withIdentifier: "next", factory: SecondViewControllerFactory())
+    }
+}
+
+class ViewController: UIViewController, AutoRouterViewController {
+    typealias Factory = ViewControllerFactory
+    var setupedByRouter: Bool { return router != nil }
+    
+    var router: ViewControllerRouter!
+    
     override func viewDidLoad() {
+        Router.viewDidLoad(self)
         super.viewDidLoad()
         
         
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        Router.prepare(for: segue, sender: sender, source: nil)
+        router.prepare(for: segue, sender: sender)
     }
-    
 
     @IBAction func actionNext() {
-//        let presenter = BuilderRouter(SecondViewControllerFactory.self).setContainer(Void()).create().setup()
-//        BuilderRouter(SecondViewControllerFactory.self).createAndSetup().present(NavigationControllerPresentationRouter(), on: self)
-   
-        BuilderRouter(SecondViewControllerFactory.self).createAndSetup()
-            .prepareHandler { print("Prepare open") }
-            .postHandler { print("Post open") }
-            .present(on: self)
-        
-//        let viewController = BuilderRouter(SecondViewControllerFactory.self).create().viewController
-//        navigationController?.pushViewController(viewController, animated: true)
+        router.presentNext()
     }
     
     @IBAction func unwindCancel(_ segue: UIStoryboardSegue) {
-        if !Router.unwindSegue(ModalViewController.self, segue: segue, callback: { _ in print("unwind empty") }) {
-            Router.unwindSegue(segue, source: self)
-        }
+        router.unwindSegue(segue)
     }
 }
 

@@ -42,15 +42,12 @@ public enum DependencyRouterError: Error {
     
     case viewControllerNotFound(Any.Type)
     
-//    case factoryRouterNotFound
-//    case factoryRouterInvalidType(CoreFactoryRouter.Type)
+    case containerNotFound(Any.Type)
+    case containerInvalidType(Any.Type, routerType: CoreFactoryRouter.Type)
     
     case inputSourceNotFound(Any)
     case inputDataInvalidType(String, Any.Type, required: Any.Type)
     case inputDataNotFound(String)
-    
-//    case containerInvalidType(Any.Type, routerType: CoreFactoryRouter.Type)
-//    case stateRestoreContainerNotFound(type: Any.Type, identifier:String?)
     
     
     public var description: String {
@@ -61,18 +58,14 @@ public enum DependencyRouterError: Error {
         case .failureSetupViewController:
             return "ViewController setup is failure. Perhaps after a successful configuration you did not set `setupedByRouter = true`"
             
-//        case .viewControllerNotFactoryRouterSupporting:
-//            return "ViewController doesn't conform to FactoryRouterSupporting"
-
         case .viewControllerNotFound(let vcType):
             return "ViewController with type \(vcType) not found"
             
-
-//        case .factoryRouterNotFound:
-//            return "Not found ViewController conformed to FactoryRouterSupporting"
-//
-//        case .factoryRouterInvalidType(let routerType):
-//            return "Invalid factory router type \(routerType)"
+        case .containerNotFound(let containerType):
+            return "Not found \(containerType) in source service container"
+            
+        case .containerInvalidType(let containerType, routerType: let routerType):
+            return "Invalid container type \(containerType) for FactoryRouter type \(routerType)"
             
         case .inputSourceNotFound(let sourceType):
             return "Not found \(sourceType) in input source list"
@@ -82,12 +75,6 @@ public enum DependencyRouterError: Error {
             
         case .inputDataNotFound(let dataName):
             return "\(dataName) not found"
-            
-//        case .containerInvalidType(let providerType, routerType: let routerType):
-//            return "Invalid container type \(providerType) for FactoryRouter type \(routerType)"
-//
-//        case .stateRestoreContainerNotFound(type: let type, identifier: let identifier):
-//            return "Not found container with type \(type) for state restore with identifier = \"\(identifier ?? "nil")\""
         }
     }
     

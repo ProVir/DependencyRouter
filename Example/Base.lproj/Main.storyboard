@@ -21,17 +21,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7ec-Ob-b8d">
-                                <rect key="frame" x="113" y="284" width="149" height="98"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7ec-Ob-b8d">
+                                <rect key="frame" x="105.5" y="286.5" width="164" height="94"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="164" id="HTq-KA-X6U"/>
+                                    <constraint firstAttribute="height" constant="94" id="Xhs-f4-g3D"/>
+                                </constraints>
                                 <state key="normal" title="Next"/>
                                 <connections>
                                     <action selector="actionNext" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Fx-b8-wYD"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5oQ-r6-coX">
-                                <rect key="frame" x="113" y="390" width="149" height="93"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5oQ-r6-coX">
+                                <rect key="frame" x="105.5" y="388.5" width="164" height="94"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="94" id="6WW-IW-VgK"/>
+                                </constraints>
                                 <state key="normal" title="Segue"/>
                                 <connections>
                                     <segue destination="Puh-4m-u1g" kind="show" identifier="next" id="nhQ-5G-Yl8"/>
@@ -39,6 +44,13 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="5oQ-r6-coX" firstAttribute="top" secondItem="7ec-Ob-b8d" secondAttribute="bottom" constant="8" symbolic="YES" id="AiO-ww-PCz"/>
+                            <constraint firstItem="7ec-Ob-b8d" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="YWR-ax-GpE"/>
+                            <constraint firstItem="7ec-Ob-b8d" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5oQ-r6-coX" secondAttribute="leading" id="c1w-An-jA5"/>
+                            <constraint firstItem="7ec-Ob-b8d" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="5oQ-r6-coX" secondAttribute="trailing" id="cMr-of-ds7"/>
+                            <constraint firstItem="7ec-Ob-b8d" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="xSK-bT-CG1"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Главная" id="2Yi-fZ-0qg"/>
                 </viewController>
@@ -58,17 +70,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Ju-JA-Rbo">
-                                <rect key="frame" x="113" y="337" width="149" height="98"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Ju-JA-Rbo">
+                                <rect key="frame" x="106" y="380" width="164" height="94"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="94" id="dcS-Oa-EhC"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="164" id="f3G-p7-fyg"/>
+                                </constraints>
                                 <state key="normal" title="Modal"/>
                                 <connections>
                                     <action selector="actionModal" destination="Puh-4m-u1g" eventType="touchUpInside" id="AX6-Te-gDn"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yaX-SA-GEl">
-                                <rect key="frame" x="113" y="231" width="149" height="98"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yaX-SA-GEl">
+                                <rect key="frame" x="106" y="287" width="164" height="94"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="164" id="UHr-bT-cKv"/>
+                                    <constraint firstAttribute="height" constant="94" id="bP4-tt-c6f"/>
+                                </constraints>
                                 <state key="normal" title="Next"/>
                                 <connections>
                                     <action selector="actionNext" destination="Puh-4m-u1g" eventType="touchUpInside" id="y4D-iU-Z9h"/>
@@ -76,6 +94,12 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="yaX-SA-GEl" firstAttribute="centerX" secondItem="9yt-dk-TGU" secondAttribute="centerX" id="Pdq-EG-DFa"/>
+                            <constraint firstItem="3Ju-JA-Rbo" firstAttribute="top" secondItem="yaX-SA-GEl" secondAttribute="bottom" id="a3r-9a-fsp"/>
+                            <constraint firstItem="3Ju-JA-Rbo" firstAttribute="centerX" secondItem="9yt-dk-TGU" secondAttribute="centerX" id="kxP-SG-Ep2"/>
+                            <constraint firstItem="yaX-SA-GEl" firstAttribute="centerY" secondItem="9yt-dk-TGU" secondAttribute="centerY" id="z5A-rS-PXE"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Второй" id="qGS-co-Whc">
                         <barButtonItem key="rightBarButtonItem" systemItem="stop" id="urE-Ik-JeB">
@@ -120,25 +144,34 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TtE-i2-2ba">
-                                <rect key="frame" x="113" y="337" width="149" height="98"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TtE-i2-2ba">
+                                <rect key="frame" x="105.5" y="286.5" width="164" height="94"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="164" id="Qkz-F1-n2M"/>
+                                    <constraint firstAttribute="height" constant="94" id="Y3i-xG-Xpx"/>
+                                </constraints>
                                 <state key="normal" title="Modal"/>
                                 <connections>
                                     <action selector="actionModal" destination="JFv-RI-2L7" eventType="touchUpInside" id="jOc-jL-zi5"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dv5-Z4-XCS">
-                                <rect key="frame" x="113" y="231" width="149" height="98"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dv5-Z4-XCS">
+                                <rect key="frame" x="105.5" y="184.5" width="164" height="94"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="164" id="HVB-o5-nWM"/>
+                                    <constraint firstAttribute="height" constant="94" id="nyb-o2-cTY"/>
+                                </constraints>
                                 <state key="normal" title="Next"/>
                                 <connections>
                                     <action selector="actionNext" destination="JFv-RI-2L7" eventType="touchUpInside" id="R1b-HD-Zel"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MCc-sj-7lm">
-                                <rect key="frame" x="113" y="443" width="149" height="98"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MCc-sj-7lm">
+                                <rect key="frame" x="105.5" y="388.5" width="164" height="94"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="94" id="Fff-PC-LaQ"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="164" id="WAF-7S-Wfh"/>
+                                </constraints>
                                 <state key="normal" title="Modal Segue"/>
                                 <connections>
                                     <segue destination="AN8-ZH-jHT" kind="show" id="BqU-sh-PCI"/>
@@ -146,6 +179,14 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="MCc-sj-7lm" firstAttribute="top" secondItem="TtE-i2-2ba" secondAttribute="bottom" constant="8" id="2at-ag-U3g"/>
+                            <constraint firstItem="MCc-sj-7lm" firstAttribute="centerX" secondItem="X0e-1Q-u8X" secondAttribute="centerX" id="5Xs-jQ-Cwz"/>
+                            <constraint firstItem="dv5-Z4-XCS" firstAttribute="centerX" secondItem="X0e-1Q-u8X" secondAttribute="centerX" id="6bF-Jk-Ghi"/>
+                            <constraint firstItem="TtE-i2-2ba" firstAttribute="top" secondItem="dv5-Z4-XCS" secondAttribute="bottom" constant="8" id="GhN-bb-KeY"/>
+                            <constraint firstItem="TtE-i2-2ba" firstAttribute="centerY" secondItem="X0e-1Q-u8X" secondAttribute="centerY" id="bMm-QG-21T"/>
+                            <constraint firstItem="TtE-i2-2ba" firstAttribute="centerX" secondItem="X0e-1Q-u8X" secondAttribute="centerX" id="cdl-wW-FvJ"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Модальный" id="kds-Td-vuv">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="SCx-Nm-b1S">

@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     @IBAction func actionNext() {
 //        let presenter = BuilderRouter(SecondViewControllerFactory.self).setContainer(Void()).create().setup()
 //        BuilderRouter(SecondViewControllerFactory.self).createAndSetup().present(NavigationControllerPresentationRouter(), on: self)
-        
+   
         BuilderRouter(SecondViewControllerFactory.self).createAndSetup()
             .prepareHandler { print("Prepare open") }
             .postHandler { print("Post open") }

@@ -232,6 +232,23 @@ extension PresentNavigationRouter {
             BuilderRouter(routerType).create().setup(sourceList: sourceList).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
+    
+    //MARK: Support Present NavigationRouter - perform segue
+    func performSegue<FR: ParamsFactoryRouter>(withIdentifier identifier: String, factory: FR, params: FR.ParamsType, sender: Any? = nil) {
+        let paramsStore = ParamsFactoryInputSourceStore(FR.self, params: params)
+        performSegue(withIdentifier: identifier, factory: factory, sourceList: [paramsStore], sender: sender)
+    }
+    
+    func performSegue<FR: CallbackFactoryRouter>(withIdentifier identifier: String, factory: FR, callback: FR.CallbackType, sender: Any? = nil) {
+        let callbackStore = CallbackFactoryInputSourceStore(FR.self, callback: callback)
+        performSegue(withIdentifier: identifier, factory: factory, sourceList: [callbackStore], sender: sender)
+    }
+    
+    func performSegue<FR: ParamsWithCallbackFactoryRouter>(withIdentifier identifier: String, factory: FR, params: FR.ParamsType, callback: FR.CallbackType, sender: Any? = nil) {
+        let paramsStore = ParamsFactoryInputSourceStore(FR.self, params: params)
+        let callbackStore = CallbackFactoryInputSourceStore(FR.self, callback: callback)
+        performSegue(withIdentifier: identifier, factory: factory, sourceList: [paramsStore, callbackStore], sender: sender)
+    }
 }
 
 //MARK: Support InputSource
@@ -266,11 +283,9 @@ private func findCallback<CallbackType>(factoryType: CoreFactoryRouter.Type, sou
 }
 
 extension ParamsFactoryRouter {
-    public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
-        guard let viewController = viewController as? VCType else {
-            throw DependencyRouterError.viewControllerNotFound(VCType.self)
-        }
-        
+    public func coreFindAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+        let viewController: VCType = try dependencyRouterFindViewController(viewController)
+
         let params: ParamsType = try findParams(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
   
         setupViewController(viewController, params: params)
@@ -278,10 +293,8 @@ extension ParamsFactoryRouter {
 }
 
 extension CallbackFactoryRouter {
-    public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
-        guard let viewController = viewController as? VCType else {
-            throw DependencyRouterError.viewControllerNotFound(VCType.self)
-        }
+    public func coreFindAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+        let viewController: VCType = try dependencyRouterFindViewController(viewController)
         
         let callback: CallbackType = try findCallback(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
         
@@ -290,10 +303,8 @@ extension CallbackFactoryRouter {
 }
 
 extension ParamsWithCallbackFactoryRouter {
-    public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
-        guard let viewController = viewController as? VCType else {
-            throw DependencyRouterError.viewControllerNotFound(VCType.self)
-        }
+    public func coreFindAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+        let viewController: VCType = try dependencyRouterFindViewController(viewController)
         
         let params: ParamsType = try findParams(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
         let callback: CallbackType = try findCallback(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)

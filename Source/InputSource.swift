@@ -11,9 +11,15 @@ import Foundation
 public protocol BaseFactoryInputSource { }
 
 public protocol FactorySupportInputSource: CoreFactoryRouter {
-    func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws
+    func coreFindAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws
 }
 
+public protocol PresentNavigationRouter {
+    var associatedViewController: UIViewController? { get }
+    var sourceList: [BaseFactoryInputSource] { get }
+    
+    func performSegue(withIdentifier identifier: String, factory: FactorySupportInputSource, sourceList: [BaseFactoryInputSource], sender: Any?)
+}
 
 //MARK: Auto Setup from segue
 extension Router {
@@ -29,7 +35,7 @@ extension Router {
         }
         
         DependencyRouterError.tryAsFatalError {
-            try factory.coreSetup(viewController, sourceList: sourceList, identifier: segue.identifier, sender: sender)
+            try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: segue.identifier, sender: sender)
         }
         
         return true
@@ -47,7 +53,7 @@ extension BuilderRouterReadySetup where FR: FactoryRouter, FR: FactorySupportInp
         
         let factory = self.factory
         DependencyRouterError.tryAsFatalError {
-            try factory.coreSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+            try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
         }
  
         return .init(viewController: viewController, default: factory.defaultPresentation())
@@ -64,7 +70,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: FactorySu
         let viewController = factory.createViewController()
         
         DependencyRouterError.tryAsFatalError {
-            try factory.coreSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+            try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
         }
         
         return .init(viewController: viewController, default: factory.defaultPresentation())

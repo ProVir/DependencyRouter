@@ -8,9 +8,12 @@
 
 import UIKit
 
-open class BaseNavigationRouter: PresentNavigationRouter {
+
+open class BaseNavigationRouter: PresentNavigationRouter, SegueRouterSupport {
     open weak var associatedViewController: UIViewController?
     open weak var source: (AnyObject & BaseFactoryInputSource)?
+    
+    public let segueRouter = SegueRouter()
     
     open var sourceList: [BaseFactoryInputSource] {
         var list = [BaseFactoryInputSource]()
@@ -22,71 +25,65 @@ open class BaseNavigationRouter: PresentNavigationRouter {
         return list
     }
     
-    init(viewController: UIViewController?) {
+    public init(viewController: UIViewController?) {
         self.associatedViewController = viewController
     }
 
-    func setSourceList(_ sourceList: [BaseFactoryInputSource], forSegueIdentifier identifier: String, onlyOne: Bool = false) {
-        let store = SourceStore()
-        store.sourceList = sourceList
-        store.onlyOne = onlyOne
-        sourcesForSegues[identifier] = store
-    }
-    
-    func setWeakSource(_ source: (AnyObject & BaseFactoryInputSource), forSegueIdentifier identifier: String, onlyOne: Bool = false) {
-        let store = SourceStore()
-        store.weakSource = source
-        store.onlyOne = onlyOne
-        sourcesForSegues[identifier] = store
-    }
-    
-    func sourceListForSegue(withIdentifier identifier: String, removeIfOnlyOne: Bool) -> [BaseFactoryInputSource] {
-        guard let store = sourcesForSegues[identifier] else {
-            return []
-        }
-        
-        if removeIfOnlyOne && store.onlyOne {
-            sourcesForSegues.removeValue(forKey: identifier)
-        }
-        
-        if let list = store.weakSource {
-            return [list]
-        } else {
-            return store.sourceList
-        }
-    }
-    
+
     @discardableResult
-    func prepare(for segue: UIStoryboardSegue, sender: Any?) -> Bool {
-        let list = sourceListForSegue(withIdentifier: segue.identifier ?? "", removeIfOnlyOne: true)
-        
-        if list.isEmpty {
+    public func prepare(for segue: UIStoryboardSegue, sender: Any?) -> Bool {
+        if segueRouter.contains(segueIdentifier: segue.identifier ?? "") {
+            return segueRouter.prepare(for: segue, sender: sender)
+        } else {
             return Router.prepare(for: segue, sender: sender, sourceList: sourceList)
-        } else {
-            return Router.prepare(for: segue, sender: sender, sourceList: list)
         }
     }
     
     @discardableResult
-    func unwindSegue(_ segue: UIStoryboardSegue) -> Bool {
+    open func unwindSegue(_ segue: UIStoryboardSegue) -> Bool {
         return Router.unwindSegue(segue, sourceList: sourceList)
     }
     
-    public func performSegue(withIdentifier identifier: String, sourceList: [BaseFactoryInputSource], sender: Any?) {
-        setSourceList(sourceList, forSegueIdentifier: identifier, onlyOne: true)
+    @discardableResult
+    open func dismiss(animated: Bool = true) -> Bool {
+        if let viewController = associatedViewController {
+            return Router.dismiss(viewController, animated: animated)
+        } else {
+            return false
+        }
+    }
+    
+    open func performSegue(withIdentifier identifier: String, factory: FactorySupportInputSource, sourceList: [BaseFactoryInputSource], sender: Any?) {
+        segueRouter.set(forSegueIdentifier: identifier, factory: factory, sourceList: sourceList, onlyOne: true)
         associatedViewController?.performSegue(withIdentifier: identifier, sender: sender)
     }
+}
+
+
+public class NullModel {
+    static let null = NullModel()
+    private init() { }
+}
+
+open class NavigationRouter<VC: UIViewController, M: AnyObject>: BaseNavigationRouter {
+    ///RouterModel with data for next Screens.
+    public let model: M
     
-    public func performSegue(withIdentifier identifier: String, sender: Any? = nil) {
-        associatedViewController?.performSegue(withIdentifier: identifier, sender: sender)
+    ///Require ViewController, RouterModel (can be ViewModel or Model).
+    public init(viewController: VC, routerModel: M) {
+        self.model = routerModel
+        super.init(viewController: viewController)
     }
     
-    //MARK: - Private
-    private class SourceStore {
-        weak var weakSource: (AnyObject & BaseFactoryInputSource)?
-        var sourceList: [BaseFactoryInputSource] = []
-        var onlyOne: Bool = false
+    ///Current ViewController for router.
+    public var viewController: VC {
+        return associatedViewController as! VC
     }
-    
-    private var sourcesForSegues: [String: SourceStore] = [:]
+}
+
+extension NavigationRouter where M == NullModel {
+    ///Require ViewController and Provider.
+    public convenience init(viewController: VC) {
+        self.init(viewController: viewController, routerModel: NullModel.null)
+    }
 }

@@ -74,16 +74,16 @@ extension PresentNavigationRouter {
             BuilderRouter(routerType).createAndSetup().present(on: viewController, presentation: presentation, animated: animated)
         }
     }
+    
+    func performSegue<FR: BlankFactoryRouter>(withIdentifier identifier: String, factory: FR, sender: Any? = nil) {
+        performSegue(withIdentifier: identifier, factory: factory, sourceList: [], sender: sender)
+    }
 }
 
 //MARK: Support InputSource
 extension BlankFactoryRouter {
-    public func coreSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
-        if let viewController = viewController as? VCType {
-            setupViewController(viewController)
-        } else {
-            throw DependencyRouterError.viewControllerNotFound(VCType.self)
-        }
+    public func coreFindAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+        setupViewController(try dependencyRouterFindViewController(viewController))
     }
 }
 

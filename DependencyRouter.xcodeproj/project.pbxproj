@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		50084F0221528A1600910769 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50084EFF215288E000910769 /* Helpers.swift */; };
 		50084F042152999D00910769 /* NavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50084F032152999D00910769 /* NavigationRouter.swift */; };
+		50084F062153447E00910769 /* SegueRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50084F052153447E00910769 /* SegueRouter.swift */; };
 		5040F36C214E287F00A23F08 /* AutoRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040F36A214E284B00A23F08 /* AutoRouter.swift */; };
 		5040F36F214FE75A00A23F08 /* InputSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040F36D214FE74800A23F08 /* InputSource.swift */; };
 		5040F3712150C6E000A23F08 /* UnwindRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040F3702150C6E000A23F08 /* UnwindRouter.swift */; };
@@ -53,6 +54,7 @@
 /* Begin PBXFileReference section */
 		50084EFF215288E000910769 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		50084F032152999D00910769 /* NavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouter.swift; sourceTree = "<group>"; };
+		50084F052153447E00910769 /* SegueRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegueRouter.swift; sourceTree = "<group>"; };
 		5040F36A214E284B00A23F08 /* AutoRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRouter.swift; sourceTree = "<group>"; };
 		5040F36D214FE74800A23F08 /* InputSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputSource.swift; sourceTree = "<group>"; };
 		5040F3702150C6E000A23F08 /* UnwindRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwindRouter.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				50E7E6212147F4D400FA64E0 /* SimplePresentation.swift */,
 				5040F3702150C6E000A23F08 /* UnwindRouter.swift */,
 				50084EFF215288E000910769 /* Helpers.swift */,
+				50084F052153447E00910769 /* SegueRouter.swift */,
 				50084F032152999D00910769 /* NavigationRouter.swift */,
 			);
 			path = Source;
@@ -334,6 +337,7 @@
 				507C9DB62144C2A200996677 /* Builder.swift in Sources */,
 				5040F36F214FE75A00A23F08 /* InputSource.swift in Sources */,
 				50084F0221528A1600910769 /* Helpers.swift in Sources */,
+				50084F062153447E00910769 /* SegueRouter.swift in Sources */,
 				507C9DB42144BF7400996677 /* ParamsCreatorFactory.swift in Sources */,
 				507C9DB22143E32D00996677 /* Cocoa.swift in Sources */,
 				50084F042152999D00910769 /* NavigationRouter.swift in Sources */,

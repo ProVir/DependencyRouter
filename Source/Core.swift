@@ -38,13 +38,6 @@ public protocol ViewContainerSupportRouter {
 
 public struct Router { }
 
-public protocol PresentNavigationRouter {
-    var associatedViewController: UIViewController? { get }
-    var sourceList: [BaseFactoryInputSource] { get }
-    
-    func performSegue(withIdentifier identifier: String, sourceList: [BaseFactoryInputSource], sender: Any?)
-}
-
 
 //MARK: Core
 public protocol CoreFactoryRouter {
@@ -145,7 +138,6 @@ public func dependencyRouterFindViewController<VCType: UIViewController>(_ viewC
     }
 }
 
-
 public func dependencyRouterFindViewControllerOrFatalError<VCType: UIViewController>(_ viewController: UIViewController, file: StaticString = #file, line: UInt = #line) -> VCType {
     return DependencyRouterError.tryAsFatalError(file: file, line: line) {
         try dependencyRouterFindViewController(viewController)
@@ -153,7 +145,7 @@ public func dependencyRouterFindViewControllerOrFatalError<VCType: UIViewControl
 }
 
 
-
+//MARK: Presentation
 public struct PresentationRouterHandler {
     public var presentation: PresentationRouter
     public var viewController: UIViewController

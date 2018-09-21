@@ -9,7 +9,7 @@
 import UIKit
 import DependencyRouter
 
-struct SecondViewControllerFactory: AutoFactoryRouter, CreatorFactoryRouter, BlankFactoryRouter {
+struct SecondViewControllerFactory: AutoCreatorFactoryRouter, BlankFactoryRouter {
     let container: Container
     struct Container: AutoServiceContainer {
         
@@ -26,7 +26,7 @@ struct SecondViewControllerFactory: AutoFactoryRouter, CreatorFactoryRouter, Bla
     }
 }
 
-class SecondViewControllerRouter: VCNavigationRouter<SecondViewController>, ParamsFactoryInputSource, CallbackFactoryInputSource {
+class SecondViewControllerRouter: NavigationRouter<SecondViewController>, ParamsFactoryInputSource, CallbackFactoryInputSource {
     func presentNext() {
         simplePresent(SecondViewControllerFactory.self)
     }

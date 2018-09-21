@@ -41,6 +41,11 @@ public struct ShowPresentationRouter: PresentationRouter {
 
 /// Present ViewController as Modal
 public struct ModalPresentationRouter: PresentationRouter {
+    public enum PopoverSourceView {
+        case barButtonItem(UIBarButtonItem)
+        case view(UIView, CGRect)
+    }
+    
     public var canAutoWrappedNavigtionController: Bool = true
     public var canDismissOtherPresented: Bool = false
     
@@ -53,9 +58,31 @@ public struct ModalPresentationRouter: PresentationRouter {
         self.prepareHandler = prepareHandler
     }
     
+    public init(autoWrapped: Bool = true, dismissOtherPresented: Bool = false, popoverSourceView: PopoverSourceView, permittedArrowDirections: UIPopoverArrowDirection = .any) {
+        self.canAutoWrappedNavigtionController = autoWrapped
+        self.canDismissOtherPresented = dismissOtherPresented
+        
+        self.prepareHandler = { viewController in
+            viewController.modalPresentationStyle = .popover
+            
+            if let popoverController = viewController.popoverPresentationController {
+                switch popoverSourceView {
+                case let .barButtonItem(barItem):
+                    popoverController.barButtonItem = barItem
+                    
+                case let .view(view, rect):
+                    popoverController.sourceView = view
+                    popoverController.sourceRect = rect
+                }
+                
+                popoverController.permittedArrowDirections = permittedArrowDirections
+            }
+        }
+    }
+    
     public func present(_ viewController: UIViewController, on existingController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationRouterResult) -> Void) {
         //1. Test - can presented
-        guard !canDismissOtherPresented, existingController.presentedViewController == nil else {
+        if !canDismissOtherPresented && existingController.presentedViewController != nil {
             completionHandler(.failure(DependencyRouterError.notReadyPresentingViewController("is already presenting a view controller")))
             return
         }

@@ -23,6 +23,15 @@ public protocol BlankCreatorFactoryRouter: FactoryRouter {
     func createAndSetupViewController() -> VCType
 }
 
+public typealias AutoCreatorFactoryRouter       = AutoFactoryRouter & CreatorFactoryRouter
+public typealias AutoBlankFactoryRouter         = AutoFactoryRouter & BlankFactoryRouter
+public typealias AutoBlankCreatorFactoryRouter  = AutoFactoryRouter & BlankCreatorFactoryRouter
+
+public typealias LightCreatorFactoryRouter       = LightFactoryRouter & CreatorFactoryRouter
+public typealias LightBlankFactoryRouter         = LightFactoryRouter & BlankFactoryRouter
+public typealias LightBlankCreatorFactoryRouter  = LightFactoryRouter & BlankCreatorFactoryRouter
+
+
 //MARK: Support Builder
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter {
     public func create() -> BuilderRouter<FR>.ReadySetup<FR.VCCreateType> {
@@ -38,7 +47,7 @@ extension BuilderRouterReadySetup where FR: BlankFactoryRouter {
         let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
         
         factory.setupViewController(findedViewController)
-        return .init(viewController: viewController, default: factory.defaultPresentation())
+        return .init(viewController: viewController, default: factory.presentation())
     }
 }
 
@@ -46,7 +55,7 @@ extension BuilderRouterReadyCreate where FR: BlankCreatorFactoryRouter {
     public func createAndSetup() -> BuilderRouterReadyPresent<FR.VCType>{
         let factory = self.factory()
         let vc = factory.createAndSetupViewController()
-        return .init(viewController: vc, default: factory.defaultPresentation())
+        return .init(viewController: vc, default: factory.presentation())
     }
 }
 
@@ -57,19 +66,19 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFact
         let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
         
         factory.setupViewController(findedViewController)
-        return .init(viewController: viewController, default: factory.defaultPresentation())
+        return .init(viewController: viewController, default: factory.presentation())
     }
 }
 
 //MARK: Support Present NavigationRouter
 extension SimplePresentNavigationRouter {
-    public func simplePresent<FR: CreatorFactoryRouter & BlankFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresent<FR: AutoCreatorFactoryRouter & BlankFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup().present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    public func simplePresent<FR: BlankCreatorFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresent<FR: AutoBlankCreatorFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup().present(on: viewController, presentation: presentation, animated: animated)
         }

@@ -43,7 +43,7 @@ public struct Router { }
 public protocol CoreFactoryRouter {
     init?(containerAny: Any)
     
-    func defaultPresentation() -> PresentationRouter
+    func presentation() -> PresentationRouter
 }
 
 public protocol CoreSourceRouterViewController: class {
@@ -59,7 +59,7 @@ extension FactoryRouter {
         }
     }
     
-    public func defaultPresentation() -> PresentationRouter {
+    public func presentation() -> PresentationRouter {
         return ShowPresentationRouter()
     }
 }

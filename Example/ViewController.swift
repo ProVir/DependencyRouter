@@ -15,7 +15,7 @@ struct ViewControllerFactory: LightFactoryRouter, BlankFactoryRouter {
     }
 }
 
-class ViewControllerRouter: VCNavigationRouter<ViewController> {
+class ViewControllerRouter: NavigationRouter<ViewController> {
     func presentNext() {
         simplePresent(SecondViewControllerFactory.self)
 //        performSegue(withIdentifier: "next", factory: SecondViewControllerFactory())

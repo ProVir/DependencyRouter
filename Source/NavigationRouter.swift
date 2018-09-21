@@ -60,14 +60,19 @@ open class BaseNavigationRouter: SimplePresentNavigationRouter {
 }
 
 
-public class NullModel {
-    static let null = NullModel()
-    private init() { }
+open class NavigationRouter<VC: UIViewController>: BaseNavigationRouter {
+    ///Require ViewController, RouterModel (can be ViewModel or Model).
+    public init(_ viewController: VC) {
+        super.init(viewController)
+    }
+    
+    ///Current ViewController for router.
+    public var viewController: VC {
+        return associatedViewController as! VC
+    }
 }
 
-public typealias VCNavigationRouter<VC: UIViewController> = NavigationRouter<VC, NullModel>
-
-open class NavigationRouter<VC: UIViewController, M: AnyObject>: BaseNavigationRouter {
+open class NavigationWithModelRouter<VC: UIViewController, M: AnyObject>: NavigationRouter<VC> {
     ///RouterModel with data for next Screens.
     public let model: M
     
@@ -77,21 +82,9 @@ open class NavigationRouter<VC: UIViewController, M: AnyObject>: BaseNavigationR
         super.init(viewController)
     }
     
-    ///Current ViewController for router.
-    public var viewController: VC {
-        return associatedViewController as! VC
-    }
-    
     open override var sourceList: [BaseFactoryInputSource] {
         var list = super.sourceList
         if let source = model as? BaseFactoryInputSource { list.append(source) }
         return list
-    }
-}
-
-extension NavigationRouter where M == NullModel {
-    ///Require ViewController.
-    public convenience init(_ viewController: VC) {
-        self.init(viewController, routerModel: NullModel.null)
     }
 }

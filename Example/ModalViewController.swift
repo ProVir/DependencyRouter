@@ -18,7 +18,7 @@ struct ModalViewControllerFactory: LightFactoryRouter, CreatorFactoryRouter, Par
         let message: String
     }
     
-    func defaultPresentation() -> PresentationRouter {
+    func presentation() -> PresentationRouter {
         return ModalPresentationRouter()
     }
     

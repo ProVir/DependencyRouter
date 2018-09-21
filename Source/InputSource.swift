@@ -40,6 +40,27 @@ extension Router {
         
         return true
     }
+    
+    @discardableResult
+    public static func setupIfSupport(viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?, fatalErrorWhenFailure: Bool) -> Bool {
+        guard let (viewController, factory) = dependencyRouterFindSourceRouterViewController(viewController) else {
+            return false
+        }
+        
+        if fatalErrorWhenFailure {
+            DependencyRouterError.tryAsFatalError {
+                try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+            }
+        } else {
+            do {
+                try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+            } catch {
+                return false
+            }
+        }
+        
+        return true
+    }
 }
 
 
@@ -56,7 +77,7 @@ extension BuilderRouterReadySetup where FR: FactoryRouter, FR: FactorySupportInp
             try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
         }
  
-        return .init(viewController: viewController, default: factory.defaultPresentation())
+        return .init(viewController: viewController, default: factory.presentation())
     }
 }
 
@@ -73,7 +94,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: FactorySu
             try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
         }
         
-        return .init(viewController: viewController, default: factory.defaultPresentation())
+        return .init(viewController: viewController, default: factory.presentation())
     }
 }
 

@@ -9,6 +9,7 @@
 import UIKit
 
 extension Router {
+    @discardableResult
     public static func dismiss(_ viewController: UIViewController, animated: Bool = true) -> Bool {
         if let navigationController = viewController.navigationController {
             //Test to first in NavigationController

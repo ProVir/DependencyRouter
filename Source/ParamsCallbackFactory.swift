@@ -23,7 +23,7 @@ public protocol ParamsFactoryRouter: FactoryRouter, FactorySupportInputSource {
     associatedtype ParamsType
     
     func setupViewController(_ viewController: VCType, params: ParamsType)
-    func defaultPresentation(params: ParamsType) -> PresentationRouter
+    func presentation(params: ParamsType) -> PresentationRouter
 }
 
 public protocol CallbackFactoryRouter: FactoryRouter, FactorySupportInputSource {
@@ -39,13 +39,23 @@ public protocol ParamsWithCallbackFactoryRouter: FactoryRouter, FactorySupportIn
     associatedtype CallbackType
     
     func setupViewController(_ viewController: VCType, params: ParamsType, callback: CallbackType)
-    func defaultPresentation(params: ParamsType) -> PresentationRouter
+    func presentation(params: ParamsType) -> PresentationRouter
 }
+
+
+public typealias AutoParamsFactoryRouter      = AutoFactoryRouter & ParamsFactoryRouter
+public typealias AutoCallbackFactoryRouter    = AutoFactoryRouter & CallbackFactoryRouter
+public typealias AutoParamsWithCallbackFactoryRouter = AutoFactoryRouter & ParamsWithCallbackFactoryRouter
+
+public typealias LightParamsFactoryRouter      = LightFactoryRouter & ParamsFactoryRouter
+public typealias LightCallbackFactoryRouter    = LightFactoryRouter & CallbackFactoryRouter
+public typealias LightParamsWithCallbackFactoryRouter = LightFactoryRouter & ParamsWithCallbackFactoryRouter
+
 
 //MARK: Helpers
 extension ParamsFactoryRouter {
-    public func defaultPresentation(params: ParamsType) -> PresentationRouter {
-        return defaultPresentation()
+    public func presentation(params: ParamsType) -> PresentationRouter {
+        return presentation()
     }
     
     public static func createParams(_ params: ParamsType) -> ParamsType {
@@ -60,8 +70,8 @@ extension CallbackFactoryRouter {
 }
 
 extension ParamsWithCallbackFactoryRouter {
-    public func defaultPresentation(params: ParamsType) -> PresentationRouter {
-        return defaultPresentation()
+    public func presentation(params: ParamsType) -> PresentationRouter {
+        return presentation()
     }
     
     public static func createParams(_ params: ParamsType) -> ParamsType {
@@ -129,7 +139,6 @@ public class WeakCallbackFactoryInputSourceStore: CallbackFactoryInputSource {
 }
 
 
-
 //MARK: Support Builder
 extension BuilderRouterReadySetup where FR: ParamsFactoryRouter {
     public func setup(params: FR.ParamsType) -> BuilderRouterReadyPresent<VC> {
@@ -137,7 +146,7 @@ extension BuilderRouterReadySetup where FR: ParamsFactoryRouter {
         let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
         
         factory.setupViewController(findedViewController, params: params)
-        return .init(viewController: viewController, default: factory.defaultPresentation(params: params))
+        return .init(viewController: viewController, default: factory.presentation(params: params))
     }
 }
 
@@ -147,7 +156,7 @@ extension BuilderRouterReadySetup where FR: CallbackFactoryRouter {
         let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
         
         factory.setupViewController(findedViewController, callback: callback)
-        return .init(viewController: viewController, default: factory.defaultPresentation())
+        return .init(viewController: viewController, default: factory.presentation())
     }
 }
 
@@ -157,7 +166,7 @@ extension BuilderRouterReadySetup where FR: ParamsWithCallbackFactoryRouter {
         let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
         
         factory.setupViewController(findedViewController, params: params, callback: callback)
-        return .init(viewController: viewController, default: factory.defaultPresentation(params: params))
+        return .init(viewController: viewController, default: factory.presentation(params: params))
     }
 }
 
@@ -168,7 +177,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsFac
         let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
         
         factory.setupViewController(findedViewController, params: params)
-        return .init(viewController: viewController, default: factory.defaultPresentation(params: params))
+        return .init(viewController: viewController, default: factory.presentation(params: params))
     }
 }
 
@@ -179,7 +188,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: CallbackF
         let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
         
         factory.setupViewController(findedViewController, callback: callback)
-        return .init(viewController: viewController, default: factory.defaultPresentation())
+        return .init(viewController: viewController, default: factory.presentation())
     }
 }
 
@@ -190,44 +199,44 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsWit
         let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
         
         factory.setupViewController(findedViewController, params: params, callback: callback)
-        return .init(viewController: viewController, default: factory.defaultPresentation(params: params))
+        return .init(viewController: viewController, default: factory.presentation(params: params))
     }
 }
 
 extension SimplePresentNavigationRouter {
     //MARK: Support Present NavigationRouter - input params
-    public func simplePresent<FR: CreatorFactoryRouter & ParamsFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresent<FR: AutoCreatorFactoryRouter & ParamsFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup(params: params).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    public func simplePresent<FR: CreatorFactoryRouter & CallbackFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresent<FR: AutoCreatorFactoryRouter & CallbackFactoryRouter>(_ routerType: FR.Type, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup(callback: callback).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    public func simplePresent<FR: CreatorFactoryRouter & ParamsWithCallbackFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresent<FR: AutoCreatorFactoryRouter & ParamsWithCallbackFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).createAndSetup(params: params, callback: callback).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
     //MARK: Support Present NavigationRouter - input source
-    public func simplePresentUseSource<FR: CreatorFactoryRouter & ParamsFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresentUseSource<FR: AutoCreatorFactoryRouter & ParamsFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).create().setup(sourceList: sourceList).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    public func simplePresentUseSource<FR: CreatorFactoryRouter & CallbackFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresentUseSource<FR: AutoCreatorFactoryRouter & CallbackFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).create().setup(sourceList: sourceList).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
-    public func simplePresentUseSource<FR: CreatorFactoryRouter & ParamsWithCallbackFactoryRouter & AutoFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
+    public func simplePresentUseSource<FR: AutoCreatorFactoryRouter & ParamsWithCallbackFactoryRouter>(_ routerType: FR.Type, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
             BuilderRouter(routerType).create().setup(sourceList: sourceList).present(on: viewController, presentation: presentation, animated: animated)
         }

@@ -8,6 +8,13 @@
 
 import UIKit
 
+/// Shared UIAdaptivePresentationControllerDelegate in regime no daptive for iPhone
+public class NoAdaptivePresentationStyleHelper: NSObject, UIAdaptivePresentationControllerDelegate {
+    public static var shared = NoAdaptivePresentationStyleHelper()
+    public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+}
 
 /// Assert if use - used as default when require always use own
 public struct NotPresentationRouter: PresentationRouter {
@@ -48,19 +55,22 @@ public struct ModalPresentationRouter: PresentationRouter {
     
     public var canAutoWrappedNavigtionController: Bool = true
     public var canDismissOtherPresented: Bool = false
+    public var noAdaptivePresentationStyle: Bool = false
     
     public var prepareHandler: ((UIViewController)->Void)? = nil
     public var postHandler: ((UIViewController)->Void)? = nil
     
-    public init(autoWrapped: Bool = true, dismissOtherPresented: Bool = false, prepareHandler: ((UIViewController)->Void)? = nil) {
+    public init(autoWrapped: Bool = true, dismissOtherPresented: Bool = false, noAdaptive: Bool = false, prepareHandler: ((UIViewController)->Void)? = nil) {
         self.canAutoWrappedNavigtionController = autoWrapped
         self.canDismissOtherPresented = dismissOtherPresented
+        self.noAdaptivePresentationStyle = noAdaptive
         self.prepareHandler = prepareHandler
     }
     
-    public init(autoWrapped: Bool = true, dismissOtherPresented: Bool = false, popoverSourceView: PopoverSourceView, permittedArrowDirections: UIPopoverArrowDirection = .any) {
+    public init(autoWrapped: Bool = true, dismissOtherPresented: Bool = false, noAdaptive: Bool = false, popoverSourceView: PopoverSourceView, permittedArrowDirections: UIPopoverArrowDirection = .any) {
         self.canAutoWrappedNavigtionController = autoWrapped
         self.canDismissOtherPresented = dismissOtherPresented
+        self.noAdaptivePresentationStyle = noAdaptive
         
         self.prepareHandler = { viewController in
             viewController.modalPresentationStyle = .popover
@@ -95,13 +105,17 @@ public struct ModalPresentationRouter: PresentationRouter {
             presentViewController = viewController
         }
         
-        prepareHandler?(viewController)
+        if noAdaptivePresentationStyle {
+            presentViewController.presentationController?.delegate = NoAdaptivePresentationStyleHelper.shared
+        }
+        
+        prepareHandler?(presentViewController)
         
         //3. Present
         let postHandler = self.postHandler
         func present() {
             existingController.present(presentViewController, animated: animated) {
-                postHandler?(viewController)
+                postHandler?(presentViewController)
                 completionHandler(.success)
             }
         }

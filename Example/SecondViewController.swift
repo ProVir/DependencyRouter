@@ -26,7 +26,7 @@ struct SecondViewControllerFactory: AutoCreatorFactoryRouter, BlankFactoryRouter
     }
 }
 
-class SecondViewControllerRouter: NavigationRouter<SecondViewController>, ParamsFactoryInputSource, CallbackFactoryInputSource {
+class SecondViewControllerRouter: NavigationRouter<SecondViewController>, ParamsFactoryInputSource {
     func presentNext() {
         simplePresent(SecondViewControllerFactory.self)
     }
@@ -46,7 +46,7 @@ class SecondViewControllerRouter: NavigationRouter<SecondViewController>, Params
         return nil
     }
     
-    func callbackForFactoryRouter(_ routerType: CoreFactoryRouter.Type, identifier: String?, sender: Any?) -> Any? {
+    override func callbackForFactoryRouter(_ routerType: CoreFactoryRouter.Type, identifier: String?, sender: Any?) -> Any? {
         if routerType == ModalViewControllerFactory.self {
             return ModalViewControllerFactory.useCallback({ print("Closed modal with message: \($0)") })
         }

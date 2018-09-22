@@ -19,8 +19,8 @@ open class BaseNavigationRouter: SimplePresentNavigationRouter {
         var list = [BaseFactoryInputSource]()
         
         if let source = self.source { list.append(source) }
-        if let source = self as? BaseFactoryInputSource { list.append(source) }
         if let source = self.associatedViewController as? BaseFactoryInputSource { list.append(source) }
+        if let source = self as? BaseFactoryInputSource { list.append(source) }
         
         return list
     }
@@ -31,7 +31,7 @@ open class BaseNavigationRouter: SimplePresentNavigationRouter {
 
 
     @discardableResult
-    public func prepare(for segue: UIStoryboardSegue, sender: Any?) -> Bool {
+    open func prepare(for segue: UIStoryboardSegue, sender: Any?) -> Bool {
         if segueRouter.contains(segueIdentifier: segue.identifier ?? "") {
             return segueRouter.prepare(for: segue, sender: sender)
         } else {
@@ -60,7 +60,7 @@ open class BaseNavigationRouter: SimplePresentNavigationRouter {
 }
 
 
-open class NavigationRouter<VC: UIViewController>: BaseNavigationRouter {
+open class NavigationRouter<VC: UIViewController>: BaseNavigationRouter, CallbackFactoryInputSource, CallbackUnwindInputSource {
     ///Require ViewController, RouterModel (can be ViewModel or Model).
     public init(_ viewController: VC) {
         super.init(viewController)
@@ -69,6 +69,14 @@ open class NavigationRouter<VC: UIViewController>: BaseNavigationRouter {
     ///Current ViewController for router.
     public var viewController: VC {
         return associatedViewController as! VC
+    }
+    
+    open func callbackForFactoryRouter(_ routerType: CoreFactoryRouter.Type, identifier: String?, sender: Any?) -> Any? {
+        return self
+    }
+    
+    public func callbackForUnwindRouter(_ unwindType: CoreUnwindCallbackRouter.Type, segueIdentifier: String?) -> Any? {
+        return self
     }
 }
 

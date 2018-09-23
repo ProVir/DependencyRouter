@@ -91,7 +91,11 @@ extension SimplePresentNavigationRouter {
 
 //MARK: Support InputSource
 extension BlankFactoryRouter {
-    public func coreFindAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+    public func findAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+        try coreFindAndSetupBlank(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+    }
+    
+    public func coreFindAndSetupBlank(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
         setupViewController(try dependencyRouterFindViewController(viewController))
     }
 }

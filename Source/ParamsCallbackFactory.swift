@@ -292,7 +292,11 @@ private func findCallback<CallbackType>(factoryType: CoreFactoryRouter.Type, sou
 }
 
 extension ParamsFactoryRouter {
-    public func coreFindAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+    public func findAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+        try coreFindAndSetupParams(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+    }
+    
+    public func coreFindAndSetupParams(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
         let viewController: VCType = try dependencyRouterFindViewController(viewController)
 
         let params: ParamsType = try findParams(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
@@ -302,7 +306,11 @@ extension ParamsFactoryRouter {
 }
 
 extension CallbackFactoryRouter {
-    public func coreFindAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+    public func findAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+        try coreFindAndSetupCallback(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+    }
+    
+    public func coreFindAndSetupCallback(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
         let viewController: VCType = try dependencyRouterFindViewController(viewController)
         
         let callback: CallbackType = try findCallback(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
@@ -312,7 +320,11 @@ extension CallbackFactoryRouter {
 }
 
 extension ParamsWithCallbackFactoryRouter {
-    public func coreFindAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+    public func findAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
+        try coreFindAndSetupParamsWithCallback(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+    }
+    
+    public func coreFindAndSetupParamsWithCallback(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws {
         let viewController: VCType = try dependencyRouterFindViewController(viewController)
         
         let params: ParamsType = try findParams(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)

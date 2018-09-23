@@ -91,13 +91,7 @@ public struct ModalPresentationRouter: PresentationRouter {
     }
     
     public func present(_ viewController: UIViewController, on existingController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationRouterResult) -> Void) {
-        //1. Test - can presented
-        if !canDismissOtherPresented && existingController.presentedViewController != nil {
-            completionHandler(.failure(DependencyRouterError.notReadyPresentingViewController("is already presenting a view controller")))
-            return
-        }
-        
-        //2. Prepare
+        //1. Prepare
         let presentViewController: UIViewController
         if canAutoWrappedNavigtionController && !(viewController is UINavigationController) {
             presentViewController = UINavigationController(rootViewController: viewController)
@@ -111,7 +105,7 @@ public struct ModalPresentationRouter: PresentationRouter {
         
         prepareHandler?(presentViewController)
         
-        //3. Present
+        //2. Present
         let postHandler = self.postHandler
         func present() {
             existingController.present(presentViewController, animated: animated) {
@@ -120,7 +114,7 @@ public struct ModalPresentationRouter: PresentationRouter {
             }
         }
         
-        if existingController.presentedViewController != nil {
+        if canDismissOtherPresented, existingController.presentedViewController != nil {
             existingController.dismiss(animated: animated, completion: present)
         } else {
             present()

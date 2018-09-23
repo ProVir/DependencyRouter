@@ -56,15 +56,15 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
         present(on: existingController, presentation: nil, animated: animated)
     }
     
-    public func present(on existingController: UIViewController, presentation: PresentationRouter?, animated: Bool = true) {
+    public func present(on existingController: UIViewController, presentation: PresentationRouter?, animated: Bool = true, completionHandler: ((PresentationRouterResult)->Void)? = nil) {
         let handler = PresentationRouterHandler(presentation: presentation ?? defaultPresentationSource(),
                                                 viewController: viewController,
                                                 prepareHandlers: prepareHandlers,
                                                 postHandlers: postHandlers)
-        handler.present(on: existingController, animated: animated, completionHandler: nil, assertWhenFailure: true)
+        handler.present(on: existingController, animated: animated, assertWhenFailure: false, completionHandler: completionHandler)
     }
     
-    /// Empty stub when used segue.
+    /// Empty stub when used segue or need only setup existing viewController.
     public func completed() { }
 }
 

@@ -159,7 +159,7 @@ public struct PresentationRouterHandler {
         self.postHandlers = postHandlers
     }
     
-    public func present(on existingController: UIViewController, animated: Bool = true, completionHandler: ((PresentationRouterResult)->Void)? = nil, assertWhenFailure: Bool = true) {
+    public func present(on existingController: UIViewController, animated: Bool = true, assertWhenFailure: Bool = false, completionHandler: ((PresentationRouterResult)->Void)? = nil) {
         for handler in prepareHandlers {
             handler()
         }

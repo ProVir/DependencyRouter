@@ -105,7 +105,7 @@ public class SegueRouter {
         
         //3. Setup
         DependencyRouterError.tryAsFatalError {
-            try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: segue.identifier, sender: sender)
+            try factory.findAndSetup(viewController, sourceList: sourceList, identifier: segue.identifier, sender: sender)
         }
         
         return true

@@ -11,7 +11,7 @@ import Foundation
 public protocol BaseFactoryInputSource { }
 
 public protocol FactorySupportInputSource: CoreFactoryRouter {
-    func coreFindAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws
+    func findAndSetup(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws
 }
 
 public protocol SimplePresentNavigationRouter {
@@ -19,6 +19,25 @@ public protocol SimplePresentNavigationRouter {
     var sourceList: [BaseFactoryInputSource] { get }
     
     func performSegue(withIdentifier identifier: String, factory: FactorySupportInputSource, sourceList: [BaseFactoryInputSource], sender: Any?)
+}
+
+extension FactorySupportInputSource {
+    public func findAndSetupMultiHelper(_ viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?, functions: [(UIViewController, [BaseFactoryInputSource], String?, Any?) throws ->Void]) throws {
+        var lastError: Error?
+        
+        for closure in functions {
+            do {
+                try closure(viewController, sourceList, identifier, sender)
+                return
+            } catch {
+                lastError = error
+            }
+        }
+        
+        if let error = lastError {
+            throw error
+        }
+    }
 }
 
 //MARK: Auto Setup from segue
@@ -35,7 +54,7 @@ extension Router {
         }
         
         DependencyRouterError.tryAsFatalError {
-            try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: segue.identifier, sender: sender)
+            try factory.findAndSetup(viewController, sourceList: sourceList, identifier: segue.identifier, sender: sender)
         }
         
         return true
@@ -49,11 +68,11 @@ extension Router {
         
         if fatalErrorWhenFailure {
             DependencyRouterError.tryAsFatalError {
-                try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+                try factory.findAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
             }
         } else {
             do {
-                try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+                try factory.findAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
             } catch {
                 return false
             }
@@ -74,7 +93,7 @@ extension BuilderRouterReadySetup where FR: FactoryRouter, FR: FactorySupportInp
         
         let factory = self.factory
         DependencyRouterError.tryAsFatalError {
-            try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+            try factory.findAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
         }
  
         return .init(viewController: viewController, default: factory.presentation())
@@ -91,7 +110,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: FactorySu
         let viewController = factory.createViewController()
         
         DependencyRouterError.tryAsFatalError {
-            try factory.coreFindAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+            try factory.findAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
         }
         
         return .init(viewController: viewController, default: factory.presentation())

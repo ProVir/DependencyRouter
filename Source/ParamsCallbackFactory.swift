@@ -22,7 +22,7 @@ public protocol ParamsFactoryRouter: FactoryRouter, FactorySupportInputSource {
     associatedtype VCType: UIViewController
     associatedtype ParamsType
     
-    func setupViewController(_ viewController: VCType, params: ParamsType)
+    func setupViewController(_ viewController: VCType, params: ParamsType) throws
     func presentation(params: ParamsType) -> PresentationRouter
 }
 
@@ -30,7 +30,7 @@ public protocol CallbackFactoryRouter: FactoryRouter, FactorySupportInputSource 
     associatedtype VCType: UIViewController
     associatedtype CallbackType
     
-    func setupViewController(_ viewController: VCType, callback: CallbackType)
+    func setupViewController(_ viewController: VCType, callback: CallbackType) throws
 }
 
 public protocol ParamsWithCallbackFactoryRouter: FactoryRouter, FactorySupportInputSource {
@@ -38,7 +38,7 @@ public protocol ParamsWithCallbackFactoryRouter: FactoryRouter, FactorySupportIn
     associatedtype ParamsType
     associatedtype CallbackType
     
-    func setupViewController(_ viewController: VCType, params: ParamsType, callback: CallbackType)
+    func setupViewController(_ viewController: VCType, params: ParamsType, callback: CallbackType) throws
     func presentation(params: ParamsType) -> PresentationRouter
 }
 
@@ -142,64 +142,88 @@ public class WeakCallbackFactoryInputSourceStore: CallbackFactoryInputSource {
 //MARK: Support Builder
 extension BuilderRouterReadySetup where FR: ParamsFactoryRouter {
     public func setup(params: FR.ParamsType) -> BuilderRouterReadyPresent<VC> {
-        let factory = self.factory
-        let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
-        
-        factory.setupViewController(findedViewController, params: params)
-        return .init(viewController: viewController, default: factory.presentation(params: params))
+        do {
+            let factory = self.factory
+            let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
+            
+            try factory.setupViewController(findedViewController, params: params)
+            return .init(viewController: viewController, default: factory.presentation(params: params))
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 
 extension BuilderRouterReadySetup where FR: CallbackFactoryRouter {
     public func setup(callback: FR.CallbackType) -> BuilderRouterReadyPresent<VC> {
-        let factory = self.factory
-        let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
+        do {
+            let factory = self.factory
+            let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
         
-        factory.setupViewController(findedViewController, callback: callback)
-        return .init(viewController: viewController, default: factory.presentation())
+            try factory.setupViewController(findedViewController, callback: callback)
+            return .init(viewController: viewController, default: factory.presentation())
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 
 extension BuilderRouterReadySetup where FR: ParamsWithCallbackFactoryRouter {
     public func setup(params: FR.ParamsType, callback: FR.CallbackType) -> BuilderRouterReadyPresent<VC> {
-        let factory = self.factory
-        let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
-        
-        factory.setupViewController(findedViewController, params: params, callback: callback)
-        return .init(viewController: viewController, default: factory.presentation(params: params))
+        do {
+            let factory = self.factory
+            let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
+            
+            try factory.setupViewController(findedViewController, params: params, callback: callback)
+            return .init(viewController: viewController, default: factory.presentation(params: params))
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsFactoryRouter {
     public func createAndSetup(params: FR.ParamsType) -> BuilderRouterReadyPresent<FR.VCCreateType> {
-        let factory = self.factory()
-        let viewController = factory.createViewController()
-        let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
-        
-        factory.setupViewController(findedViewController, params: params)
-        return .init(viewController: viewController, default: factory.presentation(params: params))
+        do {
+            let factory = self.factory()
+            let viewController = factory.createViewController()
+            let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
+            
+            try factory.setupViewController(findedViewController, params: params)
+            return .init(viewController: viewController, default: factory.presentation(params: params))
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: CallbackFactoryRouter {
     public func createAndSetup(callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCCreateType> {
-        let factory = self.factory()
-        let viewController = factory.createViewController()
-        let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
-        
-        factory.setupViewController(findedViewController, callback: callback)
-        return .init(viewController: viewController, default: factory.presentation())
+        do {
+            let factory = self.factory()
+            let viewController = factory.createViewController()
+            let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
+            
+            try factory.setupViewController(findedViewController, callback: callback)
+            return .init(viewController: viewController, default: factory.presentation())
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsWithCallbackFactoryRouter {
     public func createAndSetup(params: FR.ParamsType, callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCCreateType> {
-        let factory = self.factory()
-        let viewController = factory.createViewController()
-        let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
-        
-        factory.setupViewController(findedViewController, params: params, callback: callback)
-        return .init(viewController: viewController, default: factory.presentation(params: params))
+        do {
+            let factory = self.factory()
+            let viewController = factory.createViewController()
+            let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
+            
+            try factory.setupViewController(findedViewController, params: params, callback: callback)
+            return .init(viewController: viewController, default: factory.presentation(params: params))
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 
@@ -301,7 +325,7 @@ extension ParamsFactoryRouter {
 
         let params: ParamsType = try findParams(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
   
-        setupViewController(viewController, params: params)
+        try setupViewController(viewController, params: params)
     }
 }
 
@@ -315,7 +339,7 @@ extension CallbackFactoryRouter {
         
         let callback: CallbackType = try findCallback(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
         
-        setupViewController(viewController, callback: callback)
+        try setupViewController(viewController, callback: callback)
     }
 }
 
@@ -330,7 +354,7 @@ extension ParamsWithCallbackFactoryRouter {
         let params: ParamsType = try findParams(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
         let callback: CallbackType = try findCallback(factoryType: type(of: self), sourceList: sourceList, identifier: identifier, sender: sender)
         
-        setupViewController(viewController, params: params, callback: callback)
+        try setupViewController(viewController, params: params, callback: callback)
     }
 }
 

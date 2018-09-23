@@ -61,6 +61,16 @@ extension Router {
     }
     
     @discardableResult
+    public static func tryPrepare(for segue: UIStoryboardSegue, sender: Any?, sourceList: [BaseFactoryInputSource]) throws -> Bool {
+        guard let (viewController, factory) = dependencyRouterFindSourceRouterViewController(segue.destination) else {
+            return false
+        }
+        
+        try factory.findAndSetup(viewController, sourceList: sourceList, identifier: segue.identifier, sender: sender)
+        return true
+    }
+    
+    @discardableResult
     public static func setupIfSupport(viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?, fatalErrorWhenFailure: Bool) -> Bool {
         guard let (viewController, factory) = dependencyRouterFindSourceRouterViewController(viewController) else {
             return false
@@ -80,6 +90,16 @@ extension Router {
         
         return true
     }
+    
+    @discardableResult
+    public static func trySetupIfSupport(viewController: UIViewController, sourceList: [BaseFactoryInputSource], identifier: String?, sender: Any?) throws -> Bool {
+        guard let (viewController, factory) = dependencyRouterFindSourceRouterViewController(viewController) else {
+            return false
+        }
+        
+        try factory.findAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+        return true
+    }
 }
 
 
@@ -91,12 +111,13 @@ extension BuilderRouterReadySetup where FR: FactoryRouter, FR: FactorySupportInp
     
     public func setup(sourceList: [BaseFactoryInputSource], identifier: String? = nil, sender: Any? = nil) -> BuilderRouterReadyPresent<VC> {
         
-        let factory = self.factory
-        DependencyRouterError.tryAsFatalError {
+        do {
+            let factory = self.factory
             try factory.findAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+            return .init(viewController: viewController, default: factory.presentation())
+        } catch {
+            return .init(error: error)
         }
- 
-        return .init(viewController: viewController, default: factory.presentation())
     }
 }
 
@@ -106,14 +127,14 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: FactorySu
     }
     
     public func createAndSetup(sourceList: [BaseFactoryInputSource], identifier: String? = nil, sender: Any? = nil) -> BuilderRouterReadyPresent<FR.VCCreateType> {
-        let factory = self.factory()
-        let viewController = factory.createViewController()
-        
-        DependencyRouterError.tryAsFatalError {
+        do {
+            let factory = self.factory()
+            let viewController = factory.createViewController()
             try factory.findAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
+            return .init(viewController: viewController, default: factory.presentation())
+        } catch {
+            return .init(error: error)
         }
-        
-        return .init(viewController: viewController, default: factory.presentation())
     }
 }
 

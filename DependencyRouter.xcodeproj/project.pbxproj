@@ -55,6 +55,8 @@
 		50084EFF215288E000910769 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		50084F032152999D00910769 /* NavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouter.swift; sourceTree = "<group>"; };
 		50084F052153447E00910769 /* SegueRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegueRouter.swift; sourceTree = "<group>"; };
+		5014A9202157DF5400D07293 /* DependencyRouter.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = DependencyRouter.podspec; sourceTree = "<group>"; };
+		5014A9212157DF6500D07293 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5040F36A214E284B00A23F08 /* AutoRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRouter.swift; sourceTree = "<group>"; };
 		5040F36D214FE74800A23F08 /* InputSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputSource.swift; sourceTree = "<group>"; };
 		5040F3702150C6E000A23F08 /* UnwindRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwindRouter.swift; sourceTree = "<group>"; };
@@ -113,6 +115,8 @@
 		507C9D69214382DB00996677 = {
 			isa = PBXGroup;
 			children = (
+				5014A9202157DF5400D07293 /* DependencyRouter.podspec */,
+				5014A9212157DF6500D07293 /* README.md */,
 				507C9D922143833E00996677 /* Example */,
 				507C9D75214382DB00996677 /* Source */,
 				507C9D80214382DB00996677 /* DependencyRouterTests */,

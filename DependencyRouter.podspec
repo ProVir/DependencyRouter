@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary      = "Router with dependency services and parameters"
   s.description  = <<-DESC
 			Written in Swift.
-        		Router with dependency services and parameters
+            Router with dependency services and parameters
                    DESC
 
   s.homepage     = "https://github.com/ProVir/DependencyRouter"
@@ -13,9 +13,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/ProVir/DependencyRouter.git", :tag => "#{s.version}" }
 
   s.swift_version = '4.2'
-
   s.ios.deployment_target = '8.0'
-  
   
   s.subspec 'Core' do |ss|
     ss.source_files = 'Source/*.{h,swift}'

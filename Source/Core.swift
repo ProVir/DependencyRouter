@@ -138,12 +138,6 @@ public func dependencyRouterFindViewController<VCType: UIViewController>(_ viewC
     }
 }
 
-public func dependencyRouterFindViewControllerOrFatalError<VCType: UIViewController>(_ viewController: UIViewController, file: StaticString = #file, line: UInt = #line) -> VCType {
-    return DependencyRouterError.tryAsFatalError(file: file, line: line) {
-        try dependencyRouterFindViewController(viewController)
-    }
-}
-
 
 //MARK: Presentation
 public struct PresentationRouterHandler {

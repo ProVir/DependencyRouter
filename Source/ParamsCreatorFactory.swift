@@ -76,26 +76,38 @@ extension BlankCreatorWithCallbackFactoryRouter {
 
 //MARK: Support Builder
 extension BuilderRouterReadyCreate where FR: ParamsCreatorFactoryRouter {
-    public func createAndSetup(params: FR.ParamsType) throws -> BuilderRouterReadyPresent<FR.VCType> {
-        let factory = self.factory()
-        let vc = try factory.createAndSetupViewController(params: params)
-        return .init(viewController: vc, default: factory.presentation(params: params))
+    public func createAndSetup(params: FR.ParamsType) -> BuilderRouterReadyPresent<FR.VCType> {
+        do {
+            let factory = self.factory()
+            let vc = try factory.createAndSetupViewController(params: params)
+            return .init(viewController: vc, default: factory.presentation(params: params))
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 
 extension BuilderRouterReadyCreate where FR: ParamsCreatorWithCallbackFactoryRouter {
-    public func createAndSetup(params: FR.ParamsType, callback: FR.CallbackType) throws -> BuilderRouterReadyPresent<FR.VCType> {
-        let factory = self.factory()
-        let vc = try factory.createAndSetupViewController(params: params, callback: callback)
-        return .init(viewController: vc, default: factory.presentation(params: params))
+    public func createAndSetup(params: FR.ParamsType, callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCType> {
+        do {
+            let factory = self.factory()
+            let vc = try factory.createAndSetupViewController(params: params, callback: callback)
+            return .init(viewController: vc, default: factory.presentation(params: params))
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 
 extension BuilderRouterReadyCreate where FR: BlankCreatorWithCallbackFactoryRouter {
-    public func createAndSetup(callback: FR.CallbackType) throws -> BuilderRouterReadyPresent<FR.VCType> {
-        let factory = self.factory()
-        let vc = try factory.createAndSetupViewController(callback: callback)
-        return .init(viewController: vc, default: factory.presentation())
+    public func createAndSetup(callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCType> {
+        do {
+            let factory = self.factory()
+            let vc = try factory.createAndSetupViewController(callback: callback)
+            return .init(viewController: vc, default: factory.presentation())
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 
@@ -104,19 +116,19 @@ extension BuilderRouterReadyCreate where FR: BlankCreatorWithCallbackFactoryRout
 extension SimplePresentNavigationRouter {
     public func simplePresent<FR: AutoParamsCreatorFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
-            try? BuilderRouter(routerType).createAndSetup(params: params).present(on: viewController, presentation: presentation, animated: animated)
+            BuilderRouter(routerType).createAndSetup(params: params).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
     public func simplePresent<FR: AutoParamsCreatorWithCallbackFactoryRouter>(_ routerType: FR.Type, params: FR.ParamsType, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
-            try? BuilderRouter(routerType).createAndSetup(params: params, callback: callback).present(on: viewController, presentation: presentation, animated: animated)
+            BuilderRouter(routerType).createAndSetup(params: params, callback: callback).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
     
     public func simplePresent<FR: AutoBlankCreatorWithCallbackFactoryRouter>(_ routerType: FR.Type, callback: FR.CallbackType, presentation: PresentationRouter? = nil, animated: Bool = true) {
         if let viewController = associatedViewController {
-            try? BuilderRouter(routerType).createAndSetup(callback: callback).present(on: viewController, presentation: presentation, animated: animated)
+            BuilderRouter(routerType).createAndSetup(callback: callback).present(on: viewController, presentation: presentation, animated: animated)
         }
     }
 }

@@ -43,11 +43,15 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter {
 
 extension BuilderRouterReadySetup where FR: BlankFactoryRouter {
     public func setup() -> BuilderRouterReadyPresent<VC> {
-        let factory = self.factory
-        let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
-        
-        factory.setupViewController(findedViewController)
-        return .init(viewController: viewController, default: factory.presentation())
+        do {
+            let factory = self.factory
+            let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
+            
+            factory.setupViewController(findedViewController)
+            return .init(viewController: viewController, default: factory.presentation())
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 
@@ -61,12 +65,16 @@ extension BuilderRouterReadyCreate where FR: BlankCreatorFactoryRouter {
 
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFactoryRouter {
     public func createAndSetup() -> BuilderRouterReadyPresent<FR.VCCreateType>{
-        let factory = self.factory()
-        let viewController = factory.createViewController()
-        let findedViewController: FR.VCType = dependencyRouterFindViewControllerOrFatalError(viewController)
-        
-        factory.setupViewController(findedViewController)
-        return .init(viewController: viewController, default: factory.presentation())
+        do {
+            let factory = self.factory()
+            let viewController = factory.createViewController()
+            let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
+            
+            factory.setupViewController(findedViewController)
+            return .init(viewController: viewController, default: factory.presentation())
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 

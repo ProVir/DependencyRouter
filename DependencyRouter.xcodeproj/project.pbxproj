@@ -32,6 +32,7 @@
 		507C9DB82144DFCC00996677 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB72144DFCC00996677 /* SecondViewController.swift */; };
 		507C9DBA2144DFDA00996677 /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9DB92144DFDA00996677 /* ModalViewController.swift */; };
 		50945877216318D10017E027 /* PresentationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50945876216318D10017E027 /* PresentationHandler.swift */; };
+		50945879216337420017E027 /* SupportObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50945878216337420017E027 /* SupportObjC.swift */; };
 		50E7E6222147F4D400FA64E0 /* SimplePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E7E6212147F4D400FA64E0 /* SimplePresentation.swift */; };
 /* End PBXBuildFile section */
 
@@ -84,6 +85,7 @@
 		507C9DB72144DFCC00996677 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		507C9DB92144DFDA00996677 /* ModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
 		50945876216318D10017E027 /* PresentationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationHandler.swift; sourceTree = "<group>"; };
+		50945878216337420017E027 /* SupportObjC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportObjC.swift; sourceTree = "<group>"; };
 		50E7E6212147F4D400FA64E0 /* SimplePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePresentation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,6 +159,7 @@
 				50084EFF215288E000910769 /* Helpers.swift */,
 				50084F052153447E00910769 /* SegueRouter.swift */,
 				50084F032152999D00910769 /* NavigationRouter.swift */,
+				50945878216337420017E027 /* SupportObjC.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -343,6 +346,7 @@
 				5040F36C214E287F00A23F08 /* AutoRouter.swift in Sources */,
 				507C9DB62144C2A200996677 /* Builder.swift in Sources */,
 				5040F36F214FE75A00A23F08 /* InputSource.swift in Sources */,
+				50945879216337420017E027 /* SupportObjC.swift in Sources */,
 				50084F0221528A1600910769 /* Helpers.swift in Sources */,
 				50945877216318D10017E027 /* PresentationHandler.swift in Sources */,
 				50084F062153447E00910769 /* SegueRouter.swift in Sources */,

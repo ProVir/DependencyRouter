@@ -20,6 +20,10 @@ class ViewControllerRouter: NavigationRouter<ViewController> {
         simplePresent(SecondViewControllerFactory.self)
 //        performSegue(withIdentifier: "next", factory: SecondViewControllerFactory())
     }
+    
+    func presentThird() {
+        BuilderRouter(ThirdViewControllerFactory.self).createAndSetup().present(on: self.viewController)
+    }
 }
 
 class ViewController: UIViewController, AutoRouterViewController {
@@ -42,6 +46,11 @@ class ViewController: UIViewController, AutoRouterViewController {
     @IBAction func actionNext() {
         router.presentNext()
     }
+    
+    @IBAction func actionThird() {
+        router.presentThird()
+    }
+    
     
     @IBAction func unwindCancel(_ segue: UIStoryboardSegue) {
         router.unwindSegue(segue)

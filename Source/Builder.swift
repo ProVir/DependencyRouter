@@ -62,49 +62,49 @@ extension BuilderRouterReadyCreate {
 //MARK: - Present
 
 public class BuilderRouterReadyPresent<VC: UIViewController> {
-    private var handler: PresentationHandler
+    private var router: PresentationRouter
     
-    public init(viewController: VC, default presentationSource: @autoclosure @escaping ()->PresentationRouter) {
-        self.handler = .init(viewController: viewController, presentationSource: presentationSource)
+    public init(viewController: VC, default actionSource: @autoclosure @escaping ()->PresentationAction) {
+        self.router = .init(viewController: viewController, actionSource: actionSource)
     }
     
     public init(error: Error) {
-        self.handler = .init(error: error)
+        self.router = .init(error: error)
     }
     
     //MARK: State and Data
-    public var defaultPresentationSource: ()->PresentationRouter {
-        return self.handler.presentationSource
+    public var defaultActionSource: ()->PresentationAction {
+        return self.router.actionSource
     }
     
     public func viewController() throws -> VC {
-        return try self.handler.viewController() as! VC
+        return try self.router.viewController() as! VC
     }
     
     public var viewControllerIfReady: VC? {
-        return self.handler.viewControllerIfReady as? VC
+        return self.router.viewControllerIfReady as? VC
     }
     
     public var error: Error? {
-        return self.handler.error
+        return self.router.error
     }
     
     
     //MARK: Result without Present
     @discardableResult
     public func isSuccess() -> Bool {
-        return self.handler.viewControllerIfReady != nil
+        return self.router.viewControllerIfReady != nil
     }
     
     public func completed() throws {
-        if let error = self.handler.error {
+        if let error = self.router.error {
             throw error
         }
     }
     
     public func completedOrFatalError() {
         DependencyRouterError.tryAsFatalError {
-            if let error = self.handler.error {
+            if let error = self.router.error {
                 throw error
             }
         }
@@ -112,7 +112,7 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
     
     public func completedOrAssert() {
         try? DependencyRouterError.tryAsAssert {
-            if let error = self.handler.error {
+            if let error = self.router.error {
                 throw error
             }
         }
@@ -124,37 +124,37 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
     //MARK: Setup for Present
     @discardableResult
     public func prepareHandler(_ handler: @escaping ()->Void) -> BuilderRouterReadyPresent<VC> {
-        self.handler.addPrepareHandler(handler)
+        self.router.addPrepareHandler(handler)
         return self
     }
     
     @discardableResult
     public func postHandler(_ handler: @escaping ()->Void) -> BuilderRouterReadyPresent<VC> {
-        self.handler.addPostHandler(handler)
+        self.router.addPostHandler(handler)
         return self
     }
     
     //MARK: Ready to deferred Present
-    public func presentationHandler() -> PresentationHandler {
-        return self.handler
+    public func presentationRouter() -> PresentationRouter {
+        return self.router
     }
     
-    public func presentationHandler(presentation presentationSource: @autoclosure @escaping ()->PresentationRouter) -> PresentationHandler {
-        var handler = self.handler
-        handler.setPresentationRouter(presentationSource)
-        return handler
+    public func presentationRouter(action actionSource: @autoclosure @escaping ()->PresentationAction) -> PresentationRouter {
+        var router = self.router
+        router.setAction(actionSource)
+        return router
     }
 
     //MARK: Present
-    public func present(on existingController: UIViewController, presentation: PresentationRouter? = nil, animated: Bool = true, completionHandler: @escaping (PresentationRouterResult)->Void) {
-        present(on: existingController, presentation: presentation, animated: animated, assertWhenFailure: false, completionHandler: completionHandler)
+    public func present(on existingController: UIViewController, action: PresentationAction? = nil, animated: Bool = true, completionHandler: @escaping (PresentationActionResult)->Void) {
+        present(on: existingController, action: action, animated: animated, assertWhenFailure: false, completionHandler: completionHandler)
     }
     
-    public func present(on existingController: UIViewController, presentation: PresentationRouter? = nil, animated: Bool = true, assertWhenFailure: Bool = true) {
-        present(on: existingController, presentation: presentation, animated: animated, assertWhenFailure: assertWhenFailure, completionHandler: nil)
+    public func present(on existingController: UIViewController, action: PresentationAction? = nil, animated: Bool = true, assertWhenFailure: Bool = true) {
+        present(on: existingController, action: action, animated: animated, assertWhenFailure: assertWhenFailure, completionHandler: nil)
     }
     
-    public func present(on existingController: UIViewController, presentation: PresentationRouter? = nil, animated: Bool = true, assertWhenFailure: Bool, completionHandler: ((PresentationRouterResult)->Void)?) {
-        self.handler.present(on: existingController, customPresentation: presentation, animated: animated, assertWhenFailure: assertWhenFailure, completionHandler: completionHandler)
+    public func present(on existingController: UIViewController, action: PresentationAction? = nil, animated: Bool = true, assertWhenFailure: Bool, completionHandler: ((PresentationActionResult)->Void)?) {
+        router.present(on: existingController, customAction: action, animated: animated, assertWhenFailure: assertWhenFailure, completionHandler: completionHandler)
     }
 }

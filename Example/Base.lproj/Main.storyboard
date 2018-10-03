@@ -42,13 +42,26 @@
                                     <segue destination="Puh-4m-u1g" kind="show" identifier="next" id="4f3-Y4-1KE"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NYh-uQ-mvw">
+                                <rect key="frame" x="105.5" y="192.5" width="164" height="94"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="94" id="n5d-6F-pSR"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="164" id="zmo-Ny-pfp"/>
+                                </constraints>
+                                <state key="normal" title="Thrid"/>
+                                <connections>
+                                    <action selector="actionThird" destination="BYZ-38-t0r" eventType="touchUpInside" id="COf-33-zis"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="NYh-uQ-mvw" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="2l3-Ch-Mnt"/>
                             <constraint firstItem="5oQ-r6-coX" firstAttribute="top" secondItem="7ec-Ob-b8d" secondAttribute="bottom" constant="8" symbolic="YES" id="AiO-ww-PCz"/>
                             <constraint firstItem="7ec-Ob-b8d" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="YWR-ax-GpE"/>
                             <constraint firstItem="7ec-Ob-b8d" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5oQ-r6-coX" secondAttribute="leading" id="c1w-An-jA5"/>
                             <constraint firstItem="7ec-Ob-b8d" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="5oQ-r6-coX" secondAttribute="trailing" id="cMr-of-ds7"/>
+                            <constraint firstItem="7ec-Ob-b8d" firstAttribute="top" secondItem="NYh-uQ-mvw" secondAttribute="bottom" id="wja-Fz-CmE"/>
                             <constraint firstItem="7ec-Ob-b8d" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="xSK-bT-CG1"/>
                         </constraints>
                     </view>
@@ -71,7 +84,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Ju-JA-Rbo">
-                                <rect key="frame" x="106" y="380" width="164" height="94"/>
+                                <rect key="frame" x="105.5" y="380.5" width="164" height="94"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="94" id="dcS-Oa-EhC"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="164" id="f3G-p7-fyg"/>
@@ -82,7 +95,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yaX-SA-GEl">
-                                <rect key="frame" x="106" y="287" width="164" height="94"/>
+                                <rect key="frame" x="105.5" y="286.5" width="164" height="94"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="164" id="UHr-bT-cKv"/>
                                     <constraint firstAttribute="height" constant="94" id="bP4-tt-c6f"/>

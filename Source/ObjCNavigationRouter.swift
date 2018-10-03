@@ -1,14 +1,14 @@
 //
-//  SupportObjC.swift
+//  ObjCNavigationRouter.swift
 //  DependencyRouter
 //
-//  Created by Короткий Виталий on 02/10/2018.
+//  Created by Короткий Виталий on 03/10/2018.
 //  Copyright © 2018 ProVir. All rights reserved.
 //
 
 import UIKit
 
-@objc(NavigationRouter)
+@objc(DRNavigationRouter)
 open class ObjCNavigationRouter: NSObject, SimplePresentNavigationRouter, CallbackFactoryInputSource, CallbackUnwindInputSource {
     @objc open weak var associatedViewController: UIViewController?
     open weak var source: (AnyObject & BaseFactoryInputSource)?

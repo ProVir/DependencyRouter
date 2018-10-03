@@ -114,7 +114,7 @@ extension BuilderRouterReadySetup where FR: FactoryRouter, FR: FactorySupportInp
         do {
             let factory = self.factory
             try factory.findAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
-            return .init(viewController: viewController, default: factory.presentation())
+            return .init(viewController: viewController, default: factory.presentationAction())
         } catch {
             return .init(error: error)
         }
@@ -131,7 +131,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: FactorySu
             let factory = self.factory()
             let viewController = factory.createViewController()
             try factory.findAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
-            return .init(viewController: viewController, default: factory.presentation())
+            return .init(viewController: viewController, default: factory.presentationAction())
         } catch {
             return .init(error: error)
         }

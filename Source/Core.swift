@@ -43,7 +43,7 @@ public struct Router { }
 public protocol CoreFactoryRouter {
     init?(containerAny: Any)
     
-    func presentation() -> PresentationRouter
+    func presentationAction() -> PresentationAction
 }
 
 public protocol CoreSourceRouterViewController: class {
@@ -59,8 +59,8 @@ extension FactoryRouter {
         }
     }
     
-    public func presentation() -> PresentationRouter {
-        return ShowPresentationRouter()
+    public func presentationAction() -> PresentationAction {
+        return ShowPresentationAction()
     }
 }
 
@@ -100,13 +100,13 @@ extension SourceRouterViewController where Factory: AutoFactoryRouter {
 
 
 //MARK: Presentation
-public enum PresentationRouterResult {
+public enum PresentationActionResult {
     case success
     case failure(Error)
 }
 
-public protocol PresentationRouter {
-    func present(_ viewController: UIViewController, on existingController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationRouterResult)->Void)
+public protocol PresentationAction {
+    func present(_ viewController: UIViewController, on existingController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult)->Void)
 }
 
 
@@ -123,6 +123,10 @@ extension FactoryRouter {
         }
         
         return viewController as! VC
+    }
+    
+    public func createViewControllerFromNib<VC: UIViewController>(_ nibName: String? = nil, bundle: Bundle? = nil) -> VC {
+        return VC(nibName: nibName, bundle: bundle)
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  PresentationHandler.swift
+//  PresentationRouter.swift
 //  DependencyRouter
 //
 //  Created by Короткий Виталий on 02/10/2018.
@@ -8,25 +8,25 @@
 
 import UIKit
 
-public struct PresentationHandler {
+public struct PresentationRouter {
     
-    public init(viewController: UIViewController, presentationSource: @autoclosure @escaping ()->PresentationRouter) {
+    public init(viewController: UIViewController, actionSource: @autoclosure @escaping ()->PresentationAction) {
         self.store = .viewController(viewController)
-        self.presentationSource = presentationSource
+        self.actionSource = actionSource
     }
     
     public init(viewController: UIViewController) {
         self.store = .viewController(viewController)
-        self.presentationSource = { NotPresentationRouter() }
+        self.actionSource = { NotPresentationAction() }
     }
     
     public init(error: Error) {
         self.store = .error(error)
-        self.presentationSource = { NotPresentationRouter() }
+        self.actionSource = { NotPresentationAction() }
     }
     
     //MARK: State and Data
-    public private(set) var presentationSource: ()->PresentationRouter
+    public private(set) var actionSource: ()->PresentationAction
     
     public func viewController() throws -> UIViewController {
         switch store {
@@ -50,8 +50,8 @@ public struct PresentationHandler {
     }
     
     //MARK: Setup
-    mutating public func setPresentationRouter(_ presentationSource: @autoclosure @escaping ()->PresentationRouter) {
-        self.presentationSource = presentationSource
+    mutating public func setAction(_ actionSource: @autoclosure @escaping ()->PresentationAction) {
+        self.actionSource = actionSource
     }
     
     mutating public func addPrepareHandler(_ handler: @escaping ()->Void) {
@@ -64,15 +64,15 @@ public struct PresentationHandler {
     
     
     //MARK: Present
-    public func present(on existingController: UIViewController, customPresentation: PresentationRouter? = nil, animated: Bool = true, completionHandler: @escaping (PresentationRouterResult)->Void) {
-        present(on: existingController, customPresentation: customPresentation, animated: animated, assertWhenFailure: false, completionHandler: completionHandler)
+    public func present(on existingController: UIViewController, customAction: PresentationAction? = nil, animated: Bool = true, completionHandler: @escaping (PresentationActionResult)->Void) {
+        present(on: existingController, customAction: customAction, animated: animated, assertWhenFailure: false, completionHandler: completionHandler)
     }
     
-    public func present(on existingController: UIViewController, customPresentation: PresentationRouter? = nil, animated: Bool = true, assertWhenFailure: Bool = true) {
-        present(on: existingController, customPresentation: customPresentation, animated: animated, assertWhenFailure: assertWhenFailure, completionHandler: nil)
+    public func present(on existingController: UIViewController, customAction: PresentationAction? = nil, animated: Bool = true, assertWhenFailure: Bool = true) {
+        present(on: existingController, customAction: customAction, animated: animated, assertWhenFailure: assertWhenFailure, completionHandler: nil)
     }
     
-    public func present(on existingController: UIViewController, customPresentation: PresentationRouter? = nil, animated: Bool = true, assertWhenFailure: Bool, completionHandler: ((PresentationRouterResult)->Void)?) {
+    public func present(on existingController: UIViewController, customAction: PresentationAction? = nil, animated: Bool = true, assertWhenFailure: Bool, completionHandler: ((PresentationActionResult)->Void)?) {
         //1. Unwrap VC
         let viewController: UIViewController
         switch self.store {
@@ -88,13 +88,13 @@ public struct PresentationHandler {
         }
         
         //2. Present VC
-        let presentation = customPresentation ?? presentationSource()
+        let action = customAction ?? actionSource()
         
         for handler in prepareHandlers {
             handler()
         }
         
-        presentation.present(viewController, on: existingController, animated: animated) { [postHandlers] (result) in
+        action.present(viewController, on: existingController, animated: animated) { [postHandlers] (result) in
             switch result {
             case .success:
                 for handler in postHandlers {

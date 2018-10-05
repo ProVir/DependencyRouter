@@ -11,50 +11,72 @@ import UIKit
 //MARK: Builder
 public struct BuilderRouter<FR: FactoryRouter> {
     public struct ReadyCreate: BuilderRouterReadyCreate {
-        public init(factory: FR) { storeFactory = factory }
+        public init(factory: @autoclosure @escaping ()->FR) { lazyFactory = factory }
         
-        public let storeFactory: FR
-        public func factory() -> FR { return storeFactory }
+        public let lazyFactory: ()->FR
     }
     
     public struct ReadySetup<VC: UIViewController>: BuilderRouterReadySetup {
-        public let factory: FR
+        public init(factory: FR, viewController: VC) {
+            self.storeFactory = factory
+            self.viewController = viewController
+        }
+        
+        public let storeFactory: FR
         public let viewController: VC
+        
+        public func factory() -> FR { return storeFactory }
+    }
+    
+    public struct LazyReadySetup<VC: UIViewController>: BuilderRouterReadySetup {
+        public init(factory: @escaping ()->FR, viewController: VC) {
+            self.lazyFactory = factory
+            self.viewController = viewController
+        }
+        
+        public let lazyFactory: ()->FR
+        public let viewController: VC
+        
+        public func factory() -> FR { return lazyFactory() }
     }
     
     public init(_ factoryType: FR.Type) { }
     
-    public func setContainer(_ container: FR.ContainerType) -> ReadyCreate {
-        return ReadyCreate(factory: FR.init(container: container))
+    public func setContainer(_ container: @autoclosure @escaping ()->FR.ContainerType) -> ReadyCreate {
+        return ReadyCreate(factory: FR(container: container()))
     }
 }
 
 
 public protocol BuilderRouterReadyCreate {
     associatedtype FR: FactoryRouter
-    func factory() -> FR
+    var lazyFactory: ()->FR { get }
 }
 
 public protocol BuilderRouterReadySetup {
     associatedtype FR: FactoryRouter
     associatedtype VC: UIViewController
-    var factory: FR { get }
     var viewController: VC { get }
+    func factory() -> FR
 }
 
 extension BuilderRouter: BuilderRouterReadyCreate where FR: AutoFactoryRouter {
-    public func factory() -> FR {
-        return FR()
+    public var lazyFactory: () -> FR {
+        return { FR() }
     }
 }
 
 extension BuilderRouterReadyCreate {
-    public func use<VC: UIViewController>(_ viewController: VC) -> BuilderRouter<FR>.ReadySetup<VC> {
-        return .init(factory: factory(), viewController: viewController)
+    func factory() -> FR {
+        return lazyFactory()
     }
     
-    public func use(segue: UIStoryboardSegue) -> BuilderRouter<FR>.ReadySetup<UIViewController> {
-        return .init(factory: factory(), viewController: segue.destination)
+    public func use<VC: UIViewController>(_ viewController: VC) -> BuilderRouter<FR>.LazyReadySetup<VC> {
+        return .init(factory: lazyFactory, viewController: viewController)
+    }
+    
+    public func use(segue: UIStoryboardSegue) -> BuilderRouter<FR>.LazyReadySetup<UIViewController> {
+        return .init(factory: lazyFactory, viewController: segue.destination)
     }
 }
 

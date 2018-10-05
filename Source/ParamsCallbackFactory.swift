@@ -143,8 +143,8 @@ public class WeakCallbackFactoryInputSourceStore: CallbackFactoryInputSource {
 extension BuilderRouterReadySetup where FR: ParamsFactoryRouter {
     public func setup(params: FR.ParamsType) -> BuilderRouterReadyPresent<VC> {
         do {
-            let factory = self.factory
             let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
+            let factory = self.factory()
             
             try factory.setupViewController(findedViewController, params: params)
             return .init(viewController: viewController, default: factory.presentationAction(params: params))
@@ -157,9 +157,9 @@ extension BuilderRouterReadySetup where FR: ParamsFactoryRouter {
 extension BuilderRouterReadySetup where FR: CallbackFactoryRouter {
     public func setup(callback: FR.CallbackType) -> BuilderRouterReadyPresent<VC> {
         do {
-            let factory = self.factory
             let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
-        
+            let factory = self.factory()
+            
             try factory.setupViewController(findedViewController, callback: callback)
             return .init(viewController: viewController, default: factory.presentationAction())
         } catch {
@@ -171,8 +171,8 @@ extension BuilderRouterReadySetup where FR: CallbackFactoryRouter {
 extension BuilderRouterReadySetup where FR: ParamsWithCallbackFactoryRouter {
     public func setup(params: FR.ParamsType, callback: FR.CallbackType) -> BuilderRouterReadyPresent<VC> {
         do {
-            let factory = self.factory
             let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
+            let factory = self.factory()
             
             try factory.setupViewController(findedViewController, params: params, callback: callback)
             return .init(viewController: viewController, default: factory.presentationAction(params: params))

@@ -44,8 +44,8 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter {
 extension BuilderRouterReadySetup where FR: BlankFactoryRouter {
     public func setup() -> BuilderRouterReadyPresent<VC> {
         do {
-            let factory = self.factory
             let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
+            let factory = self.factory()
             
             factory.setupViewController(findedViewController)
             return .init(viewController: viewController, default: factory.presentationAction())

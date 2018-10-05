@@ -112,7 +112,7 @@ extension BuilderRouterReadySetup where FR: FactoryRouter, FR: FactorySupportInp
     public func setup(sourceList: [BaseFactoryInputSource], identifier: String? = nil, sender: Any? = nil) -> BuilderRouterReadyPresent<VC> {
         
         do {
-            let factory = self.factory
+            let factory = self.factory()
             try factory.findAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
             return .init(viewController: viewController, default: factory.presentationAction())
         } catch {

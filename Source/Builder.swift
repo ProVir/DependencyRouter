@@ -8,42 +8,87 @@
 
 import UIKit
 
+public protocol PrepareBuilderSupportFactoryRouter {
+    associatedtype VCSetupType: UIViewController
+    var setupVCType: VCSetupType.Type { get }
+}
+
 //MARK: Builder
-public struct BuilderRouter<FR: FactoryRouter> {
+public struct BuilderRouter<BuilderFR: FactoryRouter> {
     public struct ReadyCreate: BuilderRouterReadyCreate {
-        public init(factory: @autoclosure @escaping ()->FR) { lazyFactory = factory }
+        public init(factory: @escaping ()->BuilderFR) { lazyFactory = factory }
         
-        public let lazyFactory: ()->FR
+        public let lazyFactory: ()->BuilderFR
+    }
+    
+    public struct PrepareBuilder<VC: UIViewController> {
+        public init(viewController: VC, findedForSetupViewController: UIViewController) {
+            self.viewController = viewController
+            self.findedForSetupViewController = findedForSetupViewController
+        }
+        
+        public let viewController: VC
+        public private(set) weak var findedForSetupViewController: UIViewController?
+        
+        public func setContainer(_ container: BuilderFR.ContainerType) -> ReadySetup<VC> {
+            return .init(factory: FR(container: container), viewController: viewController, findedForSetupViewController: findedForSetupViewController)
+        }
+        
+        public func setContainer(lazy container: @autoclosure @escaping ()->BuilderFR.ContainerType) -> LazyReadySetup<VC> {
+            return .init(factory: { FR(container: container()) }, viewController: viewController, findedForSetupViewController: findedForSetupViewController)
+        }
     }
     
     public struct ReadySetup<VC: UIViewController>: BuilderRouterReadySetup {
-        public init(factory: FR, viewController: VC) {
+        public init(factory: BuilderFR, viewController: VC, findedForSetupViewController: UIViewController? = nil) {
             self.storeFactory = factory
             self.viewController = viewController
+            self.findedForSetupViewController = findedForSetupViewController
         }
         
-        public let storeFactory: FR
+        public let storeFactory: BuilderFR
         public let viewController: VC
+        public private(set) weak var findedForSetupViewController: UIViewController?
         
-        public func factory() -> FR { return storeFactory }
+        public func factory() -> BuilderFR { return storeFactory }
     }
     
     public struct LazyReadySetup<VC: UIViewController>: BuilderRouterReadySetup {
-        public init(factory: @escaping ()->FR, viewController: VC) {
+        public init(factory: @escaping ()->BuilderFR, viewController: VC, findedForSetupViewController: UIViewController? = nil) {
             self.lazyFactory = factory
             self.viewController = viewController
+            self.findedForSetupViewController = findedForSetupViewController
         }
         
-        public let lazyFactory: ()->FR
+        public let lazyFactory: ()->BuilderFR
         public let viewController: VC
+        public private(set) weak var findedForSetupViewController: UIViewController?
         
-        public func factory() -> FR { return lazyFactory() }
+        public func factory() -> BuilderFR { return lazyFactory() }
     }
     
-    public init(_ factoryType: FR.Type) { }
+    public init(_ factoryType: BuilderFR.Type) { }
     
-    public func setContainer(_ container: @autoclosure @escaping ()->FR.ContainerType) -> ReadyCreate {
-        return ReadyCreate(factory: FR(container: container()))
+    public func setContainer(_ container: BuilderFR.ContainerType) -> ReadyCreate {
+        return ReadyCreate(factory: { BuilderFR(container: container) })
+    }
+    
+    public func setContainer(lazy container: @autoclosure @escaping ()->BuilderFR.ContainerType) -> ReadyCreate {
+        return ReadyCreate(factory: { BuilderFR(container: container()) })
+    }
+}
+
+extension BuilderRouter where BuilderFR: PrepareBuilderSupportFactoryRouter {
+    public func builderIfSupport<VC: UIViewController>(use viewController: VC) -> PrepareBuilder<VC>? {
+        if let vc: BuilderFR.VCSetupType = try? dependencyRouterFindViewController(viewController) {
+            return .init(viewController: viewController, findedForSetupViewController: vc)
+        } else {
+            return nil
+        }
+    }
+    
+    public func builderIfSupport(useSegue segue: UIStoryboardSegue) -> PrepareBuilder<UIViewController>? {
+        return builderIfSupport(use: segue.destination)
     }
 }
 
@@ -56,13 +101,24 @@ public protocol BuilderRouterReadyCreate {
 public protocol BuilderRouterReadySetup {
     associatedtype FR: FactoryRouter
     associatedtype VC: UIViewController
+    
     var viewController: VC { get }
+    var findedForSetupViewController: UIViewController? { get }
+    
     func factory() -> FR
 }
 
-extension BuilderRouter: BuilderRouterReadyCreate where FR: AutoFactoryRouter {
+extension BuilderRouter: BuilderRouterReadyCreate where BuilderFR: AutoFactoryRouter {
+    public typealias FR = BuilderFR
     public var lazyFactory: () -> FR {
         return { FR() }
+    }
+}
+
+extension BuilderRouter.PrepareBuilder: BuilderRouterReadySetup where BuilderFR: AutoFactoryRouter {
+    public typealias FR = BuilderFR
+    public func factory() -> FR {
+        return FR()
     }
 }
 
@@ -77,6 +133,16 @@ extension BuilderRouterReadyCreate {
     
     public func use(segue: UIStoryboardSegue) -> BuilderRouter<FR>.LazyReadySetup<UIViewController> {
         return .init(factory: lazyFactory, viewController: segue.destination)
+    }
+}
+
+extension BuilderRouterReadySetup {
+    public func coreFindForSetupViewController<VCType: UIViewController>() throws -> VCType {
+        if let vc: VCType = findedForSetupViewController as? VCType {
+            return vc
+        } else {
+            return try dependencyRouterFindViewController(viewController)
+        }
     }
 }
 

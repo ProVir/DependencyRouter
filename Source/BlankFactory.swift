@@ -13,7 +13,7 @@ public protocol CreatorFactoryRouter: FactoryRouter {
     func createViewController() -> VCCreateType
 }
 
-public protocol BlankFactoryRouter: FactoryRouter, FactorySupportInputSource {
+public protocol BlankFactoryRouter: FactoryRouter, FactorySupportInputSource, PrepareBuilderSupportFactoryRouter {
     associatedtype VCType: UIViewController
     func setupViewController(_ viewController: VCType)
 }
@@ -33,6 +33,10 @@ public typealias LightBlankCreatorFactoryRouter  = LightFactoryRouter & BlankCre
 
 
 //MARK: Support Builder
+extension BlankFactoryRouter {
+    public var setupVCType: VCType.Type { return VCType.self }
+}
+
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter {
     public func create() -> BuilderRouter<FR>.ReadySetup<FR.VCCreateType> {
         let factory = self.factory()
@@ -44,7 +48,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter {
 extension BuilderRouterReadySetup where FR: BlankFactoryRouter {
     public func setup() -> BuilderRouterReadyPresent<VC> {
         do {
-            let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
+            let findedViewController: FR.VCType = try coreFindForSetupViewController()
             let factory = self.factory()
             
             factory.setupViewController(findedViewController)

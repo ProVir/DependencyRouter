@@ -53,6 +53,20 @@ public struct ModalPresentationAction: PresentationAction {
         case view(UIView, CGRect)
     }
     
+    public enum CloseLeftButton {
+        case none
+        case system(UIBarButtonItem.SystemItem)
+        case title(String, UIBarButtonItem.Style)
+        case image(UIImage)
+        
+        public var isNeed: Bool {
+            switch self {
+            case .none: return false
+            default: return true
+            }
+        }
+    }
+    
     public var canAutoWrappedNavigtionController: Bool = false
     public var canDismissOtherPresented: Bool = false
     public var noAdaptivePresentationStyle: Bool = false
@@ -67,6 +81,33 @@ public struct ModalPresentationAction: PresentationAction {
         self.canDismissOtherPresented = dismissOtherPresented
         self.noAdaptivePresentationStyle = noAdaptive
         self.prepareHandler = prepareHandler
+    }
+    
+    public init(autoWrapped: Bool, dismissOtherPresented: Bool = false, noAdaptive: Bool = false, presentationStyle: UIModalPresentationStyle, closeLeftButton: CloseLeftButton = .none) {
+        self.canAutoWrappedNavigtionController = autoWrapped
+        self.canDismissOtherPresented = dismissOtherPresented
+        self.noAdaptivePresentationStyle = noAdaptive
+        
+        self.prepareHandler = { viewController in
+            viewController.modalPresentationStyle = presentationStyle
+            
+            if closeLeftButton.isNeed, let firstVC = (viewController as? UINavigationController)?.viewControllers.first {
+                let selDismiss = NSSelectorFromString("dismissUseRouter")
+                
+                let item: UIBarButtonItem
+                switch closeLeftButton {
+                case .none: return
+                case .system(let button):
+                    item = UIBarButtonItem(barButtonSystemItem: button, target: firstVC, action: selDismiss)
+                case .title(let title, let style):
+                    item = UIBarButtonItem(title: title, style: style, target: firstVC, action: selDismiss)
+                case .image(let image):
+                    item = UIBarButtonItem(image: image, style: .plain, target: firstVC, action: selDismiss)
+                }
+                
+                firstVC.navigationItem.leftBarButtonItem = item
+            }
+        }
     }
     
     public init(autoWrapped: Bool, dismissOtherPresented: Bool = false, noAdaptive: Bool = false, popoverSourceView: PopoverSourceView, permittedArrowDirections: UIPopoverArrowDirection = .any) {

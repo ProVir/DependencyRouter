@@ -45,3 +45,13 @@ extension Router {
     }
 }
 
+extension UIViewController {
+    @IBAction public func dismissUseRouter() {
+        Router.dismiss(self)
+    }
+    
+    @IBAction public func dismissUseRouter(animated: Bool) {
+        Router.dismiss(self, animated: animated)
+    }
+}
+

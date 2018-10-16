@@ -150,23 +150,9 @@
 			children = (
 				507C9D76214382DB00996677 /* DependencyRouter.h */,
 				507C9D77214382DB00996677 /* Info.plist */,
-				507C9DA7214385AA00996677 /* Core.swift */,
-				507C9DAD2143D67400996677 /* Error.swift */,
-				50945876216318D10017E027 /* PresentationRouter.swift */,
-				507C9DB52144C2A200996677 /* Builder.swift */,
-				5040F36D214FE74800A23F08 /* InputSource.swift */,
-				5040F36A214E284B00A23F08 /* AutoRouter.swift */,
-				507C9DB12143E32D00996677 /* Cocoa.swift */,
-				507C9DA92143D45600996677 /* BlankFactory.swift */,
-				507C9DAF2143DC4800996677 /* ParamsCallbackFactory.swift */,
-				507C9DB32144BF7400996677 /* ParamsCreatorFactory.swift */,
-				50E7E6212147F4D400FA64E0 /* SimplePresentationActions.swift */,
-				5040F3702150C6E000A23F08 /* UnwindRouter.swift */,
-				50084EFF215288E000910769 /* Helpers.swift */,
-				50084F052153447E00910769 /* SegueRouter.swift */,
-				50084F032152999D00910769 /* NavigationRouter.swift */,
-				5094587A2164B3590017E027 /* ObjCPresentationRouter.swift */,
-				5094587C2164B39D0017E027 /* ObjCNavigationRouter.swift */,
+				50B177C02175E48E0031A085 /* Core */,
+				50B177C12175E5FC0031A085 /* General */,
+				50B177C32175E7520031A085 /* ObjC */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -202,6 +188,44 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		50B177C02175E48E0031A085 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				507C9DA7214385AA00996677 /* Core.swift */,
+				507C9DAD2143D67400996677 /* Error.swift */,
+				50945876216318D10017E027 /* PresentationRouter.swift */,
+				507C9DB52144C2A200996677 /* Builder.swift */,
+				5040F36D214FE74800A23F08 /* InputSource.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		50B177C12175E5FC0031A085 /* General */ = {
+			isa = PBXGroup;
+			children = (
+				507C9DB12143E32D00996677 /* Cocoa.swift */,
+				507C9DA92143D45600996677 /* BlankFactory.swift */,
+				5040F36A214E284B00A23F08 /* AutoRouter.swift */,
+				507C9DAF2143DC4800996677 /* ParamsCallbackFactory.swift */,
+				507C9DB32144BF7400996677 /* ParamsCreatorFactory.swift */,
+				50E7E6212147F4D400FA64E0 /* SimplePresentationActions.swift */,
+				5040F3702150C6E000A23F08 /* UnwindRouter.swift */,
+				50084EFF215288E000910769 /* Helpers.swift */,
+				50084F052153447E00910769 /* SegueRouter.swift */,
+				50084F032152999D00910769 /* NavigationRouter.swift */,
+			);
+			path = General;
+			sourceTree = "<group>";
+		};
+		50B177C32175E7520031A085 /* ObjC */ = {
+			isa = PBXGroup;
+			children = (
+				5094587A2164B3590017E027 /* ObjCPresentationRouter.swift */,
+				5094587C2164B39D0017E027 /* ObjCNavigationRouter.swift */,
+			);
+			path = ObjC;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

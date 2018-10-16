@@ -11,11 +11,11 @@ import UIKit
 
 
 //MARK: Containers
-extension UINavigationController: ViewContainerSupportRouter {
+extension UINavigationController: ContainerViewControllerSupportRouter {
     public func findViewController<VCType>() -> VCType? {
         if let vc = viewControllers.first as? VCType {
             return vc
-        } else if let container = viewControllers.first as? ViewContainerSupportRouter {
+        } else if let container = viewControllers.first as? ContainerViewControllerSupportRouter {
             return container.findViewController()
         } else {
             return nil

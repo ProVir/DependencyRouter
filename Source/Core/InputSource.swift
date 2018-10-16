@@ -142,7 +142,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: FactorySu
 public func dependencyRouterFindSourceRouterViewController(_ viewController: UIViewController) -> (UIViewController & CoreSourceRouterViewController, FactorySupportInputSource)? {
     if let vc = viewController as? UIViewController & CoreSourceRouterViewController {
         return (vc, vc.coreCreateFactoryForSetup())
-    } else if let vc: UIViewController & CoreSourceRouterViewController = (viewController as? ViewContainerSupportRouter)?.findViewController() {
+    } else if let vc: UIViewController & CoreSourceRouterViewController = (viewController as? ContainerViewControllerSupportRouter)?.findViewController() {
         return (vc, vc.coreCreateFactoryForSetup())
     } else {
         return nil

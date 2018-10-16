@@ -8,6 +8,13 @@
 
 import UIKit
 
+extension FactoryRouter {
+    public func presentationAction() -> PresentationAction {
+        return ShowPresentationAction()
+    }
+}
+
+
 /// Shared UIAdaptivePresentationControllerDelegate in regime no daptive for iPhone
 public class NoAdaptivePresentationStyleHelper: NSObject, UIAdaptivePresentationControllerDelegate {
     public static var shared = NoAdaptivePresentationStyleHelper()

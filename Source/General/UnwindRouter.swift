@@ -165,7 +165,7 @@ extension SelfUnwindRouterViewController {
 public func dependencyRouterFindUnwindRouterViewController(_ viewController: UIViewController) -> (UIViewController & CoreUnwindRouterViewController)? {
     if let vc = viewController as? UIViewController & CoreUnwindRouterViewController {
         return vc
-    } else if let vc: UIViewController & CoreUnwindRouterViewController = (viewController as? ViewContainerSupportRouter)?.findViewController() {
+    } else if let vc: UIViewController & CoreUnwindRouterViewController = (viewController as? ContainerViewControllerSupportRouter)?.findViewController() {
         return vc
     } else {
         return nil

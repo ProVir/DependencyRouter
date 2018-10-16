@@ -1,12 +1,53 @@
 //
 //  Error.swift
-//  DependencyRouter
+//  DependencyRouter 0.2
 //
 //  Created by Короткий Виталий on 08.09.2018.
 //  Copyright © 2018 ProVir. All rights reserved.
 //
 
 import Foundation
+
+public enum DependencyRouterError: Error {
+    case notReadyPresentingViewController(String)   //Parameter: detail text
+    case failureSetupViewController
+    
+    case viewControllerNotFound(Any.Type)   //Parameter: ViewController class
+
+    case inputSourceNotFound(Any)           //Parameter: require InputSource type
+    case inputDataInvalidType(String, Any.Type, required: Any.Type) //Parameters: dataName, founded type, required type.
+    
+
+    public var description: String {
+        switch self {
+        case .notReadyPresentingViewController(let detail):
+            return "Not ready presenting ViewController: \(detail)"
+            
+        case .failureSetupViewController:
+            return "ViewController setup is failure. Perhaps after a successful configuration you did not set `setupedByRouter = true`"
+            
+        case .viewControllerNotFound(let vcType):
+            return "ViewController with type \(vcType) not found"
+            
+        case .inputSourceNotFound(let sourceType):
+            return "Not found \(sourceType) in input source list"
+            
+        case .inputDataInvalidType(let dataName, let srcType, required: let requiredType):
+            return "\(dataName) (\(srcType) doesn't conform to type \(requiredType)"
+        }
+    }
+    
+    /// Fatal error with text from description
+    public func fatalError(file: StaticString = #file, line: UInt = #line) -> Never {
+        Swift.fatalError(self.description, file: file, line: line)
+    }
+    
+    /// AssertionFailure with text from description
+    public func assertionFailure(file: StaticString = #file, line: UInt = #line) {
+        Swift.assertionFailure(self.description, file: file, line: line)
+    }
+}
+
 
 extension DependencyRouterError {
     public static func tryAsFatalError<R>(file: StaticString = #file, line: UInt = #line, handler: () throws ->R) -> R {
@@ -33,56 +74,5 @@ extension DependencyRouterError {
             
             throw error
         }
-    }
-}
-
-public enum DependencyRouterError: Error {
-    case notReadyPresentingViewController(String)
-    case failureSetupViewController
-    
-    case viewControllerNotFound(Any.Type)
-    
-    case containerNotFound(Any.Type)
-    case containerInvalidType(Any.Type, routerType: CoreFactoryRouter.Type)
-    
-    case inputSourceNotFound(Any)
-    case inputDataInvalidType(String, Any.Type, required: Any.Type)
-    case inputDataNotFound(String)
-    
-    
-    public var description: String {
-        switch self {
-        case .notReadyPresentingViewController(let detail):
-            return "Not ready presenting ViewController: \(detail)"
-            
-        case .failureSetupViewController:
-            return "ViewController setup is failure. Perhaps after a successful configuration you did not set `setupedByRouter = true`"
-            
-        case .viewControllerNotFound(let vcType):
-            return "ViewController with type \(vcType) not found"
-            
-        case .containerNotFound(let containerType):
-            return "Not found \(containerType) in source service container"
-            
-        case .containerInvalidType(let containerType, routerType: let routerType):
-            return "Invalid container type \(containerType) for FactoryRouter type \(routerType)"
-            
-        case .inputSourceNotFound(let sourceType):
-            return "Not found \(sourceType) in input source list"
-            
-        case .inputDataInvalidType(let dataName, let srcType, required: let requiredType):
-            return "\(dataName) (\(srcType) doesn't conform to type \(requiredType)"
-            
-        case .inputDataNotFound(let dataName):
-            return "\(dataName) not found"
-        }
-    }
-    
-    public func fatalError(file: StaticString = #file, line: UInt = #line) -> Never {
-        Swift.fatalError(self.description, file: file, line: line)
-    }
-    
-    public func assertionFailure(file: StaticString = #file, line: UInt = #line) {
-        Swift.assertionFailure(self.description, file: file, line: line)
     }
 }

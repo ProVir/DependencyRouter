@@ -1,6 +1,6 @@
 //
 //  ObjCPresentationRouter.swift
-//  DependencyRouter
+//  DependencyRouter 0.2
 //
 //  Created by Короткий Виталий on 03/10/2018.
 //  Copyright © 2018 ProVir. All rights reserved.
@@ -32,11 +32,11 @@ open class ObjCPresentationRouter: NSObject {
         return router.error
     }
     
-    @objc public func addPrepareHandler(_ handler: @escaping ()->Void) {
+    @objc public func addPrepareHandler(_ handler: @escaping (UIViewController)->Void) {
         router.addPrepareHandler(handler)
     }
     
-    @objc public func addPostHandler(_ handler: @escaping ()->Void) {
+    @objc public func addPostHandler(_ handler: @escaping (UIViewController)->Void) {
         router.addPostHandler(handler)
     }
     

@@ -11,13 +11,10 @@ import Foundation
 public enum DependencyRouterError: Error {
     case notReadyPresentingViewController(String)   //Parameter: detail text
     case failureSetupViewController
-    
     case viewControllerNotFound(Any.Type)   //Parameter: ViewController class
-
     case inputSourceNotFound(Any)           //Parameter: require InputSource type
     case inputDataInvalidType(String, Any.Type, required: Any.Type) //Parameters: dataName, founded type, required type.
     
-
     public var description: String {
         switch self {
         case .notReadyPresentingViewController(let detail):
@@ -47,7 +44,6 @@ public enum DependencyRouterError: Error {
         Swift.assertionFailure(self.description, file: file, line: line)
     }
 }
-
 
 extension DependencyRouterError {
     public static func tryAsFatalError<R>(file: StaticString = #file, line: UInt = #line, handler: () throws ->R) -> R {

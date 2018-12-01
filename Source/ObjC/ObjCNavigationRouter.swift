@@ -31,7 +31,7 @@ open class ObjCNavigationRouter: NSObject, SimplePresentNavigationRouter, Callba
     }
     
     @discardableResult
-    open func prepare(for segue: UIStoryboardSegue, sender: Any?) -> Bool {
+    @objc open func prepare(for segue: UIStoryboardSegue, sender: Any?) -> Bool {
         if segueRouter.contains(segueIdentifier: segue.identifier ?? "") {
             return segueRouter.prepare(for: segue, sender: sender)
         } else {
@@ -40,12 +40,12 @@ open class ObjCNavigationRouter: NSObject, SimplePresentNavigationRouter, Callba
     }
     
     @discardableResult
-    open func unwindSegue(_ segue: UIStoryboardSegue) -> Bool {
+    @objc open func unwindSegue(_ segue: UIStoryboardSegue) -> Bool {
         return Router.unwindSegue(segue, sourceList: sourceList)
     }
     
     @discardableResult
-    open func dismiss(animated: Bool = true) -> Bool {
+    @objc open func dismiss(animated: Bool = true) -> Bool {
         if let viewController = associatedViewController {
             return Router.dismiss(viewController, animated: animated)
         } else {

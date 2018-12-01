@@ -14,11 +14,10 @@ public protocol PrepareBuilderSupportFactoryRouter {
     var setupVCType: VCSetupType.Type { get }
 }
 
-//MARK: Builder
+// MARK: Builder
 
 /// Builder (begin step) with factory type ready for use
 public struct BuilderRouter<BuilderFR: FactoryRouter> {
-    
     /// Builder step: after created factory (may be lazy) with container
     public struct ReadyCreate: BuilderRouterReadyCreate {
         public init(factory: @escaping ()->BuilderFR) { lazyFactory = factory }
@@ -37,7 +36,7 @@ public struct BuilderRouter<BuilderFR: FactoryRouter> {
         public let storeFactory: BuilderFR
         public let viewController: VC
         public private(set) weak var findedForSetupViewController: UIViewController?
-        
+
         public func factory() -> BuilderFR { return storeFactory }
     }
     
@@ -169,8 +168,7 @@ extension BuilderRouterReadySetup {
     }
 }
 
-
-//MARK: - Present
+// MARK: - Present
 /// Step 4 (Last): Present setuped ViewController
 public class BuilderRouterReadyPresent<VC: UIViewController> {
     private var router: PresentationRouter
@@ -185,8 +183,7 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
         self.router = .init(error: error)
     }
     
-    //MARK: State and Data
-    
+    // MARK: State and Data
     /// Autoclosure with action as default
     public var defaultActionSource: ()->PresentationAction {
         return self.router.actionSource
@@ -207,9 +204,7 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
         return self.router.error
     }
     
-    
-    //MARK: Result without Present
-    
+    // MARK: Result without Present
     /// Result as `Bool` used Builder without present
     @discardableResult
     public func isSuccess() -> Bool {
@@ -244,16 +239,15 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
     /// Ignore result used Builder without present
     public func ignoreResult() { }
     
-    
-    //MARK: Setup for Present
+    // MARK: Setup for Present
     @discardableResult
-    public func prepareHandler(_ handler: @escaping (UIViewController)->Void) -> BuilderRouterReadyPresent<VC> {
+    public func prepareHandler(_ handler: @escaping (UIViewController)->Void) -> Self {
         self.router.addPrepareHandler(handler)
         return self
     }
     
     @discardableResult
-    public func postHandler(_ handler: @escaping (UIViewController)->Void) -> BuilderRouterReadyPresent<VC> {
+    public func postHandler(_ handler: @escaping (UIViewController)->Void) -> Self {
         self.router.addPostHandler(handler)
         return self
     }
@@ -269,8 +263,7 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
         return router
     }
 
-    //MARK: Present
-    
+    // MARK: Present
     /**
      Present ViewController on existing use action and result (success or failure) return in closure.
      

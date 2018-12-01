@@ -1,6 +1,6 @@
 //
 //  PresentationRouter.swift
-//  DependencyRouter
+//  DependencyRouter 0.2
 //
 //  Created by Короткий Виталий on 02/10/2018.
 //  Copyright © 2018 ProVir. All rights reserved.
@@ -10,7 +10,6 @@ import UIKit
 
 /// PresentationActions handler
 public struct PresentationRouter {
-    
     /**
      Constructor with default action (use lazy created action).
  
@@ -43,8 +42,7 @@ public struct PresentationRouter {
         self.actionSource = { NotPresentationAction() }
     }
     
-    //MARK: State and Data
-    
+    // MARK: State and Data
     /// Autoclosure with action as default
     public private(set) var actionSource: ()->PresentationAction
     
@@ -72,7 +70,7 @@ public struct PresentationRouter {
         }
     }
     
-    //MARK: Setup
+    // MARK: Setup
     mutating public func setAction(_ actionSource: @autoclosure @escaping ()->PresentationAction) {
         self.actionSource = actionSource
     }
@@ -85,9 +83,7 @@ public struct PresentationRouter {
         postHandlers.append(handler)
     }
     
-    
-    //MARK: Present
-    
+    // MARK: Present
     /**
      Present ViewController on existing use action and result (success or failure) return in closure.
  
@@ -152,7 +148,6 @@ public struct PresentationRouter {
                 for handler in postHandlers {
                     handler(viewController)
                 }
-                
                 completionHandler?(result)
                 
             case .failure(let error):
@@ -164,8 +159,7 @@ public struct PresentationRouter {
         }
     }
     
-    
-    //MARK: - Private
+    // MARK: - Private
     private enum Store {
         case viewController(UIViewController)
         case error(Error)
@@ -174,5 +168,4 @@ public struct PresentationRouter {
     private let store: Store
     private var prepareHandlers: [(UIViewController)->Void] = []
     private var postHandlers: [(UIViewController)->Void] = []
-    
 }

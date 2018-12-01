@@ -8,8 +8,7 @@
 
 import UIKit
 
-
-//MARK: FactoryRouter
+// MARK: FactoryRouter
 
 /// Base protocol for ViewControllerFactory with only information about dependency services (used `Container` as generic type) and default presentation action.
 public protocol FactoryRouter: CoreFactoryRouter {
@@ -49,7 +48,6 @@ public protocol CoreSourceRouterViewController: class {
     func coreCreateFactoryForSetup() -> FactorySupportInputSource
 }
 
-
 /// Container ViewController with childs VC when support router. Example: `UINavigationController: ContainerViewControllerSupportRouter`.
 public protocol ContainerViewControllerSupportRouter {
     func findViewController<VCType>() -> VCType?
@@ -58,13 +56,11 @@ public protocol ContainerViewControllerSupportRouter {
 /// General functional in framework
 public struct Router { }
 
-
-//MARK: Presentation
-
+// MARK: Presentation
 /// Action for Presentation ViewControllers
 public protocol PresentationAction {
     /// Performed when need present ViewController. After completion, you need to perform only one call to completeHandler with the result.
-    func present(_ viewController: UIViewController, on existingController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult)->Void)
+    func present(_ viewController: UIViewController, on existingController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult) -> Void)
 }
 
 public enum PresentationActionResult {
@@ -72,8 +68,7 @@ public enum PresentationActionResult {
     case failure(Error)
 }
 
-
-//MARK: Helpers
+// MARK: Helpers
 extension FactoryRouter {
     /// Simple create ViewController from storyboard.
     public func createViewController<VC: UIViewController>(storyboardName: String, identifier: String?, bundle: Bundle? = nil) -> VC {
@@ -105,7 +100,6 @@ extension FactoryRouter {
     }
 }
 
-
 /// Find ViewController in childs view controllers when finded support container (implemented `ContainerViewControllerSupportRouter`)
 public func dependencyRouterFindViewController<VCType: UIViewController>(_ viewController: UIViewController) throws -> VCType {
     if let vc = viewController as? VCType {
@@ -117,8 +111,7 @@ public func dependencyRouterFindViewController<VCType: UIViewController>(_ viewC
     }
 }
 
-
-//MARK: - Core Extensions
+// MARK: - Core Extensions
 extension FactoryRouter {
     public init?(containerAny: Any) {
         if let container = containerAny as? ContainerType {

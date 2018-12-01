@@ -60,7 +60,10 @@ public struct Router { }
 /// Action for Presentation ViewControllers
 public protocol PresentationAction {
     /// Performed when need present ViewController. After completion, you need to perform only one call to completeHandler with the result.
-    func present(_ viewController: UIViewController, on existingController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult) -> Void)
+    func present(_ viewController: UIViewController,
+                 on existingController: UIViewController,
+                 animated: Bool,
+                 completionHandler: @escaping (PresentationActionResult) -> Void)
 }
 
 public enum PresentationActionResult {

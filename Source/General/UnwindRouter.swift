@@ -91,7 +91,7 @@ extension Router {
         let unwindType = viewController.unwindRouterType
         
         do {
-            try DependencyRouterError.tryAsAssert {
+            try DependencyRouterError.tryAsAssertionFailure {
                 try unwindType.coreUnwindUseCallback(viewController, sourceList: sourceList, segueIdentifier: segue.identifier)
             }
         } catch {

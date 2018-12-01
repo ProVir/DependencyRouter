@@ -58,7 +58,7 @@ extension DependencyRouterError {
         }
     }
     
-    public static func tryAsAssert<R>(file: StaticString = #file, line: UInt = #line, handler: () throws ->R) throws -> R {
+    public static func tryAsAssertionFailure<R>(file: StaticString = #file, line: UInt = #line, handler: () throws ->R) throws -> R {
         do {
             return try handler()
         } catch {

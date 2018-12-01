@@ -15,14 +15,13 @@ public protocol PrepareBuilderSupportFactoryRouter {
 }
 
 // MARK: Builder
-
 /// Builder (begin step) with factory type ready for use
 public struct BuilderRouter<BuilderFR: FactoryRouter> {
     /// Builder step: after created factory (may be lazy) with container
     public struct ReadyCreate: BuilderRouterReadyCreate {
-        public init(factory: @escaping ()->BuilderFR) { lazyFactory = factory }
+        public init(factory: @escaping () -> BuilderFR) { lazyFactory = factory }
         
-        public let lazyFactory: ()->BuilderFR
+        public let lazyFactory: () -> BuilderFR
     }
     
     /// Builder step: after create or use of existing ViewController
@@ -42,13 +41,13 @@ public struct BuilderRouter<BuilderFR: FactoryRouter> {
     
     /// Builder step: after create or use of existing ViewController (use lazy create factory)
     public struct LazyReadySetup<VC: UIViewController>: BuilderRouterReadySetup {
-        public init(factory: @escaping ()->BuilderFR, viewController: VC, findedForSetupViewController: UIViewController? = nil) {
+        public init(factory: @escaping () -> BuilderFR, viewController: VC, findedForSetupViewController: UIViewController? = nil) {
             self.lazyFactory = factory
             self.viewController = viewController
             self.findedForSetupViewController = findedForSetupViewController
         }
         
-        public let lazyFactory: ()->BuilderFR
+        public let lazyFactory: () -> BuilderFR
         public let viewController: VC
         public private(set) weak var findedForSetupViewController: UIViewController?
         
@@ -69,7 +68,7 @@ public struct BuilderRouter<BuilderFR: FactoryRouter> {
             return .init(factory: FR(container: container), viewController: viewController, findedForSetupViewController: findedForSetupViewController)
         }
         
-        public func setContainer(lazy container: @autoclosure @escaping ()->BuilderFR.ContainerType) -> LazyReadySetup<VC> {
+        public func setContainer(lazy container: @autoclosure @escaping () -> BuilderFR.ContainerType) -> LazyReadySetup<VC> {
             return .init(factory: { FR(container: container()) }, viewController: viewController, findedForSetupViewController: findedForSetupViewController)
         }
     }
@@ -83,7 +82,7 @@ public struct BuilderRouter<BuilderFR: FactoryRouter> {
     }
     
     /// Step 1 (variant 1b): Create factory (lazy) with lazy container (getted only if support factory in next steps)
-    public func setContainer(lazy container: @autoclosure @escaping ()->BuilderFR.ContainerType) -> ReadyCreate {
+    public func setContainer(lazy container: @autoclosure @escaping () -> BuilderFR.ContainerType) -> ReadyCreate {
         return ReadyCreate(factory: { BuilderFR(container: container()) })
     }
 }
@@ -111,7 +110,7 @@ extension BuilderRouter where BuilderFR: PrepareBuilderSupportFactoryRouter {
 /// Step 2: Factories with support create ViewController
 public protocol BuilderRouterReadyCreate {
     associatedtype FR: FactoryRouter
-    var lazyFactory: ()->FR { get }
+    var lazyFactory: () -> FR { get }
 }
 
 /// Step 3: Factories with support setup existing or created ViewController
@@ -174,7 +173,7 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
     private var router: PresentationRouter
     
     /// Constructor with ViewController to present and default action (use lazy created action)
-    public init(viewController: VC, default actionSource: @autoclosure @escaping ()->PresentationAction) {
+    public init(viewController: VC, default actionSource: @autoclosure @escaping () -> PresentationAction) {
         self.router = .init(viewController: viewController, action: actionSource)
     }
     
@@ -185,7 +184,7 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
     
     // MARK: State and Data
     /// Autoclosure with action as default
-    public var defaultActionSource: ()->PresentationAction {
+    public var defaultActionSource: () -> PresentationAction {
         return self.router.actionSource
     }
     
@@ -228,8 +227,8 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
     }
     
     /// Result as assertionFailure if failure Builder without present
-    public func completedOrAssert() {
-        try? DependencyRouterError.tryAsAssert {
+    public func completedOrAssertionFailure() {
+        try? DependencyRouterError.tryAsAssertionFailure {
             if let error = self.router.error {
                 throw error
             }
@@ -241,13 +240,13 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
     
     // MARK: Setup for Present
     @discardableResult
-    public func prepareHandler(_ handler: @escaping (UIViewController)->Void) -> Self {
+    public func prepareHandler(_ handler: @escaping (UIViewController) -> Void) -> Self {
         self.router.addPrepareHandler(handler)
         return self
     }
     
     @discardableResult
-    public func postHandler(_ handler: @escaping (UIViewController)->Void) -> Self {
+    public func postHandler(_ handler: @escaping (UIViewController) -> Void) -> Self {
         self.router.addPostHandler(handler)
         return self
     }
@@ -257,7 +256,7 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
         return self.router
     }
     
-    public func presentationRouter(action actionSource: @autoclosure @escaping ()->PresentationAction) -> PresentationRouter {
+    public func presentationRouter(action actionSource: @autoclosure @escaping () -> PresentationAction) -> PresentationRouter {
         var router = self.router
         router.setAction(actionSource)
         return router
@@ -273,8 +272,11 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
         - animated: present ViewController with animation if true (default)
         - completionHandler: handler with result presented
      */
-    public func present(on existingController: UIViewController, action: PresentationAction? = nil, animated: Bool = true, completionHandler: @escaping (PresentationActionResult)->Void) {
-        present(on: existingController, action: action, animated: animated, assertWhenFailure: false, completionHandler: completionHandler)
+    public func present(on existingController: UIViewController?,
+                        action: PresentationAction? = nil,
+                        animated: Bool = true,
+                        completionHandler: @escaping (PresentationActionResult) -> Void) {
+        present(on: existingController, action: action, animated: animated, useAssert: false, completionHandler: completionHandler)
     }
     
     /**
@@ -284,10 +286,13 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
         - existingController: the current ViewController on which the created ViewController is presented
         - action: (Optional) custom action if need use, else used default action from source (`var defaultActionSource`)
         - animated: present ViewController with animation if true (default)
-        - assertWhenFailure: when failure present assertionFailure if true (default)
+        - useAssert: when failure present assertionFailure if true (default)
      */
-    public func present(on existingController: UIViewController, action: PresentationAction? = nil, animated: Bool = true, assertWhenFailure: Bool = true) {
-        present(on: existingController, action: action, animated: animated, assertWhenFailure: assertWhenFailure, completionHandler: nil)
+    public func present(on existingController: UIViewController?,
+                        action: PresentationAction? = nil,
+                        animated: Bool = true,
+                        useAssert: Bool = true) {
+        present(on: existingController, action: action, animated: animated, useAssert: useAssert, completionHandler: nil)
     }
     
     /**
@@ -297,10 +302,19 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
         - existingController: the current ViewController on which the created ViewController is presented
         - action: (Optional) custom action if need use, else used default action from source (`var defaultActionSource`)
         - animated: present ViewController with animation if true (default)
-        - assertWhenFailure: when failure present assertionFailure if true
+        - useAssert: when failure present assertionFailure if true
         - completionHandler: (Optional) handler with result presented
      */
-    public func present(on existingController: UIViewController, action: PresentationAction? = nil, animated: Bool = true, assertWhenFailure: Bool, completionHandler: ((PresentationActionResult)->Void)?) {
-        router.present(on: existingController, customAction: action, animated: animated, assertWhenFailure: assertWhenFailure, completionHandler: completionHandler)
+    public func present(on existingController: UIViewController?,
+                        action: PresentationAction? = nil,
+                        animated: Bool = true,
+                        useAssert: Bool,
+                        completionHandler: ((PresentationActionResult) -> Void)?) {
+        if let existingController = existingController {
+            router.present(on: existingController, customAction: action, animated: animated, useAssert: useAssert, completionHandler: completionHandler)
+        } else if useAssert {
+            DependencyRouterError.notReadyPresentingViewController("not found existing ViewController (existingController = nil)")
+                .assertionFailure()
+        }
     }
 }

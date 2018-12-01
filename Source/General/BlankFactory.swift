@@ -85,15 +85,11 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFact
 //MARK: Support Present NavigationRouter
 extension SimplePresentNavigationRouter {
     public func simplePresent<FR: AutoCreatorFactoryRouter & BlankFactoryRouter>(_ routerType: FR.Type, action: PresentationAction? = nil, animated: Bool = true) {
-        if let viewController = associatedViewController {
-            BuilderRouter(routerType).createAndSetup().present(on: viewController, action: action, animated: animated)
-        }
+        BuilderRouter(routerType).createAndSetup().present(on: associatedViewController, action: action, animated: animated)
     }
     
     public func simplePresent<FR: AutoBlankCreatorFactoryRouter>(_ routerType: FR.Type, action: PresentationAction? = nil, animated: Bool = true) {
-        if let viewController = associatedViewController {
-            BuilderRouter(routerType).createAndSetup().present(on: viewController, action: action, animated: animated)
-        }
+        BuilderRouter(routerType).createAndSetup().present(on: associatedViewController, action: action, animated: animated)
     }
     
     public func performSegue<FR: BlankFactoryRouter>(withIdentifier identifier: String, factory: FR, sender: Any? = nil) {

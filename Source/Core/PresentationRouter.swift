@@ -17,7 +17,7 @@ public struct PresentationRouter {
         - viewController: ViewController for present
         - actionSource: autoclosure with action
      */
-    public init(viewController: UIViewController, action actionSource: @autoclosure @escaping ()->PresentationAction) {
+    public init(viewController: UIViewController, action actionSource: @autoclosure @escaping () -> PresentationAction) {
         self.store = .viewController(viewController)
         self.actionSource = actionSource
     }
@@ -44,7 +44,7 @@ public struct PresentationRouter {
     
     // MARK: State and Data
     /// Autoclosure with action as default
-    public private(set) var actionSource: ()->PresentationAction
+    public private(set) var actionSource: () -> PresentationAction
     
     /// ViewController for present or error
     public func viewController() throws -> UIViewController {
@@ -71,15 +71,15 @@ public struct PresentationRouter {
     }
     
     // MARK: Setup
-    mutating public func setAction(_ actionSource: @autoclosure @escaping ()->PresentationAction) {
+    mutating public func setAction(_ actionSource: @autoclosure @escaping () -> PresentationAction) {
         self.actionSource = actionSource
     }
     
-    mutating public func addPrepareHandler(_ handler: @escaping (UIViewController)->Void) {
+    mutating public func addPrepareHandler(_ handler: @escaping (UIViewController) -> Void) {
         prepareHandlers.append(handler)
     }
     
-    mutating public func addPostHandler(_ handler: @escaping (UIViewController)->Void) {
+    mutating public func addPostHandler(_ handler: @escaping (UIViewController) -> Void) {
         postHandlers.append(handler)
     }
     
@@ -93,8 +93,11 @@ public struct PresentationRouter {
         - animated: present ViewController with animation if true (default)
         - completionHandler: handler with result presented
      */
-    public func present(on existingController: UIViewController, customAction: PresentationAction? = nil, animated: Bool = true, completionHandler: @escaping (PresentationActionResult)->Void) {
-        present(on: existingController, customAction: customAction, animated: animated, assertWhenFailure: false, completionHandler: completionHandler)
+    public func present(on existingController: UIViewController,
+                        customAction: PresentationAction? = nil,
+                        animated: Bool = true,
+                        completionHandler: @escaping (PresentationActionResult) -> Void) {
+        present(on: existingController, customAction: customAction, animated: animated, useAssert: false, completionHandler: completionHandler)
     }
     
     /**
@@ -104,10 +107,13 @@ public struct PresentationRouter {
         - existingController: the current ViewController on which the created ViewController is presented
         - customAction: (Optional) custom action if need use, else used default action from source (`var actionSource`)
         - animated: present ViewController with animation if true (default)
-        - assertWhenFailure: when failure present assertionFailure if true (default)
+        - useAssert: when failure present assertionFailure if true (default)
      */
-    public func present(on existingController: UIViewController, customAction: PresentationAction? = nil, animated: Bool = true, assertWhenFailure: Bool = true) {
-        present(on: existingController, customAction: customAction, animated: animated, assertWhenFailure: assertWhenFailure, completionHandler: nil)
+    public func present(on existingController: UIViewController,
+                        customAction: PresentationAction? = nil,
+                        animated: Bool = true,
+                        useAssert: Bool = true) {
+        present(on: existingController, customAction: customAction, animated: animated, useAssert: useAssert, completionHandler: nil)
     }
     
     /**
@@ -117,10 +123,14 @@ public struct PresentationRouter {
         - existingController: the current ViewController on which the created ViewController is presented
         - customAction: (Optional) custom action if need use, else used default action from source (`var actionSource`)
         - animated: present ViewController with animation if true (default)
-        - assertWhenFailure: when failure present assertionFailure if true
+        - useAssert: when failure present assertionFailure if true
         - completionHandler: (Optional) handler with result presented
      */
-    public func present(on existingController: UIViewController, customAction: PresentationAction? = nil, animated: Bool = true, assertWhenFailure: Bool, completionHandler: ((PresentationActionResult)->Void)?) {
+    public func present(on existingController: UIViewController,
+                        customAction: PresentationAction? = nil,
+                        animated: Bool = true,
+                        useAssert: Bool,
+                        completionHandler: ((PresentationActionResult) -> Void)?) {
         //1. Unwrap VC
         let viewController: UIViewController
         switch self.store {
@@ -129,8 +139,8 @@ public struct PresentationRouter {
             
         case .error(let error):
             completionHandler?(.failure(error))
-            if assertWhenFailure {
-                try? DependencyRouterError.tryAsAssert { throw error }
+            if useAssert {
+                try? DependencyRouterError.tryAsAssertionFailure { throw error }
             }
             return
         }
@@ -152,8 +162,8 @@ public struct PresentationRouter {
                 
             case .failure(let error):
                 completionHandler?(result)
-                if assertWhenFailure {
-                    try? DependencyRouterError.tryAsAssert(handler: { throw error })
+                if useAssert {
+                    try? DependencyRouterError.tryAsAssertionFailure(handler: { throw error })
                 }
             }
         }
@@ -166,6 +176,6 @@ public struct PresentationRouter {
     }
     
     private let store: Store
-    private var prepareHandlers: [(UIViewController)->Void] = []
-    private var postHandlers: [(UIViewController)->Void] = []
+    private var prepareHandlers: [(UIViewController) -> Void] = []
+    private var postHandlers: [(UIViewController) -> Void] = []
 }

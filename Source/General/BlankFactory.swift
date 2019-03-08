@@ -39,9 +39,13 @@ extension BlankFactoryRouter {
 
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter {
     public func create() -> BuilderRouter<FR>.ReadySetup<FR.VCCreateType> {
-        let factory = self.factory()
-        let vc = factory.createViewController()
-        return .init(factory: factory, viewController: vc)
+        do {
+            let factory = try self.factory()
+            let vc = factory.createViewController()
+            return .init(factory: factory, viewController: vc)
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 
@@ -49,10 +53,10 @@ extension BuilderRouterReadySetup where FR: BlankFactoryRouter {
     public func setup() -> BuilderRouterReadyPresent<VC> {
         do {
             let findedViewController: FR.VCType = try coreFindForSetupViewController()
-            let factory = self.factory()
+            let factory = try self.factory()
             
             factory.setupViewController(findedViewController)
-            return .init(viewController: viewController, default: factory.presentationAction())
+            return .init(viewController: try viewController(), default: factory.presentationAction())
         } catch {
             return .init(error: error)
         }
@@ -61,16 +65,20 @@ extension BuilderRouterReadySetup where FR: BlankFactoryRouter {
 
 extension BuilderRouterReadyCreate where FR: BlankCreatorFactoryRouter {
     public func createAndSetup() -> BuilderRouterReadyPresent<FR.VCType>{
-        let factory = self.factory()
-        let vc = factory.createAndSetupViewController()
-        return .init(viewController: vc, default: factory.presentationAction())
+        do {
+            let factory = try self.factory()
+            let vc = factory.createAndSetupViewController()
+            return .init(viewController: vc, default: factory.presentationAction())
+        } catch {
+            return .init(error: error)
+        }
     }
 }
 
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: BlankFactoryRouter {
     public func createAndSetup() -> BuilderRouterReadyPresent<FR.VCCreateType>{
         do {
-            let factory = self.factory()
+            let factory = try self.factory()
             let viewController = factory.createViewController()
             let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
             

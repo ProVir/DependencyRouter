@@ -19,57 +19,106 @@ public protocol PrepareBuilderSupportFactoryRouter {
 public struct BuilderRouter<BuilderFR: FactoryRouter> {
     /// Builder step: after created factory (may be lazy) with container
     public struct ReadyCreate: BuilderRouterReadyCreate {
-        public init(factory: @escaping () -> BuilderFR) { lazyFactory = factory }
-        
-        public let lazyFactory: () -> BuilderFR
+        private enum Value {
+            case common(() -> BuilderFR)
+            case failure(Error)
+
+            func lazyFactory() -> () throws -> BuilderFR {
+                switch self {
+                case let .common(factory): return factory
+                case let .failure(error): return { throw error }
+                }
+            }
+
+            func error() -> Error? {
+                switch self {
+                case let .failure(error): return error
+                default: return nil
+                }
+            }
+        }
+
+        public init(factory: @escaping () -> BuilderFR) { value = .common(factory) }
+        public init(error: Error) { self.value = .failure(error) }
+
+        private let value: Value
+        public var errorIfFailure: Error? { return value.error() }
+        public var lazyFactory: () throws -> BuilderFR { return value.lazyFactory() }
     }
     
     /// Builder step: after create or use of existing ViewController
     public struct ReadySetup<VC: UIViewController>: BuilderRouterReadySetup {
-        public init(factory: BuilderFR, viewController: VC, findedForSetupViewController: UIViewController? = nil) {
-            self.storeFactory = factory
-            self.viewController = viewController
-            self.findedForSetupViewController = findedForSetupViewController
-        }
-        
-        public let storeFactory: BuilderFR
-        public let viewController: VC
-        public private(set) weak var findedForSetupViewController: UIViewController?
+        private enum Value {
+            case common(BuilderFR, VC)
+            case lazy(() throws -> BuilderFR, VC)
+            case failure(Error)
 
-        public func factory() -> BuilderFR { return storeFactory }
-    }
-    
-    /// Builder step: after create or use of existing ViewController (use lazy create factory)
-    public struct LazyReadySetup<VC: UIViewController>: BuilderRouterReadySetup {
-        public init(factory: @escaping () -> BuilderFR, viewController: VC, findedForSetupViewController: UIViewController? = nil) {
-            self.lazyFactory = factory
-            self.viewController = viewController
-            self.findedForSetupViewController = findedForSetupViewController
+            func factory() throws -> BuilderFR {
+                switch self {
+                case let .common(factory, _): return factory
+                case let .lazy(lazyFactory, _): return try lazyFactory()
+                case let .failure(error): throw error
+                }
+            }
+
+            func viewController() throws -> VC {
+                switch self {
+                case let .common(_, vc), let .lazy(_, vc): return vc
+                case let .failure(error): throw error
+                }
+            }
+
+            func error() -> Error? {
+                switch self {
+                case let .failure(error): return error
+                default: return nil
+                }
+            }
+        }
+
+        public init(factory: BuilderFR, viewController: VC, findedForSetupViewController: UIViewController? = nil) {
+            self.value = .common(factory, viewController)
+            self.findedViewController = findedForSetupViewController
+        }
+
+        public init(lazyFactory: @escaping () throws -> BuilderFR, viewController: VC, findedForSetupViewController: UIViewController? = nil) {
+            self.value = .lazy(lazyFactory, viewController)
+            self.findedViewController = findedForSetupViewController
+        }
+
+        public init(error: Error) {
+            self.value = .failure(error)
+            self.findedViewController = nil
         }
         
-        public let lazyFactory: () -> BuilderFR
-        public let viewController: VC
-        public private(set) weak var findedForSetupViewController: UIViewController?
-        
-        public func factory() -> BuilderFR { return lazyFactory() }
+        private let value: Value
+        private weak var findedViewController: UIViewController?
+
+        public var errorIfFailure: Error? { return value.error() }
+        public func factory() throws -> BuilderFR { return try value.factory() }
+        public func viewController() throws -> VC { return try value.viewController() }
+        public func findedForSetupViewController() -> UIViewController? { return findedViewController }
     }
     
     /// Builder step: before create factory with container with use of existing ViewController, use when need test support existing ViewController for factory. Replace steps container->useVC->setup to useVC?->container->setup
     public struct PrepareBuilder<VC: UIViewController> {
         public init(viewController: VC, findedForSetupViewController: UIViewController) {
-            self.viewController = viewController
-            self.findedForSetupViewController = findedForSetupViewController
+            self.usedViewController = viewController
+            self.findedViewController = findedForSetupViewController
         }
         
-        public let viewController: VC
-        public private(set) weak var findedForSetupViewController: UIViewController?
+        private let usedViewController: VC
+        private weak var findedViewController: UIViewController?
+
+        public func viewController() throws -> VC { return usedViewController }
+        public func findedForSetupViewController() -> UIViewController? { return findedViewController }
         
         public func setContainer(_ container: BuilderFR.ContainerType) -> ReadySetup<VC> {
-            return .init(factory: FR(container: container), viewController: viewController, findedForSetupViewController: findedForSetupViewController)
+            return .init(factory: FR(container: container), viewController: usedViewController, findedForSetupViewController: findedViewController)
         }
         
-        public func setContainer(lazy container: @autoclosure @escaping () -> BuilderFR.ContainerType) -> LazyReadySetup<VC> {
-            return .init(factory: { FR(container: container()) }, viewController: viewController, findedForSetupViewController: findedForSetupViewController)
+        public func setContainer(lazy container: @autoclosure @escaping () -> BuilderFR.ContainerType) -> ReadySetup<VC> {
+            return .init(lazyFactory: { FR(container: container()) }, viewController: usedViewController, findedForSetupViewController: findedViewController)
         }
     }
     
@@ -110,24 +159,26 @@ extension BuilderRouter where BuilderFR: PrepareBuilderSupportFactoryRouter {
 /// Step 2: Factories with support create ViewController
 public protocol BuilderRouterReadyCreate {
     associatedtype FR: FactoryRouter
-    var lazyFactory: () -> FR { get }
+    var errorIfFailure: Error? { get }
+    var lazyFactory: () throws -> FR { get }
 }
 
 /// Step 3: Factories with support setup existing or created ViewController
 public protocol BuilderRouterReadySetup {
     associatedtype FR: FactoryRouter
     associatedtype VC: UIViewController
-    
-    var viewController: VC { get }
-    var findedForSetupViewController: UIViewController? { get }
-    
-    func factory() -> FR
+
+    var errorIfFailure: Error? { get }
+    func viewController() throws -> VC
+    func findedForSetupViewController() -> UIViewController?
+    func factory() throws -> FR
 }
 
 /// Step 1->2: Support auto create factory (skip step 1 and go directly to step 2)
 extension BuilderRouter: BuilderRouterReadyCreate where BuilderFR: AutoFactoryRouter {
     public typealias FR = BuilderFR
-    public var lazyFactory: () -> FR {
+    public var errorIfFailure: Error? { return nil }
+    public var lazyFactory: () throws -> FR {
         return { FR() }
     }
 }
@@ -135,34 +186,53 @@ extension BuilderRouter: BuilderRouterReadyCreate where BuilderFR: AutoFactoryRo
 /// Step 1->3: Support auto create factory (skip step 1 and go directly to step 3, step 2 always ignored after step 0)
 extension BuilderRouter.PrepareBuilder: BuilderRouterReadySetup where BuilderFR: AutoFactoryRouter {
     public typealias FR = BuilderFR
-    public func factory() -> FR {
+    public var errorIfFailure: Error? { return nil }
+    public func factory() throws -> FR {
         return FR()
     }
 }
 
 extension BuilderRouterReadyCreate {
-    func factory() -> FR {
-        return lazyFactory()
+    public func factory() throws -> FR {
+        return try lazyFactory()
+    }
+
+    @discardableResult
+    public func testFailure() throws -> Self {
+        if let error = errorIfFailure {
+            throw error
+        } else {
+            return self
+        }
     }
     
     /// Step 2: use of existing ViewController
-    public func use<VC: UIViewController>(_ viewController: VC) -> BuilderRouter<FR>.LazyReadySetup<VC> {
-        return .init(factory: lazyFactory, viewController: viewController)
+    public func use<VC: UIViewController>(_ viewController: VC) -> BuilderRouter<FR>.ReadySetup<VC> {
+        return .init(lazyFactory: lazyFactory, viewController: viewController)
     }
     
     /// Step 2: use segue with ViewController (`segue.destination`)
-    public func use(segue: UIStoryboardSegue) -> BuilderRouter<FR>.LazyReadySetup<UIViewController> {
-        return .init(factory: lazyFactory, viewController: segue.destination)
+    public func use(segue: UIStoryboardSegue) -> BuilderRouter<FR>.ReadySetup<UIViewController> {
+        return .init(lazyFactory: lazyFactory, viewController: segue.destination)
     }
 }
 
 extension BuilderRouterReadySetup {
+    @discardableResult
+    public func testFailure() throws -> Self {
+        if let error = errorIfFailure {
+            throw error
+        } else {
+            return self
+        }
+    }
+
     /// Helper for find requred ViewController in created or existing root ViewController 
     public func coreFindForSetupViewController<VCType: UIViewController>() throws -> VCType {
-        if let vc: VCType = findedForSetupViewController as? VCType {
+        if let vc: VCType = findedForSetupViewController() as? VCType {
             return vc
         } else {
-            return try dependencyRouterFindViewController(viewController)
+            return try dependencyRouterFindViewController(try viewController())
         }
     }
 }

@@ -76,7 +76,7 @@ extension BlankCreatorWithCallbackFactoryRouter {
 extension BuilderRouterReadyCreate where FR: ParamsCreatorFactoryRouter {
     public func createAndSetup(params: FR.ParamsType) -> BuilderRouterReadyPresent<FR.VCType> {
         do {
-            let factory = self.factory()
+            let factory = try self.factory()
             let vc = try factory.createAndSetupViewController(params: params)
             return .init(viewController: vc, default: factory.presentationAction(params: params))
         } catch {
@@ -88,7 +88,7 @@ extension BuilderRouterReadyCreate where FR: ParamsCreatorFactoryRouter {
 extension BuilderRouterReadyCreate where FR: ParamsCreatorWithCallbackFactoryRouter {
     public func createAndSetup(params: FR.ParamsType, callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCType> {
         do {
-            let factory = self.factory()
+            let factory = try self.factory()
             let vc = try factory.createAndSetupViewController(params: params, callback: callback)
             return .init(viewController: vc, default: factory.presentationAction(params: params))
         } catch {
@@ -100,7 +100,7 @@ extension BuilderRouterReadyCreate where FR: ParamsCreatorWithCallbackFactoryRou
 extension BuilderRouterReadyCreate where FR: BlankCreatorWithCallbackFactoryRouter {
     public func createAndSetup(callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCType> {
         do {
-            let factory = self.factory()
+            let factory = try self.factory()
             let vc = try factory.createAndSetupViewController(callback: callback)
             return .init(viewController: vc, default: factory.presentationAction())
         } catch {

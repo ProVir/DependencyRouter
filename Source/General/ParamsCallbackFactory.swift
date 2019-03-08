@@ -156,10 +156,10 @@ extension BuilderRouterReadySetup where FR: ParamsFactoryRouter {
     public func setup(params: FR.ParamsType) -> BuilderRouterReadyPresent<VC> {
         do {
             let findedViewController: FR.VCType = try coreFindForSetupViewController()
-            let factory = self.factory()
+            let factory = try self.factory()
             
             try factory.setupViewController(findedViewController, params: params)
-            return .init(viewController: viewController, default: factory.presentationAction(params: params))
+            return .init(viewController: try viewController(), default: factory.presentationAction(params: params))
         } catch {
             return .init(error: error)
         }
@@ -170,10 +170,10 @@ extension BuilderRouterReadySetup where FR: CallbackFactoryRouter {
     public func setup(callback: FR.CallbackType) -> BuilderRouterReadyPresent<VC> {
         do {
             let findedViewController: FR.VCType = try coreFindForSetupViewController()
-            let factory = self.factory()
+            let factory = try self.factory()
             
             try factory.setupViewController(findedViewController, callback: callback)
-            return .init(viewController: viewController, default: factory.presentationAction())
+            return .init(viewController: try viewController(), default: factory.presentationAction())
         } catch {
             return .init(error: error)
         }
@@ -184,10 +184,10 @@ extension BuilderRouterReadySetup where FR: ParamsWithCallbackFactoryRouter {
     public func setup(params: FR.ParamsType, callback: FR.CallbackType) -> BuilderRouterReadyPresent<VC> {
         do {
             let findedViewController: FR.VCType = try coreFindForSetupViewController()
-            let factory = self.factory()
+            let factory = try self.factory()
             
             try factory.setupViewController(findedViewController, params: params, callback: callback)
-            return .init(viewController: viewController, default: factory.presentationAction(params: params))
+            return .init(viewController: try viewController(), default: factory.presentationAction(params: params))
         } catch {
             return .init(error: error)
         }
@@ -197,7 +197,7 @@ extension BuilderRouterReadySetup where FR: ParamsWithCallbackFactoryRouter {
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsFactoryRouter {
     public func createAndSetup(params: FR.ParamsType) -> BuilderRouterReadyPresent<FR.VCCreateType> {
         do {
-            let factory = self.factory()
+            let factory = try self.factory()
             let viewController = factory.createViewController()
             let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
             
@@ -212,7 +212,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsFac
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: CallbackFactoryRouter {
     public func createAndSetup(callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCCreateType> {
         do {
-            let factory = self.factory()
+            let factory = try self.factory()
             let viewController = factory.createViewController()
             let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
             
@@ -227,7 +227,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: CallbackF
 extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: ParamsWithCallbackFactoryRouter {
     public func createAndSetup(params: FR.ParamsType, callback: FR.CallbackType) -> BuilderRouterReadyPresent<FR.VCCreateType> {
         do {
-            let factory = self.factory()
+            let factory = try self.factory()
             let viewController = factory.createViewController()
             let findedViewController: FR.VCType = try dependencyRouterFindViewController(viewController)
             

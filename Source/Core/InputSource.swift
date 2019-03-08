@@ -120,9 +120,10 @@ extension BuilderRouterReadySetup where FR: FactoryRouter, FR: FactorySupportInp
     /// Builder step: setup used array InputSource
     public func setup(sourceList: [BaseFactoryInputSource], identifier: String? = nil, sender: Any? = nil) -> BuilderRouterReadyPresent<VC> {
         do {
-            let factory = self.factory()
-            try factory.findAndSetup(findedForSetupViewController ?? viewController, sourceList: sourceList, identifier: identifier, sender: sender)
-            return .init(viewController: viewController, default: factory.presentationAction())
+            let factory = try self.factory()
+            let vc = try viewController()
+            try factory.findAndSetup(findedForSetupViewController() ?? vc, sourceList: sourceList, identifier: identifier, sender: sender)
+            return .init(viewController: vc, default: factory.presentationAction())
         } catch {
             return .init(error: error)
         }
@@ -138,7 +139,7 @@ extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: FactorySu
     /// Builder step: create and setup used array InputSource
     public func createAndSetup(sourceList: [BaseFactoryInputSource], identifier: String? = nil, sender: Any? = nil) -> BuilderRouterReadyPresent<FR.VCCreateType> {
         do {
-            let factory = self.factory()
+            let factory = try self.factory()
             let viewController = factory.createViewController()
             try factory.findAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
             return .init(viewController: viewController, default: factory.presentationAction())

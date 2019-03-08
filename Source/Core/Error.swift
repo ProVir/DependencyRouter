@@ -14,6 +14,7 @@ public enum DependencyRouterError: Error {
     case viewControllerNotFound(Any.Type)   //Parameter: ViewController class
     case inputSourceNotFound(Any)           //Parameter: require InputSource type
     case inputDataInvalidType(String, Any.Type, required: Any.Type) //Parameters: dataName, founded type, required type.
+    case serviceFactoryNotFound(Any.Type)   //Parameter: required type
     
     public var description: String {
         switch self {
@@ -31,6 +32,9 @@ public enum DependencyRouterError: Error {
             
         case .inputDataInvalidType(let dataName, let srcType, required: let requiredType):
             return "\(dataName) (\(srcType) doesn't conform to type \(requiredType)"
+
+        case .serviceFactoryNotFound(let factoryType):
+            return "Not found \(factoryType) as service factory"
         }
     }
     

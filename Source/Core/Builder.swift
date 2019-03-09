@@ -208,12 +208,16 @@ extension BuilderRouterReadyCreate {
     
     /// Step 2: use of existing ViewController
     public func use<VC: UIViewController>(_ viewController: VC) -> BuilderRouter<FR>.ReadySetup<VC> {
-        return .init(lazyFactory: lazyFactory, viewController: viewController)
+        if let error = errorIfFailure {
+            return .init(error: error)
+        } else {
+            return .init(lazyFactory: lazyFactory, viewController: viewController)
+        }
     }
     
     /// Step 2: use segue with ViewController (`segue.destination`)
     public func use(segue: UIStoryboardSegue) -> BuilderRouter<FR>.ReadySetup<UIViewController> {
-        return .init(lazyFactory: lazyFactory, viewController: segue.destination)
+        return use(segue.destination)
     }
 }
 

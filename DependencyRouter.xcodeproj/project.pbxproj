@@ -38,6 +38,7 @@
 		509458802164B7200017E027 /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5094587E2164B7200017E027 /* ThirdViewController.swift */; };
 		509458812164B7200017E027 /* ThirdViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5094587F2164B7200017E027 /* ThirdViewController.xib */; };
 		50E7E6222147F4D400FA64E0 /* SimplePresentationActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E7E6212147F4D400FA64E0 /* SimplePresentationActions.swift */; };
+		88754B3D2233C3770098CE75 /* SimpleRouterProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88754B3C2233C3770098CE75 /* SimpleRouterProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 		5094587E2164B7200017E027 /* ThirdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
 		5094587F2164B7200017E027 /* ThirdViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThirdViewController.xib; sourceTree = "<group>"; };
 		50E7E6212147F4D400FA64E0 /* SimplePresentationActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePresentationActions.swift; sourceTree = "<group>"; };
+		88754B3C2233C3770098CE75 /* SimpleRouterProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleRouterProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,6 +220,7 @@
 				50084EFF215288E000910769 /* Helpers.swift */,
 				50084F052153447E00910769 /* SegueRouter.swift */,
 				50084F032152999D00910769 /* NavigationRouter.swift */,
+				88754B3C2233C3770098CE75 /* SimpleRouterProvider.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -376,6 +379,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88754B3D2233C3770098CE75 /* SimpleRouterProvider.swift in Sources */,
 				507C9DA8214385AA00996677 /* Core.swift in Sources */,
 				5048C272222C701D00961538 /* RouterProvider.swift in Sources */,
 				50E7E6222147F4D400FA64E0 /* SimplePresentationActions.swift in Sources */,

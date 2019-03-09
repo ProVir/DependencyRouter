@@ -1,6 +1,6 @@
 //
 //  PresentationRouter.swift
-//  DependencyRouter 0.2
+//  DependencyRouter 0.3
 //
 //  Created by Короткий Виталий on 02/10/2018.
 //  Copyright © 2018 ProVir. All rights reserved.
@@ -88,45 +88,45 @@ public struct PresentationRouter {
      Present ViewController on existing use action and result (success or failure) return in closure.
  
      - Parameters:
-        - existingController: the current ViewController on which the created ViewController is presented
+        - hostController: the current ViewController on which the created ViewController is presented
         - customAction: (Optional) custom action if need use, else used default action from source (`var actionSource`)
         - animated: present ViewController with animation if true (default)
         - completionHandler: handler with result presented
      */
-    public func present(on existingController: UIViewController,
+    public func present(on hostController: UIViewController,
                         customAction: PresentationAction? = nil,
                         animated: Bool = true,
                         completionHandler: @escaping (PresentationActionResult) -> Void) {
-        present(on: existingController, customAction: customAction, animated: animated, useAssert: false, completionHandler: completionHandler)
+        present(on: hostController, customAction: customAction, animated: animated, useAssert: false, completionHandler: completionHandler)
     }
     
     /**
      Present ViewController on existing use action and assertionFailure (usually crash in debug regime) if result is failure.
      
      - Parameters:
-        - existingController: the current ViewController on which the created ViewController is presented
+        - hostController: the current ViewController on which the created ViewController is presented
         - customAction: (Optional) custom action if need use, else used default action from source (`var actionSource`)
         - animated: present ViewController with animation if true (default)
         - useAssert: when failure present assertionFailure if true (default)
      */
-    public func present(on existingController: UIViewController,
+    public func present(on hostController: UIViewController,
                         customAction: PresentationAction? = nil,
                         animated: Bool = true,
                         useAssert: Bool = true) {
-        present(on: existingController, customAction: customAction, animated: animated, useAssert: useAssert, completionHandler: nil)
+        present(on: hostController, customAction: customAction, animated: animated, useAssert: useAssert, completionHandler: nil)
     }
     
     /**
      Present ViewController on existing use action.
      
      - Parameters:
-        - existingController: the current ViewController on which the created ViewController is presented
+        - hostController: the current ViewController on which the created ViewController is presented
         - customAction: (Optional) custom action if need use, else used default action from source (`var actionSource`)
         - animated: present ViewController with animation if true (default)
         - useAssert: when failure present assertionFailure if true
         - completionHandler: (Optional) handler with result presented
      */
-    public func present(on existingController: UIViewController,
+    public func present(on hostController: UIViewController,
                         customAction: PresentationAction? = nil,
                         animated: Bool = true,
                         useAssert: Bool,
@@ -152,7 +152,7 @@ public struct PresentationRouter {
             handler(viewController)
         }
         
-        action.present(viewController, on: existingController, animated: animated) { [postHandlers] (result) in
+        action.present(viewController, on: hostController, animated: animated) { [postHandlers] (result) in
             switch result {
             case .success:
                 for handler in postHandlers {

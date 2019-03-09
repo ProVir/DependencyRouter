@@ -11,7 +11,7 @@ import DependencyRouter
 
 struct ThirdViewControllerFactory: LightBlankCreatorFactoryRouter {
     func presentationAction() -> PresentationAction {
-        return ModalPresentationAction(autoWrapped: true)
+        return ModalPresentationAction(autoWrapper: .system)
     }
     
     func createAndSetupViewController() -> ThirdViewController {

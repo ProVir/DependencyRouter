@@ -19,7 +19,7 @@ struct ModalViewControllerFactory: LightFactoryRouter, CreatorFactoryRouter, Par
     }
     
     func presentationAction() -> PresentationAction {
-        return ModalPresentationAction(autoWrapped: true)
+        return ModalPresentationAction(autoWrapper: .system)
     }
     
     func createViewController() -> ModalViewController {

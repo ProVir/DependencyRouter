@@ -1,6 +1,6 @@
 //
 //  Core.swift
-//  DependencyRouter 0.2
+//  DependencyRouter 0.3
 //
 //  Created by Короткий Виталий on 08.09.2018.
 //  Copyright © 2018 ProVir. All rights reserved.
@@ -61,7 +61,7 @@ public struct Router { }
 public protocol PresentationAction {
     /// Performed when need present ViewController. After completion, you need to perform only one call to completeHandler with the result.
     func present(_ viewController: UIViewController,
-                 on existingController: UIViewController,
+                 on hostController: UIViewController,
                  animated: Bool,
                  completionHandler: @escaping (PresentationActionResult) -> Void)
 }

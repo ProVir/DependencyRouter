@@ -8,11 +8,10 @@
 
 import UIKit
 
-
 public class SegueRouter {
     
-    //MARK: Set for segues
-    public func set(forSegueIdentifier identifier: String, factory: @autoclosure @escaping ()->FactorySupportInputSource, sourceList: [BaseFactoryInputSource], onlyOne: Bool = false) {
+    // MARK: Set for segues
+    public func set(forSegueIdentifier identifier: String, factory: @autoclosure @escaping () -> FactorySupportInputSource, sourceList: [BaseFactoryInputSource], onlyOne: Bool = false) {
         let store = Store()
         store.factory = factory
         store.sourceList = sourceList
@@ -27,7 +26,7 @@ public class SegueRouter {
         mapSegues[identifier] = store
     }
     
-    public func set(forSegueIdentifier identifier: String, factory: @autoclosure @escaping ()->FactorySupportInputSource, weakSource: (AnyObject & BaseFactoryInputSource), onlyOne: Bool = false) {
+    public func set(forSegueIdentifier identifier: String, factory: @autoclosure @escaping () -> FactorySupportInputSource, weakSource: (AnyObject & BaseFactoryInputSource), onlyOne: Bool = false) {
         let store = Store()
         store.factory = factory
         store.weakSource = weakSource
@@ -42,7 +41,7 @@ public class SegueRouter {
         mapSegues[identifier] = store
     }
     
-    //MARK: Get and remove
+    // MARK: Get and remove
     public func contains(segueIdentifier identifier: String) -> Bool {
         return mapSegues[identifier] != nil
     }
@@ -75,7 +74,7 @@ public class SegueRouter {
         mapSegues.removeAll()
     }
     
-    //MARK: Perform segue
+    // MARK: Perform segue
     @discardableResult
     func prepare(for segue: UIStoryboardSegue, sender: Any?) -> Bool {
         //1. Get
@@ -112,7 +111,7 @@ public class SegueRouter {
     }
     
     
-    //MARK: - Private
+    // MARK: - Private
     private class Store {
         var factory: (()->FactorySupportInputSource)?
         weak var weakSource: (AnyObject & BaseFactoryInputSource)?

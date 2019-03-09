@@ -15,6 +15,7 @@ public protocol RouterServiceContainer {
 
 public protocol RouterProvider: class {
     func isSupport<FR: FactoryRouter>(_ factoryType: FR.Type) -> Bool where FR.ContainerType: RouterServiceContainer
+    func createFactory<FR: FactoryRouter>(_ factoryType: FR.Type) throws -> FR where FR.ContainerType: RouterServiceContainer
     func router<FR: FactoryRouter>(_ factoryType: FR.Type) -> BuilderRouter<FR>.ReadyCreate where FR.ContainerType: RouterServiceContainer
 
     func routerIfSupport<FR: FactoryRouter & PrepareBuilderSupportFactoryRouter, VC: UIViewController>(_ factoryType: FR.Type, use viewController: VC) -> BuilderRouter<FR>.ReadySetup<VC>? where FR.ContainerType: RouterServiceContainer
@@ -22,6 +23,10 @@ public protocol RouterProvider: class {
 }
 
 extension RouterProvider {
+    public func createFactoryOrFatalError<FR: FactoryRouter>(_ factoryType: FR.Type = FR.self) -> FR where FR.ContainerType: RouterServiceContainer {
+        return DependencyRouterError.tryAsFatalError { try createFactory(factoryType) }
+    }
+
     public func routerIfSupport<FR: FactoryRouter>(_ factoryType: FR.Type) -> BuilderRouter<FR>.ReadyCreate? where FR.ContainerType: RouterServiceContainer {
         return try? router(factoryType).testFailure()
     }

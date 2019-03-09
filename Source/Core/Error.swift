@@ -1,6 +1,6 @@
 //
 //  Error.swift
-//  DependencyRouter 0.2
+//  DependencyRouter 0.3
 //
 //  Created by Короткий Виталий on 08.09.2018.
 //  Copyright © 2018 ProVir. All rights reserved.

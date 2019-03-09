@@ -1,6 +1,6 @@
 //
 //  BuilderRouter.swift
-//  DependencyRouter 0.2
+//  DependencyRouter 0.3
 //
 //  Created by Короткий Виталий on 09.09.2018.
 //  Copyright © 2018 ProVir. All rights reserved.
@@ -133,6 +133,12 @@ public struct BuilderRouter<BuilderFR: FactoryRouter> {
     /// Step 1 (variant 1b): Create factory (lazy) with lazy container (getted only if support factory in next steps)
     public func setContainer(lazy container: @autoclosure @escaping () -> BuilderFR.ContainerType) -> ReadyCreate {
         return ReadyCreate(factory: { BuilderFR(container: container()) })
+    }
+}
+
+extension Router {
+    public static func builder<FR: FactoryRouter>(factory: FR) -> BuilderRouter<FR>.ReadyCreate {
+        return .init(factory: { factory })
     }
 }
 
@@ -341,53 +347,53 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
      Present ViewController on existing use action and result (success or failure) return in closure.
      
      - Parameters:
-        - existingController: the current ViewController on which the created ViewController is presented
+        - hostController: the current ViewController on which the created ViewController is presented
         - action: (Optional) custom action if need use, else used default action from source (`var defaultActionSource`)
         - animated: present ViewController with animation if true (default)
         - completionHandler: handler with result presented
      */
-    public func present(on existingController: UIViewController?,
+    public func present(on hostController: UIViewController?,
                         action: PresentationAction? = nil,
                         animated: Bool = true,
                         completionHandler: @escaping (PresentationActionResult) -> Void) {
-        present(on: existingController, action: action, animated: animated, useAssert: false, completionHandler: completionHandler)
+        present(on: hostController, action: action, animated: animated, useAssert: false, completionHandler: completionHandler)
     }
     
     /**
      Present ViewController on existing use action and assertionFailure (usually crash in debug regime) if result is failure.
      
      - Parameters:
-        - existingController: the current ViewController on which the created ViewController is presented
+        - hostController: the current ViewController on which the created ViewController is presented
         - action: (Optional) custom action if need use, else used default action from source (`var defaultActionSource`)
         - animated: present ViewController with animation if true (default)
         - useAssert: when failure present assertionFailure if true (default)
      */
-    public func present(on existingController: UIViewController?,
+    public func present(on hostController: UIViewController?,
                         action: PresentationAction? = nil,
                         animated: Bool = true,
                         useAssert: Bool = true) {
-        present(on: existingController, action: action, animated: animated, useAssert: useAssert, completionHandler: nil)
+        present(on: hostController, action: action, animated: animated, useAssert: useAssert, completionHandler: nil)
     }
     
     /**
      Present ViewController on existing use action.
      
      - Parameters:
-        - existingController: the current ViewController on which the created ViewController is presented
+        - hostController: the current ViewController on which the created ViewController is presented
         - action: (Optional) custom action if need use, else used default action from source (`var defaultActionSource`)
         - animated: present ViewController with animation if true (default)
         - useAssert: when failure present assertionFailure if true
         - completionHandler: (Optional) handler with result presented
      */
-    public func present(on existingController: UIViewController?,
+    public func present(on hostController: UIViewController?,
                         action: PresentationAction? = nil,
                         animated: Bool = true,
                         useAssert: Bool,
                         completionHandler: ((PresentationActionResult) -> Void)?) {
-        if let existingController = existingController {
-            router.present(on: existingController, customAction: action, animated: animated, useAssert: useAssert, completionHandler: completionHandler)
+        if let hostController = hostController {
+            router.present(on: hostController, customAction: action, animated: animated, useAssert: useAssert, completionHandler: completionHandler)
         } else if useAssert {
-            DependencyRouterError.notReadyPresentingViewController("not found existing ViewController (existingController = nil)")
+            DependencyRouterError.notReadyPresentingViewController("not found host ViewController (hostController = nil)")
                 .assertionFailure()
         }
     }

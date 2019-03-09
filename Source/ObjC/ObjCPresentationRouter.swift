@@ -42,16 +42,16 @@ open class ObjCPresentationRouter: NSObject {
     
     
     //MARK: Present
-    @objc public func present(on existingController: UIViewController, animated: Bool) {
-        router.present(on: existingController, animated: animated, useAssert: true, completionHandler: nil)
+    @objc public func present(on hostController: UIViewController, animated: Bool) {
+        router.present(on: hostController, animated: animated, useAssert: true, completionHandler: nil)
     }
     
-    @objc public func present(on existingController: UIViewController, animated: Bool, useAssert: Bool) {
-        router.present(on: existingController, animated: animated, useAssert: useAssert, completionHandler: nil)
+    @objc public func present(on hostController: UIViewController, animated: Bool, useAssert: Bool) {
+        router.present(on: hostController, animated: animated, useAssert: useAssert, completionHandler: nil)
     }
     
-    @objc public func present(on existingController: UIViewController, animated: Bool, completionHandler: @escaping (Error?)->Void) {
-        router.present(on: existingController, animated: animated, useAssert: false) {
+    @objc public func present(on hostController: UIViewController, animated: Bool, completionHandler: @escaping (Error?)->Void) {
+        router.present(on: hostController, animated: animated, useAssert: false) {
             switch $0 {
             case .success: completionHandler(nil)
             case .failure(let error): completionHandler(error)
@@ -59,16 +59,16 @@ open class ObjCPresentationRouter: NSObject {
         }
     }
     
-    @objc public func present(on existingController: UIViewController, animated: Bool, useAssert: Bool, completionHandler: ((Error?)->Void)?) {
+    @objc public func present(on hostController: UIViewController, animated: Bool, useAssert: Bool, completionHandler: ((Error?)->Void)?) {
         if let handler = completionHandler {
-            router.present(on: existingController, animated: animated, useAssert: useAssert) {
+            router.present(on: hostController, animated: animated, useAssert: useAssert) {
                 switch $0 {
                 case .success: handler(nil)
                 case .failure(let error): handler(error)
                 }
             }
         } else {
-            router.present(on: existingController, animated: animated, useAssert: useAssert)
+            router.present(on: hostController, animated: animated, useAssert: useAssert)
         }
     }
 }

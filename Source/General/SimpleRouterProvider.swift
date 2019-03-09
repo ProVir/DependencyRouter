@@ -46,6 +46,14 @@ open class InternalSimpleRouterProvider: RouterProvider {
         return findServiceFactory(factoryType) != nil
     }
 
+    public func createFactory<FR: FactoryRouter>(_ factoryType: FR.Type) throws -> FR where FR.ContainerType: RouterServiceContainer {
+        if let factory = findServiceFactory(factoryType) {
+            return FR.init(container: .init(serviceFactory: factory, routerProvider: self))
+        } else {
+           throw DependencyRouterError.serviceFactoryNotFound(FR.ContainerType.ServiceFactory.self)
+        }
+    }
+
     public func router<FR: FactoryRouter>(_ factoryType: FR.Type) -> BuilderRouter<FR>.ReadyCreate where FR.ContainerType: RouterServiceContainer {
         if let factory = findServiceFactory(factoryType) {
             return BuilderRouter(FR.self).setContainer(lazy: .init(serviceFactory: factory, routerProvider: self))

@@ -1,6 +1,6 @@
 //
 //  AutoRouter.swift
-//  DependencyRouter
+//  DependencyRouter 0.3
 //
 //  Created by Короткий Виталий on 16.09.2018.
 //  Copyright © 2018 ProVir. All rights reserved.
@@ -32,8 +32,8 @@ extension Router {
     
     public static func setupIfNeed<FR: BlankFactoryRouter>(_ needSetup: Bool, factory: @autoclosure ()->FR, viewController: FR.VCType) {
         if needSetup {
-            let use_factory = factory()
-            use_factory.setupViewController(viewController)
+            let useFactory = factory()
+            useFactory.setupViewController(viewController)
         }
     }
 }

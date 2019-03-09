@@ -1,6 +1,6 @@
 //
 //  SimplePresentationActions.swift
-//  DependencyRouter
+//  DependencyRouter 0.3
 //
 //  Created by Короткий Виталий on 11.09.2018.
 //  Copyright © 2018 ProVir. All rights reserved.
@@ -27,7 +27,7 @@ public class NoAdaptivePresentationStyleHelper: NSObject, UIAdaptivePresentation
 public struct NotPresentationAction: PresentationAction {
     public init() { }
     
-    public func present(_ viewController: UIViewController, on existingController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult) -> Void) {
+    public func present(_ viewController: UIViewController, on hostController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult) -> Void) {
         assertionFailure("You need use valid PresentationAction, don't use NotPresentationAction.")
         completionHandler(.failure(DependencyRouterError.notReadyPresentingViewController("need use valid PresentationAction, don't use NotPresentationAction.")))
     }
@@ -40,12 +40,12 @@ public struct ShowPresentationAction: PresentationAction {
     
     public init() { }
     
-    public func present(_ viewController: UIViewController, on existingController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult) -> Void) {
+    public func present(_ viewController: UIViewController, on hostController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult) -> Void) {
         
         prepareHandler?(viewController)
         
         if !animated { UIView.setAnimationsEnabled(false) }
-        existingController.show(viewController, sender: nil)
+        hostController.show(viewController, sender: nil)
         if !animated { UIView.setAnimationsEnabled(true) }
         
         postHandler?(viewController)
@@ -73,8 +73,35 @@ public struct ModalPresentationAction: PresentationAction {
             }
         }
     }
+
+    public enum WrapperNavigtionController {
+        case none
+        case system
+        case custom(alwaysWrap: Bool, (UIViewController) -> UIViewController)
+
+        func wrapIfNeed(_ viewController: UIViewController) -> UIViewController {
+            switch self {
+            case .none:
+                return viewController
+
+            case .system:
+                if viewController is UINavigationController {
+                    return viewController
+                } else {
+                    return UINavigationController(rootViewController: viewController)
+                }
+
+            case let .custom(alwaysWrap, wrapHandler):
+                if alwaysWrap == false && viewController is UINavigationController {
+                    return viewController
+                } else {
+                    return wrapHandler(viewController)
+                }
+            }
+        }
+    }
     
-    public var canAutoWrappedNavigtionController: Bool = false
+    public var autoWrapperNavigtionController: WrapperNavigtionController = .none
     public var canDismissOtherPresented: Bool = false
     public var noAdaptivePresentationStyle: Bool = false
     
@@ -83,15 +110,15 @@ public struct ModalPresentationAction: PresentationAction {
     
     public init() { }
     
-    public init(autoWrapped: Bool, dismissOtherPresented: Bool = false, noAdaptive: Bool = false, prepareHandler: ((UIViewController)->Void)? = nil) {
-        self.canAutoWrappedNavigtionController = autoWrapped
+    public init(autoWrapper: WrapperNavigtionController, dismissOtherPresented: Bool = false, noAdaptive: Bool = false, prepareHandler: ((UIViewController)->Void)? = nil) {
+        self.autoWrapperNavigtionController = autoWrapper
         self.canDismissOtherPresented = dismissOtherPresented
         self.noAdaptivePresentationStyle = noAdaptive
         self.prepareHandler = prepareHandler
     }
     
-    public init(autoWrapped: Bool, dismissOtherPresented: Bool = false, noAdaptive: Bool = false, presentationStyle: UIModalPresentationStyle, closeLeftButton: CloseLeftButton = .none) {
-        self.canAutoWrappedNavigtionController = autoWrapped
+    public init(autoWrapper: WrapperNavigtionController, dismissOtherPresented: Bool = false, noAdaptive: Bool = false, presentationStyle: UIModalPresentationStyle, closeLeftButton: CloseLeftButton = .none) {
+        self.autoWrapperNavigtionController = autoWrapper
         self.canDismissOtherPresented = dismissOtherPresented
         self.noAdaptivePresentationStyle = noAdaptive
         
@@ -117,8 +144,8 @@ public struct ModalPresentationAction: PresentationAction {
         }
     }
     
-    public init(autoWrapped: Bool, dismissOtherPresented: Bool = false, noAdaptive: Bool = false, popoverSourceView: PopoverSourceView, permittedArrowDirections: UIPopoverArrowDirection = .any) {
-        self.canAutoWrappedNavigtionController = autoWrapped
+    public init(autoWrapper: WrapperNavigtionController, dismissOtherPresented: Bool = false, noAdaptive: Bool = false, popoverSourceView: PopoverSourceView, permittedArrowDirections: UIPopoverArrowDirection = .any) {
+        self.autoWrapperNavigtionController = autoWrapper
         self.canDismissOtherPresented = dismissOtherPresented
         self.noAdaptivePresentationStyle = noAdaptive
         
@@ -140,15 +167,9 @@ public struct ModalPresentationAction: PresentationAction {
         }
     }
     
-    public func present(_ viewController: UIViewController, on existingController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult) -> Void) {
+    public func present(_ viewController: UIViewController, on hostController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult) -> Void) {
         //1. Prepare
-        let presentViewController: UIViewController
-        if canAutoWrappedNavigtionController && !(viewController is UINavigationController) {
-            presentViewController = UINavigationController(rootViewController: viewController)
-        } else {
-            presentViewController = viewController
-        }
-        
+        let presentViewController = autoWrapperNavigtionController.wrapIfNeed(viewController)
         if noAdaptivePresentationStyle {
             presentViewController.presentationController?.delegate = NoAdaptivePresentationStyleHelper.shared
         }
@@ -158,14 +179,14 @@ public struct ModalPresentationAction: PresentationAction {
         //2. Present
         let postHandler = self.postHandler
         func present() {
-            existingController.present(presentViewController, animated: animated) {
+            hostController.present(presentViewController, animated: animated) {
                 postHandler?(presentViewController)
                 completionHandler(.success)
             }
         }
         
-        if canDismissOtherPresented, existingController.presentedViewController != nil {
-            existingController.dismiss(animated: animated, completion: present)
+        if canDismissOtherPresented, hostController.presentedViewController != nil {
+            hostController.dismiss(animated: animated, completion: present)
         } else {
             present()
         }
@@ -191,9 +212,9 @@ public struct NavigationControllerPresentationAction: PresentationAction {
         self.beginFromCurrent = beginFromCurrent
     }
     
-    public func present(_ viewController: UIViewController, on existingController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult) -> Void) {
+    public func present(_ viewController: UIViewController, on hostController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult) -> Void) {
         //1. Test - can presented
-        guard let navigationController = (existingController as? UINavigationController) ?? existingController.navigationController else {
+        guard let navigationController = (hostController as? UINavigationController) ?? hostController.navigationController else {
             completionHandler(.failure(DependencyRouterError.notReadyPresentingViewController("not found UINavigationController")))
             return
         }
@@ -204,9 +225,9 @@ public struct NavigationControllerPresentationAction: PresentationAction {
         //3. Action
         switch regime {
         case .push:
-            if beginFromCurrent && navigationController.topViewController !== existingController {
+            if beginFromCurrent && navigationController.topViewController !== hostController {
                 var newVCList = navigationController.viewControllers
-                while !newVCList.isEmpty && newVCList.last !== existingController {
+                while !newVCList.isEmpty && newVCList.last !== hostController {
                     newVCList.removeLast()
                 }
                 
@@ -227,9 +248,9 @@ public struct NavigationControllerPresentationAction: PresentationAction {
             } else {
                 var viewControllers = navigationController.viewControllers
                 
-                if beginFromCurrent && navigationController.topViewController !== existingController {
+                if beginFromCurrent && navigationController.topViewController !== hostController {
                     var viewControllers = navigationController.viewControllers
-                    while !viewControllers.isEmpty && viewControllers.last !== existingController {
+                    while !viewControllers.isEmpty && viewControllers.last !== hostController {
                         viewControllers.removeLast()
                     }
                 }

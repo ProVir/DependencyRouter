@@ -219,8 +219,8 @@
 				5040F3702150C6E000A23F08 /* UnwindRouter.swift */,
 				50084EFF215288E000910769 /* Helpers.swift */,
 				50084F052153447E00910769 /* SegueRouter.swift */,
-				50084F032152999D00910769 /* NavigationRouter.swift */,
 				88754B3C2233C3770098CE75 /* SimpleRouterProvider.swift */,
+				50084F032152999D00910769 /* NavigationRouter.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";

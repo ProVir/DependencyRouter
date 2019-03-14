@@ -136,8 +136,8 @@ public struct BuilderRouter<BuilderFR: FactoryRouter> {
     }
 }
 
-extension Router {
-    public static func builder<FR: FactoryRouter>(factory: FR) -> BuilderRouter<FR>.ReadyCreate {
+extension BuilderRouter {
+    public static func useFactory(factory: BuilderFR) -> BuilderRouter<BuilderFR>.ReadyCreate {
         return .init(factory: { factory })
     }
 }
@@ -145,8 +145,8 @@ extension Router {
 extension BuilderRouter where BuilderFR: PrepareBuilderSupportFactoryRouter {
     /// Steps swap 1 and 2: Support Prepare step (0) as step 2 - use of existing ViewController if support factory
     public func builderIfSupport<VC: UIViewController>(use viewController: VC) -> PrepareBuilder<VC>? {
-        if let vc: BuilderFR.VCSetupType = try? dependencyRouterFindViewController(viewController) {
-            return .init(viewController: viewController, findedForSetupViewController: vc)
+        if let findedVC: BuilderFR.VCSetupType = try? dependencyRouterFindViewController(viewController) {
+            return .init(viewController: viewController, findedForSetupViewController: findedVC)
         } else {
             return nil
         }

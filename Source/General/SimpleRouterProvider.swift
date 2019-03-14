@@ -11,7 +11,7 @@ import Foundation
 open class SimpleRouterProvider<ServiceFactory>: InternalSimpleRouterProvider {
     private let serviceFactory: ServiceFactory
 
-    public init(serviceFactory: ServiceFactory) {
+    public init(_ serviceFactory: ServiceFactory) {
         self.serviceFactory = serviceFactory
     }
 
@@ -23,7 +23,7 @@ open class SimpleRouterProvider<ServiceFactory>: InternalSimpleRouterProvider {
 open class MultiRouterProvider: InternalSimpleRouterProvider {
     private let serviceFactories: [Any]
 
-    public init(serviceFactories: [Any]) {
+    public init(_ serviceFactories: [Any]) {
         self.serviceFactories = serviceFactories
     }
 
@@ -46,37 +46,11 @@ open class InternalSimpleRouterProvider: RouterProvider {
         return findServiceFactory(factoryType) != nil
     }
 
-    public func createFactory<FR: FactoryRouter>(_ factoryType: FR.Type) throws -> FR where FR.ContainerType: RouterServiceContainer {
+    public func factory<FR: FactoryRouter>(_ factoryType: FR.Type) throws -> FR where FR.ContainerType: RouterServiceContainer {
         if let factory = findServiceFactory(factoryType) {
-            return FR.init(container: .init(serviceFactory: factory, routerProvider: self))
+            return FR.init(container: .init(factory, routerProvider: self))
         } else {
            throw DependencyRouterError.serviceFactoryNotFound(FR.ContainerType.ServiceFactory.self)
-        }
-    }
-
-    public func router<FR: FactoryRouter>(_ factoryType: FR.Type) -> BuilderRouter<FR>.ReadyCreate where FR.ContainerType: RouterServiceContainer {
-        if let factory = findServiceFactory(factoryType) {
-            return BuilderRouter(FR.self).setContainer(lazy: .init(serviceFactory: factory, routerProvider: self))
-        } else {
-            return .init(error: DependencyRouterError.serviceFactoryNotFound(FR.ContainerType.ServiceFactory.self))
-        }
-    }
-
-    public func routerIfSupport<FR: FactoryRouter & PrepareBuilderSupportFactoryRouter, VC: UIViewController>(_ factoryType: FR.Type, use viewController: VC) -> BuilderRouter<FR>.ReadySetup<VC>? where FR.ContainerType: RouterServiceContainer {
-        if let factory = findServiceFactory(factoryType) {
-            return BuilderRouter(FR.self).builderIfSupport(use: viewController)?
-                .setContainer(lazy: .init(serviceFactory: factory, routerProvider: self))
-        } else {
-            return .init(error: DependencyRouterError.serviceFactoryNotFound(FR.ContainerType.ServiceFactory.self))
-        }
-    }
-
-    public func routerIfSupport<FR: FactoryRouter & PrepareBuilderSupportFactoryRouter>(_ factoryType: FR.Type, useSegue segue: UIStoryboardSegue, need identifier: String?) -> BuilderRouter<FR>.ReadySetup<UIViewController>? where FR.ContainerType: RouterServiceContainer {
-        if let factory = findServiceFactory(factoryType) {
-            return BuilderRouter(FR.self).builderIfSupport(useSegue: segue, need: identifier)?
-                .setContainer(lazy: .init(serviceFactory: factory, routerProvider: self))
-        } else {
-            return .init(error: DependencyRouterError.serviceFactoryNotFound(FR.ContainerType.ServiceFactory.self))
         }
     }
 }

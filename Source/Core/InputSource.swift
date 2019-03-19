@@ -130,25 +130,6 @@ extension BuilderRouterReadySetup where FR: FactoryRouter, FR: FactorySupportInp
     }
 }
 
-extension BuilderRouterReadyCreate where FR: CreatorFactoryRouter, FR: FactorySupportInputSource {
-    /// Builder step: create and setup used InputSource
-    public func createAndSetup(source: BaseFactoryInputSource, identifier: String? = nil, sender: Any? = nil) -> BuilderRouterReadyPresent<FR.VCCreateType> {
-        return createAndSetup(sourceList: [source], identifier: identifier, sender: sender)
-    }
-    
-    /// Builder step: create and setup used array InputSource
-    public func createAndSetup(sourceList: [BaseFactoryInputSource], identifier: String? = nil, sender: Any? = nil) -> BuilderRouterReadyPresent<FR.VCCreateType> {
-        do {
-            let factory = try self.factory()
-            let viewController = factory.createViewController()
-            try factory.findAndSetup(viewController, sourceList: sourceList, identifier: identifier, sender: sender)
-            return .init(viewController: viewController, default: factory.presentationAction())
-        } catch {
-            return .init(error: error)
-        }
-    }
-}
-
 // MARK: Helpers
 /// Helper function: find ViewController with support InputSource setup and create factory for use next
 public func dependencyRouterFindSourceRouterViewController(_ viewController: UIViewController) -> (UIViewController & CoreSourceRouterViewController, FactorySupportInputSource)? {

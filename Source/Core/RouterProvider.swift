@@ -41,7 +41,7 @@ extension RouterServiceContainer {
         }
     }
 
-    static func isSupport(serviceFactoryType: Any.Type) -> Bool {
+    public static func isSupport(serviceFactoryType: Any.Type) -> Bool {
         return serviceFactoryType is ServiceFactory.Type
     }
 }

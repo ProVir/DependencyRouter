@@ -8,6 +8,16 @@
 
 import UIKit
 
+/// Assert if use - used as default when require always use own
+public struct NotPresentationAction: PresentationAction {
+    public init() { }
+    
+    public func present(_ viewController: UIViewController, on existingController: UIViewController, animated: Bool, completionHandler: @escaping (PresentationActionResult) -> Void) {
+        assertionFailure("You need use valid PresentationAction, don't use NotPresentationAction.")
+        completionHandler(.failure(DependencyRouterError.notReadyPresentingViewController("need use valid PresentationAction, don't use NotPresentationAction.")))
+    }
+}
+
 /// PresentationActions handler
 public struct PresentationRouter {
     /**

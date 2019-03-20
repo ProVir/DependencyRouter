@@ -14,7 +14,6 @@
 		5040F36F214FE75A00A23F08 /* InputSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040F36D214FE74800A23F08 /* InputSource.swift */; };
 		5040F3712150C6E000A23F08 /* UnwindRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040F3702150C6E000A23F08 /* UnwindRouter.swift */; };
 		507C9D7D214382DB00996677 /* DependencyRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 507C9D73214382DB00996677 /* DependencyRouter.framework */; };
-		507C9D82214382DB00996677 /* DependencyRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9D81214382DB00996677 /* DependencyRouterTests.swift */; };
 		507C9D84214382DB00996677 /* DependencyRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = 507C9D76214382DB00996677 /* DependencyRouter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		507C9D942143833F00996677 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9D932143833E00996677 /* AppDelegate.swift */; };
 		507C9D962143833F00996677 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C9D952143833F00996677 /* ViewController.swift */; };
@@ -38,6 +37,8 @@
 		509458812164B7200017E027 /* ThirdViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5094587F2164B7200017E027 /* ThirdViewController.xib */; };
 		50E7E6222147F4D400FA64E0 /* SimplePresentationActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E7E6212147F4D400FA64E0 /* SimplePresentationActions.swift */; };
 		8806C49E2240097E00AB6951 /* RouterProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8806C49A224008E200AB6951 /* RouterProvider.swift */; };
+		8806C52922424AF500AB6951 /* SimpleRouterProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8806C52822424AF500AB6951 /* SimpleRouterProviderTests.swift */; };
+		8806C52B22424BA000AB6951 /* StubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8806C52A22424BA000AB6951 /* StubTests.swift */; };
 		88754B3D2233C3770098CE75 /* SimpleRouterProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88754B3C2233C3770098CE75 /* SimpleRouterProvider.swift */; };
 /* End PBXBuildFile section */
 
@@ -71,7 +72,6 @@
 		507C9D76214382DB00996677 /* DependencyRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DependencyRouter.h; sourceTree = "<group>"; };
 		507C9D77214382DB00996677 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		507C9D7C214382DB00996677 /* DependencyRouterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DependencyRouterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		507C9D81214382DB00996677 /* DependencyRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyRouterTests.swift; sourceTree = "<group>"; };
 		507C9D83214382DB00996677 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		507C9D912143833E00996677 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		507C9D932143833E00996677 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +96,8 @@
 		5094587F2164B7200017E027 /* ThirdViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThirdViewController.xib; sourceTree = "<group>"; };
 		50E7E6212147F4D400FA64E0 /* SimplePresentationActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePresentationActions.swift; sourceTree = "<group>"; };
 		8806C49A224008E200AB6951 /* RouterProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterProvider.swift; sourceTree = "<group>"; };
+		8806C52822424AF500AB6951 /* SimpleRouterProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleRouterProviderTests.swift; sourceTree = "<group>"; };
+		8806C52A22424BA000AB6951 /* StubTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubTests.swift; sourceTree = "<group>"; };
 		88754B3C2233C3770098CE75 /* SimpleRouterProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleRouterProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -164,8 +166,9 @@
 		507C9D80214382DB00996677 /* DependencyRouterTests */ = {
 			isa = PBXGroup;
 			children = (
-				507C9D81214382DB00996677 /* DependencyRouterTests.swift */,
 				507C9D83214382DB00996677 /* Info.plist */,
+				8806C52A22424BA000AB6951 /* StubTests.swift */,
+				8806C52722424ACF00AB6951 /* General */,
 			);
 			path = DependencyRouterTests;
 			sourceTree = "<group>";
@@ -232,6 +235,14 @@
 				5094587C2164B39D0017E027 /* ObjCNavigationRouter.swift */,
 			);
 			path = ObjC;
+			sourceTree = "<group>";
+		};
+		8806C52722424ACF00AB6951 /* General */ = {
+			isa = PBXGroup;
+			children = (
+				8806C52822424AF500AB6951 /* SimpleRouterProviderTests.swift */,
+			);
+			path = General;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -406,7 +417,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				507C9D82214382DB00996677 /* DependencyRouterTests.swift in Sources */,
+				8806C52B22424BA000AB6951 /* StubTests.swift in Sources */,
+				8806C52922424AF500AB6951 /* SimpleRouterProviderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

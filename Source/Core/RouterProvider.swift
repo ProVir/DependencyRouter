@@ -2,7 +2,7 @@
 //  RouterProvider.swift
 //  DependencyRouter 0.3
 //
-//  Created by Короткий Виталий on 03/03/2019.
+//  Created by Короткий Виталий on 03.03.2019.
 //  Copyright © 2019 ProVir. All rights reserved.
 //
 

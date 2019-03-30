@@ -114,11 +114,11 @@ public struct BuilderRouter<BuilderFR: FactoryRouter> {
         public func findedForSetupViewController() -> UIViewController? { return findedViewController }
         
         public func setContainer(_ container: BuilderFR.ContainerType) -> ReadySetup<VC> {
-            return .init(factory: FR(container: container), viewController: usedViewController, findedForSetupViewController: findedViewController)
+            return .init(factory: BuilderFR(container: container), viewController: usedViewController, findedForSetupViewController: findedViewController)
         }
         
         public func setContainer(lazy container: @autoclosure @escaping () -> BuilderFR.ContainerType) -> ReadySetup<VC> {
-            return .init(lazyFactory: { FR(container: container()) }, viewController: usedViewController, findedForSetupViewController: findedViewController)
+            return .init(lazyFactory: { BuilderFR(container: container()) }, viewController: usedViewController, findedForSetupViewController: findedViewController)
         }
     }
     
@@ -254,7 +254,7 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
     
     /// Constructor with ViewController to present and default action (use lazy created action)
     public init(viewController: VC, default actionSource: @autoclosure @escaping () -> PresentationAction) {
-        self.router = .init(viewController: viewController, action: actionSource)
+        self.router = .init(viewController: viewController, actionSource: actionSource)
     }
     
     /// Constructor with always failure when present
@@ -338,7 +338,7 @@ public class BuilderRouterReadyPresent<VC: UIViewController> {
     
     public func presentationRouter(action actionSource: @autoclosure @escaping () -> PresentationAction) -> PresentationRouter {
         var router = self.router
-        router.setAction(actionSource)
+        router.setAction(source: actionSource)
         return router
     }
 

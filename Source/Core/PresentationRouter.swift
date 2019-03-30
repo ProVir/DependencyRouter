@@ -25,7 +25,19 @@ public struct PresentationRouter {
  
      - Parameters:
         - viewController: ViewController for present
-        - actionSource: autoclosure with action
+        - actionSource: closure with action
+     */
+    public init(viewController: UIViewController, actionSource: @escaping () -> PresentationAction) {
+        self.store = .viewController(viewController)
+        self.actionSource = actionSource
+    }
+    
+    /**
+     Constructor with default action (use lazy created action).
+     
+     - Parameters:
+        - viewController: ViewController for present
+        - action: autoclosure with action
      */
     public init(viewController: UIViewController, action actionSource: @autoclosure @escaping () -> PresentationAction) {
         self.store = .viewController(viewController)
@@ -81,6 +93,10 @@ public struct PresentationRouter {
     }
     
     // MARK: Setup
+    mutating public func setAction(source: @escaping () -> PresentationAction) {
+        self.actionSource = source
+    }
+    
     mutating public func setAction(_ actionSource: @autoclosure @escaping () -> PresentationAction) {
         self.actionSource = actionSource
     }

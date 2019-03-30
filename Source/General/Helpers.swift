@@ -27,7 +27,7 @@ extension Router {
             }
 
             //Test to center in NavigationController
-            else if let indexVC = navigationController.viewControllers.index(where: { $0 === viewController }), indexVC > 0 {
+            else if let indexVC = navigationController.viewControllers.firstIndex(where: { $0 === viewController }), indexVC > 0 {
                 let prevVC = navigationController.viewControllers[indexVC-1]
                 navigationController.popToViewController(prevVC, animated: animated)
 

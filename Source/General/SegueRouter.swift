@@ -9,6 +9,7 @@
 import UIKit
 
 public class SegueRouter {
+    public init() { }
     
     // MARK: Set for segues
     public func set(forSegueIdentifier identifier: String, factory: @autoclosure @escaping () -> FactorySupportInputSource, sourceList: [BaseFactoryInputSource], onlyOne: Bool = false) {
@@ -76,7 +77,7 @@ public class SegueRouter {
     
     // MARK: Perform segue
     @discardableResult
-    func prepare(for segue: UIStoryboardSegue, sender: Any?) -> Bool {
+    public func prepare(for segue: UIStoryboardSegue, sender: Any?) -> Bool {
         //1. Get
         guard let (storeFactory, sourceList, onlyOne) = get(withSegueIdentifier: segue.identifier ?? "") else {
             return false
